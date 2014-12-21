@@ -3,7 +3,7 @@
   "name": "JIRA Scrum Cards",
   "manifest_version": 2,
   "author": "Krasimir Chariyski",
-  "homepage_url": "https://github.com/Chariyski",
+  "homepage_url": "https://github.com/Chariyski/JIRA-Scrum-Cards",
   "description": "Create printable scrum cards form JIRA(v5) issues",
   "version": "0.2",
   "background": {
