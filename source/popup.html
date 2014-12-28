@@ -1,32 +1,80 @@
 <!DOCTYPE html>
+<!--
+  - This file is part of JIRA Cards for Task Board,
+  - Copyright (C) 2014-2015 Krasimir Chariyski
+  -
+  - JIRA Cards for Task Board is free software: you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License version 3 as
+  - published by the Free Software Foundation.
+  -
+  - JIRA Cards for Task Board is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with JIRA Cards for Task Board.  If not, see <http://www.gnu.org/licenses/>.
+  -->
 <html>
     <head>
         <link rel="stylesheet" href="css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="css/custom.css"/>
-
-        <!-- Not needed at that point -->
-        <!--<script src="js/bootstrap/jquery-2.0.3.min.js"></script>-->
-        <!--<script src="js/bootstrap/bootstrap.min.js"></script>-->
-
-        <script src="js/popup.js"></script>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
+        <link rel="stylesheet" href="css/popup.css"/>
     </head>
     <body>
 
         <nav class="navbar navbar-default" role="navigation">
             <div class="navbar-header">
-                <a class="navbar-brand" href="https://chrome.google.com/webstore/detail/jira-scrum-cards/pkjkejnmpailbogakjkpoefndabeenek/reviews?hl=en&gl=BG">JIRA Scrum Cards</a>
+                <a class="navbar-brand">JIRA Cards for Task Board</a>
             </div>
         </nav>
 
-        <section>
-            <p>Be sure that you have open JIRA task board page, before pressing the buttons!</p>
-            <button type="button" class="btn btn-block btn-primary" id="add">Print</button>
-            <button type="button" class="btn btn-block btn-danger" id="delete">Restore print preview</button>
-        </section>
+        <div id="loading" class="loading">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+                <circle transform="translate(8 0)" cx="0" cy="16" r="0.751299">
+                    <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite" begin="0"
+                             keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8"
+                             calcMode="spline"/>
+                </circle>
+                <circle transform="translate(16 0)" cx="0" cy="16" r="3.67365">
+                    <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite" begin="0.3"
+                             keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8"
+                             calcMode="spline"/>
+                </circle>
+                <circle transform="translate(24 0)" cx="0" cy="16" r="0.294316">
+                    <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite" begin="0.6"
+                             keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8"
+                             calcMode="spline"/>
+                </circle>
+            </svg>
+        </div>
 
-        <section>
-            <p class="text-center">made with <i class="glyphicon glyphicon-heart"></i></p>
-        </section>
+        <form>
+            <p id="error" class="text-danger text-center text-hide">
+                <strong>Please open your JIRA and sign in!</strong>
+            </p>
+            <fieldset id="main-field" disabled>
+                <select class="form-control form-group" id="project">
+                    <option value="default">- select project -</option>
+                </select>
+                <select class="form-control form-group" id="version">
+                    <option value="default">- select project version -</option>
+                </select>
+                <button type="button" class="btn btn-block btn-primary" id="submit" disabled>Get issues</button>
+            </fieldset>
+        </form>
 
+        <p id="link-to-webstore" class="message text-center">Made with <i class="glyphicon glyphicon-heart"></i>, so
+            don't forget to
+            <i class="glyphicon glyphicon-star"></i> it.</p>
+
+        <template id="template-for-option-tag">
+            <option></option>
+        </template>
+
+        <!-- Not needed at that point -->
+        <!--<script src="js/bootstrap/jquery-2.0.3.min.js"></script>-->
+        <!--<script src="js/bootstrap/bootstrap.min.js"></script>-->
+        <script src="js/popup.js"></script>
     </body>
 </html>

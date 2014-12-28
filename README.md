@@ -1,9 +1,11 @@
-## JIRA Scrum Cards
-Browser extensions for Chrome to print scrum cards from JIRA(v5) task board. Useful for developers who have task board with scrum cards and work with JIRA
+## JIRA Cards for Task Board
+Browser extensions for Chrome to print agile/scrum cards from JIRA. Useful for developers who have task board with task cards and work with JIRA
 
 ## Install on Chrome
-* Download and Install JSC from [Chrome WebStore](https://chrome.google.com/webstore/detail/jira-scrum-cards/pkjkejnmpailbogakjkpoefndabeenek?hl=en&gl=BG)
+Download and Install JSC from [Chrome WebStore](https://chrome.google.com/webstore)
 
 ## How to use
-* Go to your JIRA task board
+* Go to your JIRA and login
 * Click the extension icon
+* Choose a project and version(optional)
+* Click "Get issues"

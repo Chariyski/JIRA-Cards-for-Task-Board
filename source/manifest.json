@@ -1,19 +1,13 @@
 {
-  "version": "0.2.1",
-  "name": "JIRA Scrum Cards",
+  "version": "0.9.0",
+  "name": "JIRA Cards for Task Board",
   "manifest_version": 2,
   "author": "Krasimir Chariyski",
   "homepage_url": "https://github.com/Chariyski/JIRA-Scrum-Cards",
-  "description": "Create printable scrum cards form JIRA(v5) issues",
-  "background": {
-    "scripts": [
-      "event.js"
-    ],
-    "persistent": false
-  },
+  "description": "Create printable cards for task board form JIRA issues",
   "permissions": [
-    "http://*/*",
-    "https://*/*"
+    "tabs",
+    "<all_urls>"
   ],
   "optional_permissions": [
     "<all_urls>"

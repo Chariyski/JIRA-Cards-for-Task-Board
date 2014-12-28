@@ -1,0 +1,69 @@
+/*
+ * This file is part of JIRA Cards for Task Board,
+ * Copyright (C) 2014-2015 Krasimir Chariyski
+ *
+ * JIRA Cards for Task Board is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * JIRA Cards for Task Board is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with JIRA Cards for Task Board.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* ==========================================================================
+  CSS for popup.html
+  ========================================================================== */
+body, section {
+    overflow-x: hidden;
+    width: 300px;
+}
+
+.navbar {
+    border-left: none;
+    border-radius: 0;
+    border-right: none;
+    border-top: none;
+    margin-bottom: 0;
+}
+
+.navbar-header {
+    width: 100%;
+}
+
+.navbar-brand {
+    line-height: 1;
+    text-align: center;
+    width: 100%;
+}
+
+.loading {
+    font-size: 0;
+    line-height: 1;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Basic style tweaks */
+section,
+form {
+    padding: 0 5px;
+}
+
+.message {
+    color: #5e5e5e;
+    margin-top: 3rem
+}
+
+.message:hover {
+    color: #333;
+    cursor: pointer
+}
+
+.text-hide {
+    margin:0;
+}

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<!--
+  - This file is part of JIRA Cards for Task Board,
+  - Copyright (C) 2014-2015 Krasimir Chariyski
+  -
+  - JIRA Cards for Task Board is free software: you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License version 3 as
+  - published by the Free Software Foundation.
+  -
+  - JIRA Cards for Task Board is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with JIRA Cards for Task Board.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<html>
+    <head>
+        <title>JIRA Cards for Task Board</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="css/card.css"/>
+
+        <!-- This stylesheet need to be aways last, else you need to change this page JS file -->
+        <style>
+            /*TODO make page.css*/
+            body {
+                padding-top: 50px;
+            }
+
+            .message {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                height: 64px;
+            }
+
+            .message--error,
+            .message--info {
+                display: none;
+            }
+
+            @media print {
+                body > *:not(.print) {
+                    display: none;
+                }
+
+                .card-container {
+                    display: block;
+                    width: 100%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand"
+                       href="https://chrome.google.com/webstore/"
+                       target="_blank">Project name</a>
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Loader /start -->
+        <div class="container">
+            <div id="message" class="row message">
+                <span id="message-error" class="message--error text-danger">Something went wrong, please try again later</span>
+                <span id="message-info" class="message--info">There are no issues from this project version</span>
+                <svg id="message-loading" class="message--loading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="64"
+                     height="64">
+                    <circle transform="translate(8 0)" cx="0" cy="16" r="0.751299">
+                        <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite" begin="0"
+                                 keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8"
+                                 calcMode="spline"/>
+                    </circle>
+                    <circle transform="translate(16 0)" cx="0" cy="16" r="3.67365">
+                        <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite"
+                                 begin="0.3"
+                                 keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8"
+                                 calcMode="spline"/>
+                    </circle>
+                    <circle transform="translate(24 0)" cx="0" cy="16" r="0.294316">
+                        <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite"
+                                 begin="0.6"
+                                 keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8"
+                                 calcMode="spline"/>
+                    </circle>
+                </svg>
+            </div>
+        </div>
+        <!-- Loader /end -->
+
+        <!-- Options form /start -->
+        <div class="container well">
+            <form id="option-form" class="form">
+
+                <!-- First row /start -->
+                <div class="row">
+                    <!-- Template type /start -->
+                    <fieldset class="form-group col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <p>Template:</p>
+                                <select class="form-control" id="template-type">
+                                    <option value="magnetic-board">Magnetic board</option>
+                                    <option value="pinboard">Pinboard</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <!-- Template type /end -->
+
+                    <!-- Checkboxes for font-weight /start -->
+                    <fieldset class="form-group col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <p>Bold:</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="bold-tact">
+                                    <input type="checkbox" id="bold-tact" data-class="tact" value="bold">tact
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="bold-key">
+                                    <input type="checkbox" id="bold-key" data-class="key" value="bold">key
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="bold-summary">
+                                    <input type="checkbox" id="bold-summary" data-class="summary" value="bold">summary
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="bold-priority">
+                                    <input type="checkbox" id="bold-priority" data-class="priority" value="bold">priority
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="bold-subtask">
+                                    <input type="checkbox" id="bold-subtask" data-class="subtask" value="bold">subtask
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="bold-assignee">
+                                    <input type="checkbox" id="bold-assignee" data-class="assignee" value="bold">assignee
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <!-- Checkboxes for font-weight /end -->
+
+                    <!-- Select for font-size /start -->
+                    <fieldset class="form-group col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="font-size" class="control-label">Font size:</label>
+                                <select class="form-control" id="font-size">
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="14">14</option>
+                                    <option value="16">16</option>
+                                    <option value="18">18</option>
+                                    <option value="20" selected>20</option>
+                                    <option value="22">22</option>
+                                    <option value="24">24</option>
+                                    <option value="26">26</option>
+                                    <option value="28">28</option>
+                                    <option value="36">36</option>
+                                    <option value="48">48</option>
+                                    <option value="72">72</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="heading-size" class="control-label">Heading size:</label>
+                                <select class="form-control" id="heading-size">
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="14">14</option>
+                                    <option value="16">16</option>
+                                    <option value="18">18</option>
+                                    <option value="20">20</option>
+                                    <option value="22">22</option>
+                                    <option value="24">24</option>
+                                    <option value="26">26</option>
+                                    <option value="28">28</option>
+                                    <option value="36" selected>36</option>
+                                    <option value="48">48</option>
+                                    <option value="72">72</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <!-- Select for font-size /end -->
+                </div>
+                <!--  First row /end -->
+
+                <!--  Second row /start -->
+                <div class="row">
+                    <!--  Select for assignees /start -->
+                    <fieldset class="form-group col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <p>Issues from:</p>
+                                <select class="form-control" id="assignees">
+                                    <option value="all">All issues</option>
+                                    <option value="unassigned">Unassigned</option>
+                                    <option value="assigned">Assigned</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <!--  Select for assignees /end -->
+
+                    <!--  Show/hide card elements /start -->
+                    <fieldset class="form-group col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <strong>Show:</strong>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="show-tact">
+                                    <input type="checkbox" id="show-tact" data-class="tact" value="show" checked>tact
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="show-key">
+                                    <input type="checkbox" id="show-key" data-class="key" value="show" checked>key
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="show-summary">
+                                    <input type="checkbox" id="show-summary" data-class="summary" value="show" checked>summary
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="show-priority">
+                                    <input type="checkbox" id="show-priority" data-class="priority" value="show"
+                                           checked>priority
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="show-subtask">
+                                    <input type="checkbox" id="show-subtask" data-class="subtask" value="show" checked>subtask
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="show-assignee">
+                                    <input type="checkbox" id="show-assignee" data-class="assignee" value="show"
+                                           checked>assignee
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <!--  Show/hide card elements /end -->
+                </div>
+                <!--  Second row /end -->
+
+                <!--  Third row /start -->
+                <div class="row">
+                    <fieldset class="form-group col-sm-12">
+                        <button type="button" class="btn btn-primary pull-right" id="print-preview">Print preview
+                        </button>
+                    </fieldset>
+                </div>
+                <!--  Third row /end -->
+
+            </form>
+        </div>
+        <!-- Options form /end -->
+
+        <!-- Task board cards container /start -->
+        <div class="container print">
+            <section id="cards-container" class="card-container"></section>
+        </div>
+        <!-- Task board cards container /end -->
+
+        <!-- TEMPLATES /start -->
+        <!-- Template for magnetic board /start -->
+        <template id="magnetic-board">
+            <div class="card card--magnetic-board l-row" data-clone="card">
+                <!-- Place for magnet /start-->
+                <div class="magnet l-column"></div>
+                <!-- Place for magnet /end-->
+                <!-- Card header /start-->
+                <div class="l-column l-size--1">
+                    <div class="card__header l-row">
+                        <div class="l-row l-size--1">
+                            <span class="tact" data-clone="tact"></span>
+                            <span class="tact priority" data-clone="separator">/</span>
+                            <span class="priority" data-clone="priority"></span>
+                        </div>
+                        <div class="l-row l-size--1 l-justify-end">
+                            <span class="key" data-clone="key"></span>
+                            <span class="key subtask" data-clone="searator">/</span>
+                            <span class="subtask" data-clone="subtask"></span>
+                        </div>
+                    </div>
+                    <!-- Card header /end-->
+                    <!-- Card body /start-->
+                    <div class="card__body l-column l-size--1">
+                        <span class="summary l-column l-size--4 l-justify-center" data-clone="summary"></span>
+                        <span class="assignee l-column l-size--1  l-justify-center" data-clone="assignee"></span>
+                    </div>
+                </div>
+                <!-- Card body /end-->
+            </div>
+        </template>
+        <!-- Template for magnetic board /end -->
+
+        <!-- Template for pinboard /start -->
+        <template id="pinboard">
+            <div class="card card--pinboard l-flex" data-clone="card">
+                <div class="l-column l-size--1">
+                    <!-- Card header /start-->
+                    <div class="card__header l-row">
+                        <div class="l-row l-size--1">
+                            <span class="tact" data-clone="tact"></span>
+                            <span class="tact priority" data-clone="separator">/</span>
+                            <span class="priority" data-clone="priority"></span>
+                        </div>
+                        <div class="l-row l-size--1 l-justify-end">
+                            <span class="key" data-clone="key"></span>
+                            <span class="key subtask" data-clone="searator">/</span>
+                            <span class="subtask" data-clone="subtask"></span>
+                        </div>
+                    </div>
+                    <!-- Card header /end-->
+                    <!-- Card body /start-->
+                    <div class="card__body l-column l-size--1">
+                        <span class="summary l-column l-size--4 l-justify-center" data-clone="summary"></span>
+                        <span class="assignee l-column l-size--1  l-justify-center" data-clone="assignee"></span>
+                    </div>
+                    <!-- Card body /end-->
+                </div>
+                <!-- end:Card body -->
+            </div>
+        </template>
+        <!-- Template for pinboard /end -->
+        <!-- TEMPLATES /end -->
+
+        <!-- JavaScript -->
+        <script src="js/preview.js"></script>
+        <script src="js/bootstrap/jquery-2.0.3.min.js"></script>
+        <script src="js/bootstrap/bootstrap.min.js"></script>
+    </body>
+</html>
