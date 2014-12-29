@@ -7,10 +7,8 @@
   "description": "Create printable cards for task board form JIRA issues",
   "permissions": [
     "tabs",
-    "<all_urls>"
-  ],
-  "optional_permissions": [
-    "<all_urls>"
+    "<all_urls>",
+    "storage"
   ],
   "icons": {
     "16": "img/icon16.png",

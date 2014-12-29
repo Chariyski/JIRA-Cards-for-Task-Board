@@ -20,11 +20,13 @@
 
     var page,
         card,
-        model;
+        model,
+        store;
 
     window.addEventListener('load', function () {
         var form = document.getElementById('option-form'),
-            printPreviewButton = document.getElementById('print-preview');
+            printPreviewButton = document.getElementById('print-preview'),
+            saveButton = document.getElementById('save');
 
         // Listener for data, send from getInfoFromJIRA.js
         chrome.runtime.onMessage.addListener(
@@ -95,6 +97,12 @@
         // Opens print preview
         printPreviewButton.addEventListener('click', function () {
             window.print();
+        }, false);
+
+        // Save form options
+        saveButton.addEventListener('click', function () {
+            store.saveOptions();
+            store.getOptions();
         }, false);
 
     }, false);
@@ -334,4 +342,55 @@
             }
         }
     };
+
+    store = {
+        applyOptions: function () {
+
+        },
+        getOptions: function () {
+            chrome.storage.sync.get('JCTB', function (obj) {
+                console.log(obj);
+            });
+        },
+        saveOptions: function () {
+            var options = {
+                'JCTB': {
+                    template: undefined,
+                    assignee: undefined,
+                    fields: {
+                        tact: {
+                            bold: undefined,
+                            show: undefined
+                        },
+                        priority: {
+                            bold: undefined,
+                            show: undefined
+                        },
+                        key: {
+                            bold: undefined,
+                            show: document.getElementById('show-key').checked
+                        },
+                        subtask: {
+                            bold: undefined,
+                            show: undefined
+                        },
+                        summary: {
+                            bold: undefined,
+                            show: undefined
+                        },
+                        assignee: {
+                            bold: undefined,
+                            show: undefined
+                        },
+                        fontSize: undefined,
+                        headingFontSize: undefined
+                    }
+                }
+            };
+
+            chrome.storage.sync.set(options, function () {
+                console.log('Saved');
+            });
+        }
+    }
 }());
