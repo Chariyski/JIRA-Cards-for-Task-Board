@@ -79,10 +79,7 @@
 
     // Open a new tab to the chrome webstore
     linkToWebstore.addEventListener('click', function () {
-        chrome.runtime.getBackgroundPage(function (eventPage) {
-            // TODO change url
-            chrome.tabs.create({url: 'https://chrome.google.com/webstore/'});
-        });
+        chrome.tabs.create({url: 'https://chrome.google.com/webstore/detail/jira-cards-for-task-board/pkjkejnmpailbogakjkpoefndabeenek/reviews'});
     }, false);
 
     /**
