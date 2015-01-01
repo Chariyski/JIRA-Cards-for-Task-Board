@@ -40,16 +40,16 @@
             action: "getProjects"
         });
 
-        showLoading();
+        showLoading(true);
     });
 
     // Send request to getInfoFromJIRA for all versions of the selected project
     projectSelect.addEventListener('change', function (event) {
         if (event.target.value === 'default') {
-            disableSubmitButton();
+            disableSubmitButton(true);
             return;
         } else {
-            enableSubmitButton();
+            disableSubmitButton();
         }
 
         chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
@@ -59,7 +59,7 @@
             });
         });
 
-        showLoading();
+        showLoading(true);
     }, false);
 
     // Send request to getInfoFromJIRA for all issue from the selected project and version
@@ -89,12 +89,12 @@
     function onDataReceived(data) {
         // Check if there is an error
         if (data.indexOf('Error') > -1) {
-            showError();
-            hideLoading();
+            showError(true);
+            showLoading(false);
             return;
         } else {
-            hideError();
-            hideLoading();
+            showError(false);
+            showLoading(false);
         }
 
         // Exit the function if the response is empty
@@ -108,29 +108,24 @@
         } else {
             insertData(data, 'project');
         }
-        hideLoading();
+        showLoading(false);
     }
 
     /**
-     * Shows the error and disables the form
+     * Shows/Hide the error and disables/enables the form
+     * @param isVisible {boolean}
      */
-    function showError() {
+    function showError(isVisible) {
         var field = document.getElementById('main-field'),
             error = document.getElementById('error');
 
-        field.setAttribute('disabled', 'disabled');
-        error.classList.remove('text-hide');
-    }
-
-    /**
-     * Removes the error and enables the form
-     */
-    function hideError() {
-        var field = document.getElementById('main-field'),
-            error = document.getElementById('error');
-
-        field.removeAttribute('disabled');
-        error.classList.add('text-hide');
+        if (isVisible === true) {
+            field.setAttribute('disabled', 'disabled');
+            error.classList.remove('text-hide');
+        } else {
+            field.removeAttribute('disabled');
+            error.classList.add('text-hide');
+        }
     }
 
     /**
@@ -183,32 +178,28 @@
     }
 
     /**
-     * Show loading indicator
+     * Show/Hide loading indicator
+     * @param isVisible {boolean}
      */
-    function showLoading() {
-        document.getElementById('loading').style.visibility = "visible";
+    function showLoading(isVisible) {
+        if (isVisible === true) {
+            document.getElementById('loading').style.visibility = "visible";
+        } else {
+            document.getElementById('loading').style.visibility = "hidden";
+        }
     }
 
     /**
-     * Hide loading indicator
+     * Disable/Enable submit button
+     * @param isDisabled {boolean}
      */
-    function hideLoading() {
-        document.getElementById('loading').style.visibility = "hidden";
-    }
-
-    /**
-     * Disable submit button
-     */
-    function disableSubmitButton() {
+    function disableSubmitButton(isDisabled) {
         var submitButton = document.getElementById('submit');
-        submitButton.setAttribute('disabled', 'disabled');
-    }
 
-    /**
-     * Enable submit button
-     */
-    function enableSubmitButton() {
-        var submitButton = document.getElementById('submit');
-        submitButton.removeAttribute('disabled');
+        if (isDisabled === true) {
+            submitButton.setAttribute('disabled', 'disabled');
+        } else {
+            submitButton.removeAttribute('disabled');
+        }
     }
 }());
