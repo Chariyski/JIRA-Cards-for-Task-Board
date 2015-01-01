@@ -1,0 +1,47 @@
+/*
+ * This file is part of JIRA Cards for Task Board,
+ * Copyright (C) 2014-2015 Krasimir Chariyski
+ *
+ * JIRA Cards for Task Board is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * JIRA Cards for Task Board is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with JIRA Cards for Task Board.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+body {
+    padding-top: 50px;
+}
+
+.message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    height: 100px;
+}
+
+.alert{
+    margin: 0;
+}
+
+.btn + .btn {
+    margin-right: 16px;
+}
+
+@media print {
+    body > *:not(.print) {
+        display: none;
+    }
+
+    .card-container {
+        display: block;
+        width: 100%;
+    }
+}
