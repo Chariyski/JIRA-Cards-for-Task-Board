@@ -48,7 +48,7 @@
             disableSubmitButton(true);
             return;
         } else {
-            disableSubmitButton();
+            disableSubmitButton(false);
         }
 
         chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
