@@ -65,7 +65,7 @@
                 if (request.issues === undefined) {
                     page.message.show({
                         text: 'Something went wrong, please try again later.',
-                        type: 'error'
+                        type: 'danger'
                     });
                     return;
                 }
