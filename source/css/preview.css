@@ -27,12 +27,18 @@ body {
     height: 100px;
 }
 
-.alert{
+.alert {
     margin: 0;
 }
 
 .btn + .btn {
     margin-right: 16px;
+}
+
+.scroll-top{
+    position: fixed;
+bottom: 50px;
+    right: 50px;
 }
 
 @media print {

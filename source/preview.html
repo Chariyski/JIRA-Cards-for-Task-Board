@@ -19,22 +19,51 @@
     <head>
         <title>JIRA Cards for Task Board</title>
         <link rel="stylesheet" href="css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
         <link rel="stylesheet" href="css/card.css"/>
         <link rel="stylesheet" href="css/preview.css"/>
     </head>
-    <body>
+    <body id="top">
 
-        <nav class="navbar navbar-inverse navbar-fixed-top">
+        <!--<nav class="navbar navbar-inverse navbar-fixed-top">-->
+        <!--<div class="container">-->
+        <!--<div class="navbar-header">-->
+        <!--<a class="navbar-brand"-->
+        <!--href="https://chrome.google.com/webstore/detail/jira-cards-for-task-board/pkjkejnmpailbogakjkpoefndabeenek"-->
+        <!--target="_blank">JIRA Cards for Task Board</a>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</nav>-->
+
+        <!-- Navigation /start -->
+        <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand"
-                       href="https://chrome.google.com/webstore/detail/jira-cards-for-task-board/pkjkejnmpailbogakjkpoefndabeenek"
-                       target="_blank">JIRA Cards for Task Board</a>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand disabled" href="#top">JIRA Cards for Task Board</a>
                 </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Contacts <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="https://github.com/Chariyski/JIRA-Cards-for-Task-Board/labels/enhancement" target="_blank">Propose a feature</a></li>
+                                <li><a href="https://github.com/Chariyski/JIRA-Cards-for-Task-Board/issues" target="_blank">Report a bug</a></li>
+                                <li><a href="https://chrome.google.com/webstore/detail/jira-cards-for-task-board/pkjkejnmpailbogakjkpoefndabeenek/reviews" target="_blank">Give a review</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!--/.nav-collapse -->
             </div>
         </nav>
+        <!-- Navigation /end -->
 
-        <!-- Loader /start -->
+        <!-- Message container /start -->
         <div class="container">
             <div id="message" class="row message">
                 <svg id="message-loading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="64"
@@ -59,7 +88,7 @@
                 </svg>
             </div>
         </div>
-        <!-- Loader /end -->
+        <!-- Message container /end -->
 
         <!-- Options form /start -->
         <div class="container well">
@@ -236,7 +265,8 @@
                 <!--  Third row /start -->
                 <div class="row">
                     <fieldset class="form-group col-sm-12">
-                        <button type="button" class="btn btn-primary pull-right" id="print-preview">Print preview</button>
+                        <button type="button" class="btn btn-primary pull-right" id="print-preview">Print preview
+                        </button>
                         <button type="button" class="btn btn-default pull-right" id="save">Save options</button>
                     </fieldset>
                 </div>
@@ -251,6 +281,14 @@
             <section id="cards-container" class="card-container"></section>
         </div>
         <!-- Task board cards container /end -->
+
+        <!-- Navigation /start -->
+
+                <a href="#top" class="btn btn-primary pull-right scroll-top" title="Go to top">
+                    <i class="glyphicon glyphicon-chevron-up"></i>
+                </a>
+
+        <!-- Navigation /end -->
 
         <!-- TEMPLATES /start -->
         <!-- Template for magnetic board /start -->
