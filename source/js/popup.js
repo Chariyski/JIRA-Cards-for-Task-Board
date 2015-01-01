@@ -28,7 +28,6 @@
     });
 
     // Perform the callback when a message is received from the content script
-    // TODO check stack
     chrome.runtime.onMessage.addListener(function (message) {
         // Call the callback function
         onDataReceived(message);
