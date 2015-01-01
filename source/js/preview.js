@@ -58,24 +58,28 @@
                     return;
                 }
 
+                // Delete loading indicator
+                page.message.delete();
+
                 // Check if there is data in the request
                 if (request.issues === undefined) {
-                    page.message.showError();
-                    page.message.hideLoading();
-
+                    page.message.show({
+                        text: 'Something went wrong, please try again later.',
+                        type: 'error'
+                    });
                     return;
                 }
 
                 // Show info text if there is nothing to print
                 if (request.issues.length === 0) {
-                    page.message.showInfo();
-                    page.message.hideLoading();
-
+                    page.message.show({
+                        text: 'There are no issues from this project version, that can be print.',
+                        type: 'warning'
+                    });
                     return;
                 }
 
                 model.setIssues(request.issues);
-                page.message.hideLoading();
                 page.insertAssignees();
                 card.createCards();
             }
@@ -157,7 +161,7 @@
 
     /**
      * Manipulates page elements
-     * @type {{insertAssignees: Function, message: {hideError: Function, hideInfo: Function, hideLoading: Function, showError: Function, showInfo: Function, showLoading: Function}}}
+     * @type {{insertAssignees: Function, message: {_create: Function, delete: Function, show: Function}}}
      */
     page = {
 
@@ -182,25 +186,51 @@
         },
 
         // Message handling
-        // TODO opravi stilovete na popupa
         message: {
-            hideError: function () {
-                document.getElementById('message-error').style.display = 'none';
+            /**
+             * Create HTML tag with all the information
+             * @param message {Object} Includes massage type and text that will be shown
+             * @returns {HTMLElement}
+             * @private
+             */
+            _create: function (message) {
+                var type = message.type,
+                    text = message.text,
+                    massageTag = document.createElement('span');
+
+                massageTag.classList.add('alert');
+                massageTag.classList.add('alert-' + type);
+                massageTag.innerText = message.text;
+
+                return massageTag;
             },
-            hideInfo: function () {
-                document.getElementById('message-info').style.display = 'none';
+
+            /**
+             * Delete all messages in the message container
+             */
+            delete: function () {
+                var messageContainer = document.getElementById('message');
+
+                while (messageContainer.firstChild) {
+                    messageContainer.removeChild(messageContainer.firstChild);
+                }
             },
-            hideLoading: function () {
-                document.getElementById('message-loading').style.display = 'none';
-            },
-            showError: function () {
-                document.getElementById('message-error').style.display = 'block';
-            },
-            showInfo: function () {
-                document.getElementById('message-info').style.display = 'block';
-            },
-            showLoading: function () {
-                document.getElementById('message-loading').style.display = 'block';
+
+            /**
+             *
+             * Visualise the message and remove it, if it is not a error message
+             * @param message {Object} Includes massage type and text that will be shown
+             */
+            show: function (message) {
+                var messageContainer = document.getElementById('message'),
+                    messageTag = this._create(message);
+
+                messageContainer.appendChild(messageTag);
+
+                // Delete info message after 4s
+                if (message.type === 'info') {
+                    setTimeout(this.delete, 4000);
+                }
             }
         }
     };
@@ -516,8 +546,10 @@
             };
 
             chrome.storage.sync.set(options, function () {
-                // TODO
-                console.log('Saved');
+                page.message.show({
+                    type: 'info',
+                    text: 'All options are saved.'
+                });
             });
         }
     };
