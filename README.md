@@ -13,8 +13,7 @@ Download and Install JSC from [Chrome WebStore](https://chrome.google.com/websto
 A new tab will be created, in which all the issues of the selected project and version will be visualized(if there are any).
 After the cards are loaded, you will be able to change their visual style and print them.
 
-Features
-========
+## Features
 
 * Get JIRA issues from certain project and version
 * Create printable cards
@@ -26,8 +25,7 @@ Features
 * Show cards from assignee
 * Save options
 
-Changelog
-===============
+## Changelog
 
 ### [v1.0.0](https://github.com/Chariyski/JIRA-Cards-for-Task-Board)
 * Initial version
