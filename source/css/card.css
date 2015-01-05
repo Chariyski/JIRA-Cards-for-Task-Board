@@ -81,6 +81,34 @@
     margin: 16px 0;
     min-height: 5cm;
     page-break-inside: avoid;
+    position: relative;
+}
+
+.card-print--hidden:after,
+.card-print--visible:after {
+    font-family: 'Glyphicons Halflings';
+    font-size: 30px;
+    line-height: 1;
+    position: absolute;
+    right: -4rem;
+    top: 0;
+}
+
+.card-print--hidden:after {
+    content: "\e106";
+}
+
+.card-print--visible:after {
+    content: "\e105";
+}
+
+.card:hover:after {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.card-print--hidden {
+    opacity: 0.5;
 }
 
 .card--magnetic-board .magnet {

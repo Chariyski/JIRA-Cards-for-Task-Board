@@ -18,6 +18,7 @@
 (function () {
     'use strict';
 
+    // Form controls
     var cardTemplate = document.getElementById('template-type'),
         fromAssignee = document.getElementById('assignees'),
         tactBold = document.getElementById('bold-tact'),
@@ -39,97 +40,6 @@
         card,
         model,
         options;
-
-    // Add Page events listeners
-    window.addEventListener('load', function () {
-        var form = document.getElementById('option-form'),
-            printPreviewButton = document.getElementById('print-preview'),
-            saveButton = document.getElementById('save');
-
-        // If there are any saved option, apples them.
-        options.apply();
-
-        // Listener for data, send from getInfoFromJIRA.js
-        chrome.runtime.onMessage.addListener(
-            // Perform the callback when a message is received from the content script
-            function (request, sender, sendResponse) {
-                // Makes sure that this is executed only one time
-                if (model.getIssues() !== undefined) {
-                    return;
-                }
-
-                // Delete loading indicator
-                page.message.delete();
-
-                // Check if there is data in the request
-                if (request.issues === undefined) {
-                    page.message.show({
-                        text: 'Something went wrong, please try again later.',
-                        type: 'danger'
-                    });
-                    return;
-                }
-
-                // Show info text if there is nothing to print
-                if (request.issues.length === 0) {
-                    page.message.show({
-                        text: 'There are no issues from this project version, that can be print.',
-                        type: 'warning'
-                    });
-                    return;
-                }
-
-                model.setIssues(request.issues);
-                page.insertAssignees();
-                card.createCards();
-            }
-        );
-
-        // Event listener for user interaction on options form
-        form.addEventListener('change', function (event) {
-            // Change template
-            if (event.target.id === 'template-type') {
-                card.deleteCards();
-                card.createCards();
-            }
-
-            // Hides cards with different assignee from the given one
-            if (event.target.id === 'assignees') {
-                card.showFromAssignees(event.target.value);
-            }
-
-            // Change font weight
-            if (event.target.value === 'bold') {
-                card.changeFontWeight(event.target.getAttribute('data-class'), event.target.checked);
-            }
-
-            // Hide/show parts from the cards
-            if (event.target.value === 'show') {
-                card.changeDisplay(event.target.getAttribute('data-class'), event.target.checked);
-            }
-
-            // Change font size
-            if (event.target.id === 'font-size') {
-                card.changeFontSize(event.target.value);
-            }
-
-            // Change summary font size
-            if (event.target.id === 'heading-size') {
-                card.changeHeadingFontSize(event.target.value);
-            }
-        }, false);
-
-        // Opens print preview
-        printPreviewButton.addEventListener('click', function () {
-            window.print();
-        }, false);
-
-        // Save form options
-        saveButton.addEventListener('click', function () {
-            options.save();
-        }, false);
-
-    }, false);
 
     /**
      * Object that processes the received data
@@ -553,5 +463,103 @@
             });
         }
     };
+
+    // Add Page events listeners
+    window.addEventListener('load', function () {
+        var form = document.getElementById('option-form'),
+            printPreviewButton = document.getElementById('print-preview'),
+            saveButton = document.getElementById('save'),
+            cardContainer = document.getElementById('cards-container');
+
+        // If there are any saved option, apples them.
+        options.apply();
+
+        // Listener for data, send from getInfoFromJIRA.js
+        chrome.runtime.onMessage.addListener(
+            // Perform the callback when a message is received from the content script
+            function (request, sender, sendResponse) {
+                // Makes sure that this is executed only one time
+                if (model.getIssues() !== undefined) {
+                    return;
+                }
+
+                // Delete loading indicator
+                page.message.delete();
+
+                // Check if there is data in the request
+                if (request.issues === undefined) {
+                    page.message.show({
+                        text: 'Something went wrong, please try again later.',
+                        type: 'danger'
+                    });
+                    return;
+                }
+
+                // Show info text if there is nothing to print
+                if (request.issues.length === 0) {
+                    page.message.show({
+                        text: 'There are no issues from this project version, that can be print.',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                model.setIssues(request.issues);
+                page.insertAssignees();
+                card.createCards();
+            }
+        );
+
+        // Event listener for user interaction on options form
+        form.addEventListener('change', function (event) {
+            // Change template
+            if (event.target.id === 'template-type') {
+                card.deleteCards();
+                card.createCards();
+            }
+
+            // Hides cards with different assignee from the given one
+            if (event.target.id === 'assignees') {
+                card.showFromAssignees(event.target.value);
+            }
+
+            // Change font weight
+            if (event.target.value === 'bold') {
+                card.changeFontWeight(event.target.getAttribute('data-class'), event.target.checked);
+            }
+
+            // Hide/show parts from the cards
+            if (event.target.value === 'show') {
+                card.changeDisplay(event.target.getAttribute('data-class'), event.target.checked);
+            }
+
+            // Change font size
+            if (event.target.id === 'font-size') {
+                card.changeFontSize(event.target.value);
+            }
+
+            // Change summary font size
+            if (event.target.id === 'heading-size') {
+                card.changeHeadingFontSize(event.target.value);
+            }
+        }, false);
+
+        // Opens print preview
+        printPreviewButton.addEventListener('click', function () {
+            window.print();
+        }, false);
+
+        // Save form options
+        saveButton.addEventListener('click', function () {
+            options.save();
+        }, false);
+
+        cardContainer.addEventListener('click', function (event) {
+            if (event.target.classList.contains('card')) {
+                event.target.classList.toggle('card-print--visible');
+                event.target.classList.toggle('card-print--hidden');
+            }
+        }, false);
+    }, false);
 
 }());

@@ -25,10 +25,15 @@ body {
 
 .message {
     display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 22px;
     height: 100px;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-container {
+    padding-left: 4rem;
+    padding-right: 4rem;
 }
 
 .alert {
@@ -40,8 +45,8 @@ body {
 }
 
 .scroll-top {
-    position: fixed;
     bottom: 50px;
+    position: fixed;
     right: 50px;
 }
 
@@ -52,6 +57,14 @@ body {
 
     .card-container {
         display: block;
+        padding: 0;
         width: 100%;
+    }
+
+    .card-print--visible:after {
+        display: none;
+    }
+    .card-print--hidden {
+        display: none!important;
     }
 }
