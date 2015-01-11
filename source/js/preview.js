@@ -219,21 +219,28 @@
 
                 if (issues[i].fields.fixVersions[0]) {
                     var tact = clone.querySelector('[data-clone="tact"]');
-                    tact.innerText = issues[i].fields.fixVersions[0].name;
+
+                    if (tact) {
+                        tact.innerText = issues[i].fields.fixVersions[0].name;
+                    }
                 }
 
                 if (issues[i].fields.priority.name) {
                     var priority = clone.querySelector('[data-clone="priority"]');
-                    priority.innerText = issues[i].fields.priority.name;
+                    if (priority) {
+                        priority.innerText = issues[i].fields.priority.name;
+                    }
                 }
 
                 if (issues[i].key) {
                     var issueKey = clone.querySelector('[data-clone="key"]');
-                    issueKey.innerText = issues[i].key;
+                    if (issueKey) {
+                        issueKey.innerText = issues[i].key;
+                    }
                 }
 
                 var subTask = clone.querySelector('[data-clone="subtask"]');
-                if (issues[i].fields.issuetype.subtask) {
+                if (issues[i].fields.issuetype.subtask && subTask) {
                     subTask.innerText = issues[i].fields.parent.key;
                 } else {
                     subTask.parentNode.removeChild(subTask);
@@ -241,11 +248,13 @@
 
                 if (issues[i].fields.summary) {
                     var summary = clone.querySelector('[data-clone="summary"]');
-                    summary.innerText = issues[i].fields.summary;
+                    if (summary) {
+                        summary.innerText = issues[i].fields.summary;
+                    }
                 }
 
                 var assignee = clone.querySelector('[data-clone="assignee"]');
-                if (issues[i].fields.assignee) {
+                if (issues[i].fields.assignee && assignee) {
                     assignee.innerText = issues[i].fields.assignee.displayName;
                     card.setAttribute('data-assignee', issues[i].fields.assignee.displayName);
                 } else {

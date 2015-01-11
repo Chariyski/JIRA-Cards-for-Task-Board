@@ -32,3 +32,6 @@ After the cards are loaded, you will be able to change their visual style and pr
 
 ### [v1.1.0](https://github.com/Chariyski/JIRA-Cards-for-Task-Board/issues?q=is%3Aissue+milestone%3Av1.1.0+is%3Aclosed)
 * Added a button next to each card, for hiding or showing the card in print preview.
+
+### [v1.2.0](https://github.com/Chariyski/JIRA-Cards-for-Task-Board/issues?q=is%3Aissue+milestone%3Av1.2.0+is%3Aclosed)
+* Added a new template.

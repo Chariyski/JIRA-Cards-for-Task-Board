@@ -112,6 +112,7 @@
                                 <strong>Template:</strong>
                                 <select class="form-control" id="template-type">
                                     <option value="magnetic-board">Magnetic board</option>
+                                    <option value="pirin">Magnetic board - Pirin</option>
                                     <option value="pinboard">Pinboard</option>
                                 </select>
                             </div>
@@ -361,6 +362,39 @@
             </div>
         </template>
         <!-- Template for pinboard /end -->
+
+        <!-- Template for magnetic board - pirin /start -->
+        <template id="pirin">
+            <div class="card card-print--visible card--pirin l-row" data-clone="card">
+                <!-- Card header /start-->
+                <div class="l-column l-size--1">
+                    <div class="card__header l-row">
+
+                        <div class="optional l-row l-size--1"></div>
+
+                        <div class="l-row l-size--1 l-justify-center l-align-center">
+                            <span class="priority" data-clone="priority"></span>
+                        </div>
+
+                        <div class="magnet l-row l-size--4"></div>
+
+                        <div class="l-column l-size--2 l-justify-center l-align-center">
+                            <span class="key" data-clone="key"></span>
+                            <span class="subtask" data-clone="subtask"></span>
+                        </div>
+
+                    </div>
+                    <!-- Card header /end-->
+                    <!-- Card body /start-->
+                    <div class="card__body l-column l-size--1">
+                        <span class="summary l-column l-size--4 l-justify-center" data-clone="summary"></span>
+                        <span class="assignee l-column l-size--1  l-justify-center" data-clone="assignee"></span>
+                    </div>
+                </div>
+                <!-- Card body /end-->
+            </div>
+        </template>
+        <!-- Template for magnetic board - pirin /end -->
         <!-- TEMPLATES /end -->
 
         <!-- JavaScript -->

@@ -65,15 +65,15 @@
 }
 
 .l-align-start {
-    align-content: flex-start;
+    align-items: flex-start;
 }
 
 .l-align-center {
-    align-content: center;
+    align-items: center;
 }
 
 .l-align-end {
-    align-content: flex-end;
+    align-items: flex-end;
 }
 
 /* Cards layout */
@@ -103,8 +103,8 @@
 }
 
 .card:hover:after {
-    opacity: 0.8;
     cursor: pointer;
+    opacity: 0.8;
 }
 
 .card-print--hidden {
@@ -113,6 +113,10 @@
 
 .card--magnetic-board .magnet {
     min-width: 5cm;
+}
+
+.card--pirin .magnet {
+    height: 3cm;
 }
 
 .card__header {
@@ -153,4 +157,18 @@
 
 .summary {
     font-size: 36px;
+}
+
+.card--pirin .magnet {
+    border-left: 2px solid #000;
+    border-right: 2px solid #000;
+}
+
+.card--pirin .optional {
+    border-right: 2px solid #000;
+}
+
+.card--pirin .summary {
+    padding-bottom: 3rem;
+    padding-top: 3rem;
 }
