@@ -268,6 +268,20 @@
                             </div>
                         </div>
                     </fieldset>
+
+                    <fieldset class="form-group col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <strong>Hide/Show all task cards:</strong>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="btn-group" id="cards-viability">
+                                    <button type="button" class="btn btn-default" data-hide-cards="true">Hide</button>
+                                    <button type="button" class="btn btn-default" data-hide-cards="false">Show</button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
                     <!--  Show/hide card elements /end -->
                 </div>
                 <!--  Second row /end -->
@@ -275,9 +289,9 @@
                 <!--  Third row /start -->
                 <div class="row">
                     <fieldset class="form-group col-sm-12">
-                        <button type="button" class="btn btn-primary pull-right" id="print-preview">Print preview
+                        <button type="button" class="btn btn-primary pull-right" data-role="print-preview">Print preview
                         </button>
-                        <button type="button" class="btn btn-default pull-right" id="save">Save options</button>
+                        <button type="button" class="btn btn-default pull-right" data-role="save-options">Save options</button>
                     </fieldset>
                 </div>
                 <!--  Third row /end -->

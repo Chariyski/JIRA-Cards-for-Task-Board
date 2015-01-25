@@ -553,14 +553,34 @@
             }
         }, false);
 
-        // Opens print preview
-        printPreviewButton.addEventListener('click', function () {
-            window.print();
-        }, false);
+        // Event listener for clicks on options form
+        form.addEventListener('click', function (event) {
+            var cards;
 
-        // Save form options
-        saveButton.addEventListener('click', function () {
-            options.save();
+            // Hide/Show all cards in print preview
+            if (event.target.getAttribute('data-hide-cards')) {
+                cards = document.getElementsByClassName('card');
+
+                for (var i = 0; i < cards.length; i++) {
+                    if (event.target.getAttribute('data-hide-cards') === 'true') {
+                        cards[i].classList.remove('card-print--visible');
+                        cards[i].classList.add('card-print--hidden');
+                    } else {
+                        cards[i].classList.remove('card-print--hidden');
+                        cards[i].classList.add('card-print--visible');
+                    }
+                }
+            }
+
+            // Opens print preview
+            if(event.target.getAttribute('data-role') === 'print-preview'){
+                window.print();
+            }
+
+            // Save form options
+            if(event.target.getAttribute('data-role') === 'save-options'){
+                options.save();
+            }
         }, false);
 
         cardContainer.addEventListener('click', function (event) {

@@ -44,6 +44,10 @@ body {
     margin-right: 16px;
 }
 
+.btn-group {
+    margin-top: 5px;
+}
+
 .scroll-top {
     bottom: 50px;
     position: fixed;
