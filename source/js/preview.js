@@ -573,12 +573,12 @@
             }
 
             // Opens print preview
-            if(event.target.getAttribute('data-role') === 'print-preview'){
+            if (event.target.getAttribute('data-role') === 'print-preview') {
                 window.print();
             }
 
             // Save form options
-            if(event.target.getAttribute('data-role') === 'save-options'){
+            if (event.target.getAttribute('data-role') === 'save-options') {
                 options.save();
             }
         }, false);

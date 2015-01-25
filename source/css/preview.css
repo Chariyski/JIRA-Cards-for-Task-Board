@@ -68,7 +68,8 @@ body {
     .card-print--visible:after {
         display: none;
     }
+
     .card-print--hidden {
-        display: none!important;
+        display: none !important;
     }
 }
