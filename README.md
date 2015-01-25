@@ -19,6 +19,7 @@ After the cards are loaded, you will be able to change their visual style and pr
 * Create printable cards
 * Choose between cards templates
 * Show/hide different parts of the cards
+* Show/hide different task cards in print preview
 * Bold/unbold different parts of the cards
 * Change the font of cards
 * Change the summary font
