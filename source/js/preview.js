@@ -173,7 +173,7 @@
             if (isBold) {
                 this._insertCSSRule('.' + CSSClassName + '{font-weight:900;}');
             } else {
-                this._insertCSSRule('.' + CSSClassName + '{font-weight:100;}');
+                this._insertCSSRule('.' + CSSClassName + '{font-weight:400;}');
             }
         },
 
