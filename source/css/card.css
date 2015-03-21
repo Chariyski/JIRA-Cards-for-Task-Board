@@ -137,38 +137,48 @@
 /* Theming
    ========================================================================== */
 .card {
-    border: 2px solid #000;
+    border: 0.125rem solid #000;
     font-size: 20px;
 }
 
 .card > .l-column,
 .card > .l-row {
-    border: 2px solid #000;
+    border: 0.125rem solid #000;
 }
 
 .card__header {
-    border-bottom: 4px solid #000;
-    padding: 0 16px;
+    border-bottom: 0.25rem solid #000;
+    padding: 0 1rem;
 }
 
 .card__body {
-    padding: 0 16px;
+    padding: 0 1rem;
 }
 
 .summary {
-    font-size: 36px;
+    font-size: 2.25rem;
 }
 
 .card--pirin .magnet {
-    border-left: 2px solid #000;
-    border-right: 2px solid #000;
+    border-left: 0.125rem solid #000;
+    border-right: 0.125rem solid #000;
 }
 
 .card--pirin .optional {
-    border-right: 2px solid #000;
+    border-right: 0.125rem solid #000;
 }
 
 .card--pirin .summary {
     padding-bottom: 3rem;
     padding-top: 3rem;
+}
+
+.card--pinboard-detailed .card__header span {
+    padding-right: 0.5rem;
+}
+
+.card--pinboard-detailed .summary,
+.card--pinboard-detailed .assignee {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }

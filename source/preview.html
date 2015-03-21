@@ -24,17 +24,6 @@
         <link rel="stylesheet" href="css/preview.css"/>
     </head>
     <body id="top">
-
-        <!--<nav class="navbar navbar-inverse navbar-fixed-top">-->
-        <!--<div class="container">-->
-        <!--<div class="navbar-header">-->
-        <!--<a class="navbar-brand"-->
-        <!--href="https://chrome.google.com/webstore/detail/jira-cards-for-task-board/pkjkejnmpailbogakjkpoefndabeenek"-->
-        <!--target="_blank">JIRA Cards for Task Board</a>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</nav>-->
-
         <!-- Navigation /start -->
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
@@ -112,8 +101,9 @@
                                 <strong>Template:</strong>
                                 <select class="form-control" id="template-type">
                                     <option value="magnetic-board">Magnetic board</option>
-                                    <option value="pirin">Magnetic board - Pirin</option>
                                     <option value="pinboard">Pinboard</option>
+                                    <option value="pirin">Pirin</option>
+                                    <option value="pinboard-detailed">Detailed</option>
                                 </select>
                             </div>
                         </div>
@@ -128,7 +118,7 @@
                             </div>
                             <div class="col-sm-4">
                                 <label class="checkbox-inline" for="bold-tact">
-                                    <input type="checkbox" id="bold-tact" data-class="tact" value="bold">tact
+                                    <input type="checkbox" id="bold-tact" data-class="tact" value="bold">version
                                 </label>
                             </div>
                             <div class="col-sm-4">
@@ -137,8 +127,24 @@
                                 </label>
                             </div>
                             <div class="col-sm-4">
+                                <label class="checkbox-inline" for="bold-subtask">
+                                    <input type="checkbox" id="bold-subtask" data-class="subtask" value="bold">subtask
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
                                 <label class="checkbox-inline" for="bold-summary">
                                     <input type="checkbox" id="bold-summary" data-class="summary" value="bold">summary
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="bold-description">
+                                    <input type="checkbox" id="bold-description" data-class="description"
+                                           data-pinboard-detailed="true" data-template="disabled" value="bold">description
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="bold-assignee">
+                                    <input type="checkbox" id="bold-assignee" data-class="assignee" value="bold">assignee
                                 </label>
                             </div>
                             <div class="col-sm-4">
@@ -147,13 +153,15 @@
                                 </label>
                             </div>
                             <div class="col-sm-4">
-                                <label class="checkbox-inline" for="bold-subtask">
-                                    <input type="checkbox" id="bold-subtask" data-class="subtask" value="bold">subtask
+                                <label class="checkbox-inline" for="bold-timeestimate">
+                                    <input type="checkbox" id="bold-timeestimate" data-class="timeestimate"
+                                           data-pinboard-detailed="true" data-template="disabled" value="bold">estimated
                                 </label>
                             </div>
                             <div class="col-sm-4">
-                                <label class="checkbox-inline" for="bold-assignee">
-                                    <input type="checkbox" id="bold-assignee" data-class="assignee" value="bold">assignee
+                                <label class="checkbox-inline" for="bold-issuetype">
+                                    <input type="checkbox" id="bold-issuetype" data-class="issuetype"
+                                           data-pinboard-detailed="true" data-template="disabled" value="bold">type
                                 </label>
                             </div>
                         </div>
@@ -236,7 +244,7 @@
                             </div>
                             <div class="col-sm-4">
                                 <label class="checkbox-inline" for="show-tact">
-                                    <input type="checkbox" id="show-tact" data-class="tact" value="show" checked>tact
+                                    <input type="checkbox" id="show-tact" data-class="tact" value="show" checked>version
                                 </label>
                             </div>
                             <div class="col-sm-4">
@@ -245,8 +253,25 @@
                                 </label>
                             </div>
                             <div class="col-sm-4">
+                                <label class="checkbox-inline" for="show-subtask">
+                                    <input type="checkbox" id="show-subtask" data-class="subtask" value="show" checked>subtask
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
                                 <label class="checkbox-inline" for="show-summary">
                                     <input type="checkbox" id="show-summary" data-class="summary" value="show" checked>summary
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="show-description">
+                                    <input type="checkbox" id="show-description" data-class="description"
+                                           data-pinboard-detailed="true" data-template="disabled" value="show" checked>description
+                                </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="checkbox-inline" for="show-assignee">
+                                    <input type="checkbox" id="show-assignee" data-class="assignee" value="show"
+                                           checked>assignee
                                 </label>
                             </div>
                             <div class="col-sm-4">
@@ -256,14 +281,15 @@
                                 </label>
                             </div>
                             <div class="col-sm-4">
-                                <label class="checkbox-inline" for="show-subtask">
-                                    <input type="checkbox" id="show-subtask" data-class="subtask" value="show" checked>subtask
+                                <label class="checkbox-inline" for="show-timeestimate">
+                                    <input type="checkbox" id="show-timeestimate" data-class="timeestimate"
+                                           data-pinboard-detailed="true" data-template="disabled" value="show" checked>estimated
                                 </label>
                             </div>
                             <div class="col-sm-4">
-                                <label class="checkbox-inline" for="show-assignee">
-                                    <input type="checkbox" id="show-assignee" data-class="assignee" value="show"
-                                           checked>assignee
+                                <label class="checkbox-inline" for="show-issuetype">
+                                    <input type="checkbox" id="show-issuetype" data-class="issuetype"
+                                           data-pinboard-detailed="true" data-template="disabled" value="show" checked>type
                                 </label>
                             </div>
                         </div>
@@ -377,6 +403,50 @@
             </div>
         </template>
         <!-- Template for pinboard /end -->
+
+        <!-- Template for pinboard - detailed /start -->
+        <template id="pinboard-detailed">
+            <div class="card card-print--visible card--pinboard-detailed l-flex l-column" data-clone="card">
+                <!--<div class="l-column l-size--1">-->
+                <!-- Card header /start-->
+                <div class="card__header l-column">
+                    <div class="l-row l-size--1">
+                        <div class="l-column l-size--1">
+                            <div class="l-row l-size--1">
+                                <span class="issuetype" data-clone="issuetype"></span>
+                                <span class="key" data-clone="key">#</span>
+                                <span class="subtask" data-clone="subtask">for #</span>
+                            </div>
+                        </div>
+                        <div class="l-column l-size--1 l-align-end">
+                            <div class="l-row l-size--1">
+                                <span class="tact" data-clone="tact">Version: </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="l-row l-size--1">
+                        <div class="l-column l-size--1">
+                            <span class="priority" data-clone="priority">Priority: </span>
+                        </div>
+                        <div class="l-column l-size--1 l-align-end">
+                            <span class="timeestimate" data-clone="timeestimate">Estimated time: </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card header /end-->
+                <!-- Card body /start-->
+                <div class="card__body l-column l-size--1">
+                    <span class="summary l-column l-size--4 l-justify-center" data-clone="summary"></span>
+                    <span class="description l-column l-size--4 l-justify-center" data-clone="description"></span>
+                        <span class="assignee l-column l-size--1  l-justify-center"
+                              data-clone="assignee">Assignee: </span>
+                </div>
+                <!-- Card body /end-->
+                <!--</div>-->
+                <!-- end:Card body -->
+            </div>
+        </template>
+        <!-- Template for pinboard - detailed /end -->
 
         <!-- Template for magnetic board - pirin /start -->
         <template id="pirin">
