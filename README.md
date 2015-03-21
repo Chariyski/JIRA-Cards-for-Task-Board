@@ -30,8 +30,8 @@ After the cards are loaded, you will be able to change their visual style and pr
 
 ### [v1.4.0](https://github.com/Chariyski/JIRA-Cards-for-Task-Board/issues?q=is%3Aissue+milestone%3Av1.4.0+is%3Aclosed)
 * Added a new template with tree new fields:
-    - issue description
-    - issue estimated time
+    - description
+    - estimated time in hours
     - issue type
 
 ### [v1.3.0](https://github.com/Chariyski/JIRA-Cards-for-Task-Board/issues?q=is%3Aissue+milestone%3Av1.3.0+is%3Aclosed)
