@@ -27,12 +27,18 @@
         subtaskBold = document.getElementById('bold-subtask'),
         summaryBold = document.getElementById('bold-summary'),
         assigneeBold = document.getElementById('bold-assignee'),
+        descriptionBold = document.getElementById('bold-description'),
+        typeBold = document.getElementById('bold-issuetype'),
+        timeestimateBold = document.getElementById('bold-timeestimate'),
         tactShow = document.getElementById('show-tact'),
         priorityShow = document.getElementById('show-priority'),
         keyShow = document.getElementById('show-key'),
         subtaskShow = document.getElementById('show-subtask'),
         summaryShow = document.getElementById('show-summary'),
         assigneeShow = document.getElementById('show-assignee'),
+        descriptionShow = document.getElementById('show-description'),
+        timeestimateShow = document.getElementById('show-timeestimate'),
+        typeShow = document.getElementById('show-issuetype'),
         fontSize = document.getElementById('font-size'),
         headingFontSize = document.getElementById('heading-size');
 
@@ -219,29 +225,28 @@
 
                 if (issues[i].fields.fixVersions[0]) {
                     var tact = clone.querySelector('[data-clone="tact"]');
-
                     if (tact) {
-                        tact.innerText = issues[i].fields.fixVersions[0].name;
+                        tact.innerText += issues[i].fields.fixVersions[0].name;
                     }
                 }
 
-                if (issues[i].fields.priority.name) {
+                if (issues[i].fields.priority && issues[i].fields.priority.name) {
                     var priority = clone.querySelector('[data-clone="priority"]');
                     if (priority) {
-                        priority.innerText = issues[i].fields.priority.name;
+                        priority.innerText += issues[i].fields.priority.name;
                     }
                 }
 
                 if (issues[i].key) {
                     var issueKey = clone.querySelector('[data-clone="key"]');
                     if (issueKey) {
-                        issueKey.innerText = issues[i].key;
+                        issueKey.innerText += issues[i].key;
                     }
                 }
 
                 var subTask = clone.querySelector('[data-clone="subtask"]');
                 if (issues[i].fields.issuetype.subtask && subTask) {
-                    subTask.innerText = issues[i].fields.parent.key;
+                    subTask.innerText += issues[i].fields.parent.key;
                 } else {
                     subTask.parentNode.removeChild(subTask);
                 }
@@ -249,13 +254,34 @@
                 if (issues[i].fields.summary) {
                     var summary = clone.querySelector('[data-clone="summary"]');
                     if (summary) {
-                        summary.innerText = issues[i].fields.summary;
+                        summary.innerText += issues[i].fields.summary;
+                    }
+                }
+
+                if (issues[i].fields.description) {
+                    var description = clone.querySelector('[data-clone="description"]');
+                    if (description) {
+                        description.innerText += issues[i].fields.description;
+                    }
+                }
+
+                if (issues[i].fields.issuetype) {
+                    var issuetype = clone.querySelector('[data-clone="issuetype"]');
+                    if (issuetype) {
+                        issuetype.innerText += issues[i].fields.issuetype.name;
+                    }
+                }
+
+                if (issues[i].fields.timeestimate) {
+                    var timeestimate = clone.querySelector('[data-clone="timeestimate"]');
+                    if (timeestimate) {
+                        timeestimate.innerText += (issues[i].fields.timeestimate / 1800).toFixed(0) + 'h';
                     }
                 }
 
                 var assignee = clone.querySelector('[data-clone="assignee"]');
                 if (issues[i].fields.assignee && assignee) {
-                    assignee.innerText = issues[i].fields.assignee.displayName;
+                    assignee.innerText += issues[i].fields.assignee.displayName;
                     card.setAttribute('data-assignee', issues[i].fields.assignee.displayName);
                 } else {
                     assignee.parentNode.removeChild(assignee);
@@ -303,6 +329,8 @@
          * Apples all saved options
          */
         apply: function () {
+            var that = this;
+
             chrome.storage.sync.get('cards', function (object) {
                 var options;
 
@@ -366,6 +394,27 @@
                     card.changeFontWeight(assigneeShow.getAttribute('data-class'), assigneeShow.checked);
                 }
 
+                // Set bold style
+                if (options.fields.description.bold !== descriptionBold.checked) {
+                    descriptionBold.checked = options.fields.description.bold;
+
+                    card.changeFontWeight(descriptionShow.getAttribute('data-class'), descriptionShow.checked);
+                }
+
+                // Set bold style
+                if (options.fields.type.bold !== typeBold.checked) {
+                    typeBold.checked = options.fields.type.bold;
+
+                    card.changeFontWeight(typeShow.getAttribute('data-class'), typeShow.checked);
+                }
+
+                // Set bold style
+                if (options.fields.timeestimate.bold !== timeestimateBold.checked) {
+                    timeestimateBold.checked = options.fields.timeestimate.bold;
+
+                    card.changeFontWeight(timeestimateShow.getAttribute('data-class'), timeestimateShow.checked);
+                }
+
                 // Set display style
                 if (options.fields.tact.show !== tactShow.checked) {
                     tactShow.checked = options.fields.tact.show;
@@ -408,6 +457,27 @@
                     card.changeDisplay(assigneeShow.getAttribute('data-class'), assigneeShow.checked);
                 }
 
+                // Set display style
+                if (options.fields.description.show !== descriptionShow.checked) {
+                    descriptionShow.checked = options.fields.description.show;
+
+                    card.changeDisplay(descriptionShow.getAttribute('data-class'), descriptionShow.checked);
+                }
+
+                // Set display style
+                if (options.fields.timeestimate.show !== timeestimateShow.checked) {
+                    timeestimateShow.checked = options.fields.timeestimate.show;
+
+                    card.changeDisplay(timeestimateShow.getAttribute('data-class'), timeestimateShow.checked);
+                }
+
+                // Set display style
+                if (options.fields.type.show !== typeShow.checked) {
+                    typeShow.checked = options.fields.type.show;
+
+                    card.changeDisplay(typeShow.getAttribute('data-class'), typeShow.checked);
+                }
+
                 // Set font style
                 if (options.fields.fontSize !== fontSize.value) {
                     fontSize.value = options.fields.fontSize;
@@ -422,7 +492,34 @@
                     card.changeFontSize(fontSize.value);
                 }
 
+                that.changeCheckboxState(cardTemplate.value);
             });
+        },
+
+        /**
+         * Enable/disable specific checkboxes for the current, active template
+         * @param template {string} the template ID
+         */
+        changeCheckboxState: function (template) {
+            var checkBoxesForThisTemplate = document.querySelectorAll('[data-' + template + ']'),
+                checkBoxes = document.querySelectorAll('[data-template]');
+
+            for (var i = 0; i < checkBoxes.length; i++) {
+
+                if (checkBoxesForThisTemplate.length === 0) {
+                    // disable all checkboxes that are dependent to a template
+                    checkBoxes[i].setAttribute('disabled', 'disabled');
+                    checkBoxes[i].parentNode.classList.add('disabled');
+
+                    continue;
+                }
+
+                // enable all checkboxes that are dependent to the currant template
+                if (checkBoxes[i].getAttribute('data-' + template)) {
+                    checkBoxes[i].removeAttribute('disabled');
+                    checkBoxes[i].parentNode.classList.remove('disabled');
+                }
+            }
         },
 
         /**
@@ -458,6 +555,18 @@
                             bold: assigneeBold.checked,
                             show: assigneeShow.checked
                         },
+                        description: {
+                            bold: descriptionBold.checked,
+                            show: descriptionShow.checked
+                        },
+                        timeestimate: {
+                            bold: timeestimateBold.checked,
+                            show: timeestimateShow.checked
+                        },
+                        type: {
+                            bold: typeBold.checked,
+                            show: typeShow.checked
+                        },
                         fontSize: fontSize.value,
                         headingFontSize: headingFontSize.value
                     }
@@ -482,6 +591,8 @@
 
         // If there are any saved option, apples them.
         options.apply();
+        // Disable specific checkboxes
+        options.changeCheckboxState(cardTemplate.value);
 
         // Listener for data, send from getInfoFromJIRA.js
         chrome.runtime.onMessage.addListener(
@@ -525,6 +636,7 @@
             if (event.target.id === 'template-type') {
                 card.deleteCards();
                 card.createCards();
+                options.changeCheckboxState(event.target.value);
             }
 
             // Hides cards with different assignee from the given one
