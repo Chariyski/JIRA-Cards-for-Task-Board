@@ -1,5 +1,10 @@
 # Ignore IntelliJ project and settings files
 .idea
 
-# Ignore TODO file
+# npm and bower
+node_modules
+bower_components
+
+# Ignore files and folders
+dist
 TODO.txt
