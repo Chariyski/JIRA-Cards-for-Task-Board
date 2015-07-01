@@ -10,7 +10,6 @@ var clean = require('gulp-clean'),
     plumber = require('gulp-plumber'),
     runSequence = require('gulp-run-sequence');
 
-
 // Delete dist folder
 gulp.task('clean', function () {
     return gulp.src('dist', {read: false})
@@ -35,7 +34,8 @@ gulp.task('copy', function () {
     return gulp.src(
         ['manifest.json',
             'images/*.*',
-            'scripts/bundle.js',
+            'fonts/*.*',
+            'scripts/*.*',
             'popup.html'
         ], {cwd: 'app'})
         .pipe(plumber())
@@ -67,4 +67,5 @@ gulp.task('build', function (callback) {
     runSequence('clean', ['concat', 'copy', 'vulcanize'], callback);
 });
 gulp.task('default', ['build']);
+
 gulp.task('serve', ['build', 'watch']);
