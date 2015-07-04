@@ -1,26 +1,26 @@
 <script src="../../bower_components/page/page.js"></script>
 <script>
-  window.addEventListener('WebComponentsReady', function() {
-    page('/', function () {
-      app.route = 'home';
-    });
+    window.addEventListener('WebComponentsReady', function () {
+        page('/', function () {
+            app.route = 'home';
+        });
 
-    page('/users', function () {
-      app.route = 'users';
-    });
+        page('/users', function () {
+            app.route = 'users';
+        });
 
-    page('/users/:name', function (data) {
-      app.route = 'user-info';
-      app.params = data.params;
-    });
+        page('/users/:name', function (data) {
+            app.route = 'user-info';
+            app.params = data.params;
+        });
 
-    page('/contact', function () {
-      app.route = 'contact';
-    });
+        page('/contact', function () {
+            app.route = 'contact';
+        });
 
-    // add #! before urls
-    page({
-      hashbang: true
+        // add #! before urls
+        page({
+            hashbang: true
+        });
     });
-  });
 </script>
