@@ -35,8 +35,8 @@ gulp.task('copy', function () {
         ['manifest.json',
             'images/*.*',
             'fonts/*.*',
-            'scripts/*.*',
-            'popup.html'
+            'scripts/**/*.*',
+            'index.html'
         ], {cwd: 'app'})
         .pipe(plumber())
         .pipe(copy('dist'));
