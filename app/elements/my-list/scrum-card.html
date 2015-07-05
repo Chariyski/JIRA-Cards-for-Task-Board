@@ -1,0 +1,117 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html"/>
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+
+<dom-module id="scrum-card" url project version>
+
+    <style>
+        :host {
+            display: block;
+            margin: 16px 8px;
+        }
+
+        /* TODO webstorm can't auto format properly */
+        .cards-container {
+            @apply(--layout-vertical);
+            max-width: 29cm;
+        }
+
+        .card {
+            min-height: 6cm;
+            margin-bottom: 25px;
+            @apply(--layout-horizontal);
+            font-size: 20px;
+        }
+
+        .card_magnet {
+            width: 5cm;
+            border-right: 1px solid rgba(0, 0, 0, 0.14);
+        }
+
+        .card_info {
+            @apply(--layout-vertical);
+            @apply(--layout-flex);
+        }
+
+    </style>
+
+    <template>
+
+        <iron-ajax id="ajax"
+                   content-type="application/json"
+                   handle-as="json"
+                   last-response="{{ajax}}"></iron-ajax>
+
+        <paper-button on-click="handleClick">get</paper-button>
+
+        <div class="cards-container">
+
+            <template is="dom-repeat" items="{{ajax.issues}}">
+                <paper-material elevation="3" class="card">
+
+                    <div class="card_magnet"></div>
+
+                    <div class="card_info vertical layout">
+
+                        <span>
+                            <span>{{item.fields.issuetype.name}}</span> #<span>{{item.key}}</span>
+
+                            <!-- Add parent information for sub-tasks -->
+                            <template is="dom-if" if="{{item.fields.parent.key}}">
+                                for #<span>{{item.fields.parent.key}}</span>
+                            </template>
+                        </span>
+
+                        <span>
+                            Priority: <span>{{item.fields.priority.name}}</span>;
+
+                            <template is="dom-if" if="{{item.fields.fixVersions}}">
+                                Planed for:
+                                <template is="dom-repeat" items="{{item.fields.fixVersions}}">
+                                    <span>{{item.name}}</span>&#32;
+                                </template>
+                            </template>
+                        </span>
+
+                        <span>{{item.fields.summary}}</span>
+
+                        <span>{{item.fields.description}}</span>
+
+                        <span>{{item.fields.assignee.displayName}}</span>
+                    </div>
+                </paper-material>
+            </template>
+
+        </div>
+
+    </template>
+
+</dom-module>
+
+<script>
+    (function () {
+        Polymer({
+            is: 'scrum-card',
+            properties: {
+                url: {
+                    type: String
+                },
+                project: {
+                    type: String
+                },
+                version: {
+                    type: String
+                }
+            },
+
+            ready: function () {
+            },
+
+            handleClick: function () {
+                this.$.ajax.url = this.url + '/rest/api/2/search?jql=project=' + this.project + '+and+fixVersion=' + this.version + '&&maxResults=500';
+                this.$.ajax.generateRequest();
+            }
+        });
+    })();
+</script>

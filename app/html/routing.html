@@ -1,7 +1,7 @@
 <script src="../../bower_components/page/page.js"></script>
 <script>
     window.addEventListener('WebComponentsReady', function () {
-        page('/', function () {
+        page('/index.html', function () {
             app.route = 'home';
         });
 
@@ -18,9 +18,9 @@
             app.route = 'contact';
         });
 
-        // add #! before urls
+        // remove #! before urls
         page({
-            hashbang: true
+            hashbang: false
         });
     });
 </script>
