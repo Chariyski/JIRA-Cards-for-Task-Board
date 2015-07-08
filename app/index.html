@@ -70,15 +70,33 @@
                         <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
                             <section data-route="home">
-                                <paper-material class="vertical layout around-justified" elevation="1">
+                                <paper-material class="horizontal layout around-justified end" elevation="1">
+                                    <paper-input
+                                        id="JIRA-URL-address"
+                                        label="https://sapjira.wdf.sap.corp/"></paper-input>
+                                    <!--pattern="(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})"-->
 
+                                    <paper-input
+                                        id="JIRA-project"
+                                        label="BGSOFUIRODOPI"></paper-input>
+                                    <paper-input
+                                        id="JIRA-project-version"
+                                        label="101511"></paper-input>
+
+                                    <paper-button on-click="getJIRAIssues">Get issues</paper-button>
+                                    <paper-spinner id="ajax-spinner" alt="Loading issues"></paper-spinner>
+
+                                    <iron-ajax id="ajax-for-issues"
+                                               content-type="application/json"
+                                               handle-as="json"
+                                               last-response="{{ajax}}"
+                                               on-request="onJIRAIssuesRequest"
+                                               on-response="onJIRAIssuesResponse"></iron-ajax>
                                 </paper-material>
 
-                                <scrum-card  class="vertical center"
-                                    url="http://jira.atlassian.com/"
-                                    project="ANERDS"
-                                    version="20994"
-                                    ></scrum-card>
+                                <scrum-cards id="scrum-cards-container"
+                                             class="vertical center"
+                                             issues="{{ajax.issues}}"></scrum-cards>
                             </section>
 
                             <section data-route="users">

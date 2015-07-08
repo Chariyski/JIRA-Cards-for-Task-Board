@@ -24,10 +24,30 @@
 
     // Close drawer after menu item is selected if drawerPanel is narrow
     app.onMenuSelect = function () {
-        var drawerPanel = document.querySelector('#paperDrawerPanel');
+        let drawerPanel = document.querySelector('#paperDrawerPanel');
         if (drawerPanel.narrow) {
             drawerPanel.closeDrawer();
         }
+    };
+
+    app.getJIRAIssues = function () {
+        let scrumCardsContainer = app.$['scrum-cards-container'].$,
+            url = app.$['JIRA-URL-address'].value,
+            project = app.$['JIRA-project'].value,
+            version = app.$['JIRA-project-version'].value,
+            AJAXForJIRAIssues = document.querySelector('#ajax-for-issues');
+
+        AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=project=' + project + '+and+fixVersion=' + version + '&&maxResults=500';
+
+        AJAXForJIRAIssues.generateRequest();
+    };
+
+    app.onJIRAIssuesRequest = function () {
+        document.querySelector('#ajax-spinner').active = true;
+    };
+
+    app.onJIRAIssuesResponse = function () {
+        document.querySelector('#ajax-spinner').active = false;
     };
 
 })(document);
