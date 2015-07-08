@@ -61,6 +61,7 @@ gulp.task('vulcanize', function () {
 gulp.task('watch', function () {
     gulp.watch('app/manifest.json', ['copy']);
     gulp.watch('app/**/*.html', ['copy', 'vulcanize']);
+    gulp.watch('app/scripts/main.js', ['concat', 'copy', 'vulcanize']);
 });
 
 gulp.task('build', function (callback) {

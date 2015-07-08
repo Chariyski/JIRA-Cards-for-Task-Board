@@ -1,9 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html"/>
-<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 
-<dom-module id="scrum-card" url project version>
+<dom-module id="scrum-cards" issues>
 
     <style>
         :host {
@@ -37,17 +35,9 @@
     </style>
 
     <template>
-
-        <iron-ajax id="ajax"
-                   content-type="application/json"
-                   handle-as="json"
-                   last-response="{{ajax}}"></iron-ajax>
-
-        <paper-button on-click="handleClick">get</paper-button>
-
         <div class="cards-container">
 
-            <template is="dom-repeat" items="{{ajax.issues}}">
+            <template is="dom-repeat" items="{{issues}}">
                 <paper-material elevation="3" class="card">
 
                     <div class="card_magnet"></div>
@@ -92,25 +82,14 @@
 <script>
     (function () {
         Polymer({
-            is: 'scrum-card',
+            is: 'scrum-cards',
             properties: {
-                url: {
-                    type: String
-                },
-                project: {
-                    type: String
-                },
-                version: {
-                    type: String
+                issues: {
+                    type: Object
                 }
             },
 
             ready: function () {
-            },
-
-            handleClick: function () {
-                this.$.ajax.url = this.url + '/rest/api/2/search?jql=project=' + this.project + '+and+fixVersion=' + this.version + '&&maxResults=500';
-                this.$.ajax.generateRequest();
             }
         });
     })();
