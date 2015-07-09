@@ -73,15 +73,18 @@
                                 <paper-material class="horizontal layout around-justified end" elevation="1">
                                     <paper-input
                                         id="JIRA-URL-address"
-                                        label="https://sapjira.wdf.sap.corp/"></paper-input>
+                                        label="JIRA URL address"
+                                        value="{{URLAddress}}"></paper-input>
                                     <!--pattern="(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})"-->
 
                                     <paper-input
                                         id="JIRA-project"
-                                        label="BGSOFUIRODOPI"></paper-input>
+                                        label="JIRA Project"
+                                        value="{{project}}">></paper-input>
                                     <paper-input
                                         id="JIRA-project-version"
-                                        label="101511"></paper-input>
+                                        label="Project version"
+                                        value="{{projectVersion}}">></paper-input>
 
                                     <paper-button on-click="getJIRAIssues">Get issues</paper-button>
                                     <paper-spinner id="ajax-spinner" alt="Loading issues"></paper-spinner>
@@ -120,9 +123,11 @@
 
                             <section data-route="contact">
                                 <paper-material elevation="1">
-                                    <h2 class="paper-font-display2">Contact</h2>
+                                    <paper-input value="{{URLAddress}}"></paper-input>
+                                    <paper-input value="{{project}}"></paper-input>
+                                    <paper-input value="{{projectVersion}}"></paper-input>
 
-                                    <p>This is the contact section</p>
+                                    <paper-button id="save-options" on-click="saveUserOptions">Save options</paper-button>
                                 </paper-material>
                             </section>
                         </iron-pages>
@@ -130,10 +135,9 @@
                 </paper-header-panel>
             </paper-drawer-panel>
 
-            <paper-toast id="caching-complete"
-                         duration="6000"
-                         text="Caching complete! This app will work offline.">
-            </paper-toast>
+            <paper-toast id="options-saved" duration="6000" text="All the options ware saved"></paper-toast>
+            <paper-toast id="options-loaded" duration="6000" text="All user options ware loaded"></paper-toast>
+            <!-- TODO add function for message showing-->
         </template>
 
         <!-- build:js scripts/app.js -->
