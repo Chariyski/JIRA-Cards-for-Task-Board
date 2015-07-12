@@ -57,16 +57,20 @@ gulp.task('vulcanize', function () {
         .pipe(gulp.dest('dist/html'));
 });
 
-// Watch for changes
-gulp.task('watch', function () {
-    gulp.watch('app/manifest.json', ['copy']);
-    gulp.watch('app/**/*.html', ['copy', 'vulcanize']);
-    gulp.watch('app/scripts/main.js', ['concat', 'copy', 'vulcanize']);
+// Tasks
+gulp.task('default', function (callback) {
+    runSequence(['concat', 'copy', 'vulcanize'], callback);
 });
 
 gulp.task('build', function (callback) {
-    runSequence('clean', ['concat', 'copy', 'vulcanize'], callback);
+    runSequence('clean', 'default', callback);
 });
-gulp.task('default', ['build']);
+
+gulp.task('watch', function () {
+    gulp.watch('app/manifest.json', ['copy']);
+    gulp.watch('app/**/*.html', ['default']);
+    gulp.watch('app/**/*.css', ['default']);
+    gulp.watch('app/scripts/main.js', ['default']);
+});
 
 gulp.task('serve', ['build', 'watch']);

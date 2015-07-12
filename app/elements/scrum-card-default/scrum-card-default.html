@@ -1,0 +1,86 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html"/>
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+
+<dom-module id="scrum-card-default" jira-issue settings>
+    <link rel="import" type="css" href="scrum-card-default.css">
+
+    <template>
+        <paper-material elevation="3" class="card" style="page-break-inside: avoid;position: relative;">
+            <div class="card-magnet"></div>
+
+            <div class="card-info">
+
+                <div class="card-info__header">
+                    <span>
+                        <span
+                            class$="{{applyClassesToElement(settings.issueType)}}">{{jiraIssue.fields.issuetype.name}}</span>
+                        &#32;#<span class$="{{applyClassesToElement(settings.issueKey)}}">{{jiraIssue.key}}</span>&#32;
+                        <!-- Add parent information for sub-tasks -->
+                        <template is="dom-if" if="{{jiraIssue.fields.issuetype.subtask}}">
+                            for&#32;<span class$="{{applyClassesToElement(settings.parentName)}}">{{jiraIssue.fields.parent.fields.issuetype.name}}</span>
+                            &#32;#<span class$="{{applyClassesToElement(settings.parentKey)}}">{{jiraIssue.fields.parent.key}}</span>
+                        </template>
+                    </span>
+
+                    <span>Priority: <span class$="{{applyClassesToElement(settings.issuePriority)}}">{{jiraIssue.fields.priority.name}}</span>, planed for:
+                        <template is="dom-repeat" items="{{jiraIssue.fields.fixVersions}}">
+                            <span class$="{{applyClassesToElement(settings.issueFixVersions)}}">{{item.name}}</span>&#32;
+                        </template>
+                    </span>
+                </div>
+
+                <div class="card-info__body">
+                    <span class$="{{applyClassesToElement(settings.issueSummary)}}">{{jiraIssue.fields.summary}}</span>
+                    <pre class$="{{applyClassesToElement(settings.issueDescription)}}">{{jiraIssue.fields.description}}</pre>
+                    <span
+                        class$="{{applyClassesToElement(settings.issueAssignee)}}">{{jiraIssue.fields.assignee.displayName}}</span>
+                </div>
+
+            </div>
+        </paper-material>
+    </template>
+
+</dom-module>
+
+<script>
+    (function () {
+        Polymer({
+            is: 'scrum-card-default',
+            properties: {
+                jiraIssue: {
+                    type: Object,
+                    notify: true
+                },
+                settings: {
+                    type: Object,
+                    notify: true,
+                    observer: 'settingsChanged'
+                }
+            },
+            settingsChanged: function (e) {
+                console.log(e);
+            },
+            /**
+             *
+             * @param object.isBold
+             * @param object.isVisible
+             * @returns {string}
+             */
+            applyClassesToElement: function (object) {
+                var cssClasses = '';
+
+                if (object.isBold === true) {
+                    cssClasses += 'bold ';
+                }
+
+                if (object.isVisible === false) {
+                    cssClasses += 'hidden ';
+                }
+
+                return cssClasses;
+            },
+            ready: function () {
+            }
+        });
+    })();
+</script>

@@ -1,0 +1,68 @@
+:host {
+    page-break-inside: avoid;
+}
+
+.card {
+    @apply(--layout-horizontal);
+    min-height: 6cm;
+    margin-bottom: 25px;
+    font-size: 20px;
+}
+
+.card-magnet {
+    width: 5cm;
+    border-right: 1px solid rgba(0, 0, 0, 0.14);
+}
+
+.card-info {
+    @apply(--layout-flex);
+    @apply(--layout-vertical);
+}
+
+.card-info__header {
+    @apply(--layout-vertical);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+    padding: 0.5rem 1rem;
+}
+
+.card-info__body {
+    display:flex;
+    flex:1;
+    @apply(--layout-vertical);
+    @apply(--layout-around-justified);
+    padding: 0.5rem 1rem;
+/* da si pomislq dali da izpolzvam     @apply(--layout-around-justified); i drugi takiva */
+}
+
+.card-info__body > span {
+    padding: 1rem 0;
+}
+
+.card-info__body > pre {
+    font-family: inherit;
+    margin: 0;
+    word-wrap: break-word;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.hidden {
+    display: none;
+}
+
+@media print {
+    .card {
+        box-shadow: none!important;
+        border: 2px solid black;
+        display:block;
+    }
+    .card-magnet {
+        border-right: 2px solid black;
+    }
+
+    .card-info__header {
+        border-bottom: 2px solid black;
+    }
+}

@@ -1,0 +1,15 @@
+:host {
+    display: block;
+    margin: 16px 8px;
+}
+
+.cards-container {
+    max-width: 29cm;
+}
+
+@media print {
+    .cards-container {
+        /* Display table is needed for page-break-inside: avoid; to work properly */
+        /*display: table;*/
+    }
+}
