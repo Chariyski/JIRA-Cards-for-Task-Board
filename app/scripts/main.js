@@ -17,6 +17,13 @@
         // imports are loaded and elements have been registered
         app.createReferencesForUserSettings();
         app.loadUserOptions();
+
+        app.$['settings-for-font-weight'].onchange = function (e) {
+            app.updateScrumCardSettings();
+        };
+        app.$['settings-for-viability'].onchange = function (e) {
+            app.updateScrumCardSettings();
+        };
     });
 
     // Close drawer after menu item is selected if drawerPanel is narrow
@@ -28,13 +35,14 @@
     };
 
     app.getJIRAIssues = function () {
-        let scrumCardsContainer = app.$['scrum-cards-container'].$,
-            url = app.$['JIRA-URL-address'].value,
-            project = app.$['JIRA-project'].value,
-            version = app.$['JIRA-project-version'].value,
+        let scrumCardsContainer = this.$['scrum-cards-container'].$,
+            url = this.$['JIRA-URL-address'].value,
+            project = this.$['JIRA-project'].value,
+            version = this.$['JIRA-project-version'].value,
             AJAXForJIRAIssues = document.querySelector('#ajax-for-issues');
 
         AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=project=' + project + '+and+fixVersion=' + version + '&&maxResults=500';
+        //AJAXForJIRAIssues.url = 'https://sapjira.wdf.sap.corp/rest/api/2/search?jql=Sprint=1513';
 
         AJAXForJIRAIssues.generateRequest();
     };
@@ -47,6 +55,42 @@
         document.querySelector('#ajax-spinner').active = false;
     };
 
+    app.updateScrumCardSettings = function () {
+        let settings = this.scrumCardSettings;
+        this.scrumCardSettings = null;
+        this.scrumCardSettings = settings;
+    };
+
+    app.demoScrumCard = [{
+        key: '302',
+        fields: {
+            summary: 'This is the task summary',
+            description: 'This is some description about the task. Lorem ipsum dolor sit amet, consectetur adipisicing elit!',
+            issuetype: {
+                name: 'Task',
+                subtask: true
+            },
+            parent: {
+                key: '298',
+                fields: {
+                    issuetype: {
+                        name: 'Backlog Item'
+                    }
+                }
+            },
+            priority: {
+                name: 'Medium'
+            },
+            fixVersions: [{
+                name: '1.20'
+            }, {
+                name: '1.30'
+            }],
+            assignee: {
+                displayName: 'Joe Doe'
+            }
+        }
+    }];
     ////////////////////////////////////////////////////////////
     // Extension storage
     ////////////////////////////////////////////////////////////
@@ -75,8 +119,8 @@
                 return;
             }
 
-            var ajax = object.settings.ajax;
-            var scrumCard = object.settings.scrumCard;
+            let ajax = object.settings.ajax;
+            let scrumCard = object.settings.scrumCard;
 
             app.URLAddress = ajax.url;
             app.project = ajax.project;
@@ -126,9 +170,9 @@
     };
 
     app.saveUserOptions = function () {
-        var scrumCardSettings = app.scrumCardSettings;
+        let scrumCardSettings = app.scrumCardSettings;
 
-        var optionsToBeSaved = {
+        let optionsToBeSaved = {
             settings: {
                 ajax: {
                     url: app.URLAddress || 'https://sapjira.wdf.sap.corp/',

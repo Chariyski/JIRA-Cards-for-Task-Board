@@ -44,6 +44,10 @@
     word-wrap: break-word;
 }
 
+.card-info__summary {
+    font-size: 36px;
+}
+
 .bold {
     font-weight: bold;
 }
@@ -57,6 +61,8 @@
         box-shadow: none!important;
         border: 2px solid black;
         display:block;
+        page-break-inside: avoid;
+        position: relative;
     }
     .card-magnet {
         border-right: 2px solid black;
