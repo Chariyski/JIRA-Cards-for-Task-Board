@@ -31,7 +31,8 @@
                         <span class$="{{applyClassesToElement(settings.issuePriority)}}">Priority:&#32;
                             <span>{{jiraIssue.fields.priority.name}}</span>
                         </span>
-                        <span class$="{{applyClassesToElement(settings.issueFixVersions)}}">, planed for:&#32;</span>
+                        <span class$="{{applyClassesToElement(settings.issueFixVersions)}}">&#32;planned for:&#32;</span>
+
                         <template is="dom-repeat" items="{{jiraIssue.fields.fixVersions}}">
                             <span class$="{{applyClassesToElement(settings.issueFixVersions)}}">{{item.name}}</span>&#32;
                         </template>

@@ -8,13 +8,21 @@ var clean = require('gulp-clean'),
     vulcanize = require('gulp-vulcanize'),
     watch = require('gulp-watch'),
     plumber = require('gulp-plumber'),
-    runSequence = require('gulp-run-sequence');
+    runSequence = require('gulp-run-sequence'),
+    path = require('path'),
+    less = require('gulp-less');
 
 // Delete dist folder
 gulp.task('clean', function () {
     return gulp.src('dist', {read: false})
         .pipe(plumber())
         .pipe(clean());
+});
+
+gulp.task('less', function () {
+    return gulp.src('app/styles/less/main.less')
+        .pipe(less())
+        .pipe(gulp.dest('app/styles/'));
 });
 
 // Concatenate all JS files that are needed for distribution
@@ -36,6 +44,7 @@ gulp.task('copy', function () {
             'images/*.*',
             'fonts/*.*',
             'scripts/**/*.*',
+            'styles/main.css',
             'index.html'
         ], {cwd: 'app'})
         .pipe(plumber())
@@ -59,7 +68,7 @@ gulp.task('vulcanize', function () {
 
 // Tasks
 gulp.task('default', function (callback) {
-    runSequence(['concat', 'copy', 'vulcanize'], callback);
+    runSequence(['less', 'concat', 'copy', 'vulcanize'], callback);
 });
 
 gulp.task('build', function (callback) {
@@ -69,6 +78,7 @@ gulp.task('build', function (callback) {
 gulp.task('watch', function () {
     gulp.watch('app/manifest.json', ['copy']);
     gulp.watch('app/**/*.html', ['default']);
+    gulp.watch('app/styles/**/*.less', ['default']);
     gulp.watch('app/**/*.css', ['default']);
     gulp.watch('app/scripts/main.js', ['default']);
 });

@@ -1,7 +1,43 @@
 @import "fonts";
 
+html {
+    font-size: 16px;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
 body {
     background: #fafafa;
-    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     color: #333;
+}
+
+.content {
+    max-width: 29cm;
+}
+
+.ajax-control-container {
+    paper-input {
+        padding-right: 1rem;
+    }
+
+    paper-button {
+        margin-bottom: 8px;
+    }
+}
+
+#print {
+    display: none;
+}
+
+#settings-checkbox-container paper-checkbox {
+    margin: 1rem 1rem 1rem 0;
+}
+
+@media print {
+    body > * {
+        display: none;
+    }
+
+    #print {
+        display: block;
+    }
 }

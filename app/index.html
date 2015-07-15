@@ -9,26 +9,11 @@
         <!-- 3RD PARTY -->
         <script src="scripts/bundle.js"></script>
 
-        <!-- APP FILES -->
-
         <!-- ELEMENTS -->
         <link rel="import" href="html/elements.html">
 
-        <style>
-            #print {
-                display: none;
-            }
-
-            @media print {
-                body > * {
-                    display: none;
-                }
-
-                #print {
-                    display: block;
-                }
-            }
-        </style>
+        <!-- APP FILES -->
+        <link rel="stylesheet" href="styles/main.css"/>
     </head>
 
     <body unresolved class="fullbleed layout vertical">
@@ -83,25 +68,37 @@
                         <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
                             <section data-route="home">
-                                <paper-material class="horizontal layout around-justified end" elevation="1">
+                                <paper-material class="horizontal layout around-justified end ajax-control-container"
+                                                elevation="1">
                                     <paper-input
                                         id="JIRA-URL-address"
+                                        class="flex-4"
                                         label="JIRA URL address"
-                                        value="{{URLAddress}}"></paper-input>
-                                    <!--pattern="(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})"-->
+                                        auto-validate
+                                        pattern="(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})"
+                                        error-message="Invalid input!"
+                                        value="{{ajaxSettings.jiraURL}}"></paper-input>
 
                                     <paper-input
                                         id="JIRA-project"
+                                        class="flex-2"
                                         label="JIRA Project"
-                                        value="{{project}}">>
+                                        value="{{ajaxSettings.project}}">>
                                     </paper-input>
                                     <paper-input
                                         id="JIRA-project-version"
+                                        class="flex-2"
                                         label="Project version"
-                                        value="{{projectVersion}}">>
+                                        value="{{ajaxSettings.projectVersion}}">>
                                     </paper-input>
 
-                                    <paper-button on-click="getJIRAIssues">Get issues</paper-button>
+                                    <paper-button
+                                        class="flex-1"
+                                        raised
+                                        on-click="getJIRAIssues">Get issues
+                                    </paper-button>
+
+
                                     <paper-spinner id="ajax-spinner" alt="Loading issues"></paper-spinner>
 
                                     <iron-ajax
@@ -110,7 +107,8 @@
                                         handle-as="json"
                                         last-response="{{ajax}}"
                                         on-request="onJIRAIssuesRequest"
-                                        on-response="onJIRAIssuesResponse"></iron-ajax>
+                                        on-response="onJIRAIssuesResponse"
+                                        on-error="test"></iron-ajax>
                                 </paper-material>
 
                                 <scrum-cards
@@ -140,120 +138,156 @@
                             </section>
 
                             <section data-route="contact">
-                                <paper-material elevation="1">
-                                    <paper-input value="{{URLAddress}}"></paper-input>
-                                    <paper-input value="{{project}}"></paper-input>
-                                    <paper-input value="{{projectVersion}}"></paper-input>
-                                </paper-material>
-                                <paper-material id="settings-for-font-weight" elevation="1">
-                                    <p>Please choose which parts of the scrum card will be bold</p>
+                                <paper-material class="layout vertical" elevation="1">
 
-                                    <div class="layout horizontal">
+                                    <div class="layout horizontal flex-1 around-justified end ajax-control-container">
+                                        <paper-input
+                                            class="flex-4"
+                                            label="JIRA URL address"
+                                            value="{{ajaxSettings.jiraURL}}"></paper-input>
+
+                                        <paper-input
+                                            class="flex-2"
+                                            label="Choose Project"
+                                            value="{{ajaxSettings.project}}"></paper-input>
+
+                                        <paper-input
+                                            class="flex-2"
+                                            label="Choose project version"
+                                            value="{{ajaxSettings.projectVersion}}"></paper-input>
+                                    </div>
+
+                                    <div class="layout horizontal flex-1 around-justified end ajax-control-container">
                                         <div>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueType.isBold}}"
-                                                value="{{scrumCardSettings.issueType.isBold}}">issueType.isBold
-                                            </paper-checkbox>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueKey.isBold}}"
-                                                value="{{scrumCardSettings.issueKey.isBold}}">issueKey.isBold
-                                            </paper-checkbox>
+                                            <paper-toggle-button
+                                                on-change="test"
+                                                checked="{{ajaxSettings.isAgileSprintUsed}}"></paper-toggle-button>
+                                            <span>Use sprints</span>
                                         </div>
-                                        <div>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.parentName.isBold}}"
-                                                value="{{scrumCardSettings.parentName.isBold}}">parentName.isBold
-                                            </paper-checkbox>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.parentKey.isBold}}"
-                                                value="{{scrumCardSettings.parentKey.isBold}}">parentKey.isBold
-                                            </paper-checkbox>
-                                        </div>
-                                        <div>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issuePriority.isBold}}"
-                                                value="{{scrumCardSettings.issuePriority.isBold}}">issuePriority.isBold
-                                            </paper-checkbox>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueFixVersions.isBold}}"
-                                                value="{{scrumCardSettings.issueFixVersions.isBold}}">
-                                                issueFixVersions.isBold
-                                            </paper-checkbox>
-                                        </div>
-                                        <div>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueSummary.isBold}}"
-                                                value="{{scrumCardSettings.issueSummary.isBold}}">issueSummary.isBold
-                                            </paper-checkbox>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueAssignee.isBold}}"
-                                                value="{{scrumCardSettings.issueAssignee.isBold}}">issueAssignee.isBold
-                                            </paper-checkbox>
-                                        </div>
-                                        <div>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueDescription.isBold}}"
-                                                value="{{scrumCardSettings.issueDescription.isBold}}">
-                                                issueDescription.isBold
-                                            </paper-checkbox>
+
+                                        <paper-input
+                                            class="flex-2"
+                                            label="Choose Agile Board"
+                                            value="{{ajaxSettings.agileBoard}}"></paper-input>
+
+                                        <paper-input
+                                            class="flex-2"
+                                            label="Choose sprint"
+                                            value="{{ajaxSettings.agileSprint}}"></paper-input>
+
+                                        <paper-button
+                                            raised
+                                            on-click="saveUserOptions">Save options
+                                        </paper-button>
+                                    </div>
+
+                                </paper-material>
+
+                                <paper-material
+                                    id="settings-checkbox-container"
+                                    class="layout horizontal"
+                                    elevation="1">
+
+                                    <div class="layout vertical flex-1">
+                                        <h3>Please choose which parts of the scrum card will be bold</h3>
+
+                                        <div class="layout horizontal">
+                                            <div class="layout vertical flex-1">
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueType.isBold}}"
+                                                    value="{{scrumCardSettings.issueType.isBold}}">type
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueKey.isBold}}"
+                                                    value="{{scrumCardSettings.issueKey.isBold}}">key
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issuePriority.isBold}}"
+                                                    value="{{scrumCardSettings.issuePriority.isBold}}">priority
+                                                </paper-checkbox>
+                                            </div>
+                                            <div class="layout vertical flex-1">
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueFixVersions.isBold}}"
+                                                    value="{{scrumCardSettings.issueFixVersions.isBold}}">planed for
+                                                    version
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.parentName.isBold}}"
+                                                    value="{{scrumCardSettings.parentName.isBold}}">parent issue name
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.parentKey.isBold}}"
+                                                    value="{{scrumCardSettings.parentKey.isBold}}">parent key
+                                                </paper-checkbox>
+                                            </div>
+                                            <div class="layout vertical flex-1">
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueSummary.isBold}}"
+                                                    value="{{scrumCardSettings.issueSummary.isBold}}">summary
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueDescription.isBold}}"
+                                                    value="{{scrumCardSettings.issueDescription.isBold}}">description
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueAssignee.isBold}}"
+                                                    value="{{scrumCardSettings.issueAssignee.isBold}}">assignee
+                                                </paper-checkbox>
+                                            </div>
                                         </div>
                                     </div>
-                                </paper-material>
-                                <paper-material id="settings-for-viability" elevation="1">
-                                    <p>Please choose which parts of the scrum card will be visible</p>
 
-                                    <div class="layout horizontal">
-                                        <div>
+                                    <div class="layout vertical flex-1">
+                                        <h3>Please choose which parts of the scrum card will be visible</h3>
 
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueType.isVisible}}"
-                                                value="{{scrumCardSettings.issueType.isVisible}}">issueType.isVisible
-                                            </paper-checkbox>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueKey.isVisible}}"
-                                                value="{{scrumCardSettings.issueKey.isVisible}}">issueKey.isVisible
-                                            </paper-checkbox>
-                                        </div>
-                                        <div>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.parentName.isVisible}}"
-                                                value="{{scrumCardSettings.parentName.isVisible}}">parentName.isVisible
-                                            </paper-checkbox>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.parentKey.isVisible}}"
-                                                value="{{scrumCardSettings.parentKey.isVisible}}">parentKey.isVisible
-                                            </paper-checkbox>
-                                        </div>
-                                        <div>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issuePriority.isVisible}}"
-                                                value="{{scrumCardSettings.issuePriority.isVisible}}">
-                                                issuePriority.isVisible
-                                            </paper-checkbox>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueFixVersions.isVisible}}"
-                                                value="{{scrumCardSettings.issueFixVersions.isVisible}}">
-                                                issueFixVersions.isVisible
-                                            </paper-checkbox>
-                                        </div>
-                                        <div>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueSummary.isVisible}}"
-                                                value="{{scrumCardSettings.issueSummary.isVisible}}">
-                                                issueSummary.isVisible
-                                            </paper-checkbox>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueAssignee.isVisible}}"
-                                                value="{{scrumCardSettings.issueAssignee.isVisible}}">
-                                                issueAssignee.isVisible
-                                            </paper-checkbox>
-                                        </div>
-                                        <div>
-                                            <paper-checkbox
-                                                checked="{{scrumCardSettings.issueDescription.isVisible}}"
-                                                value="{{scrumCardSettings.issueDescription.isVisible}}">
-                                                issueDescription.isVisible
-                                            </paper-checkbox>
+                                        <div class="layout horizontal">
+                                            <div class="layout vertical flex-1">
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueType.isVisible}}"
+                                                    value="{{scrumCardSettings.issueType.isVisible}}">type
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueKey.isVisible}}"
+                                                    value="{{scrumCardSettings.issueKey.isVisible}}">key
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issuePriority.isVisible}}"
+                                                    value="{{scrumCardSettings.issuePriority.isVisible}}">priority
+                                                </paper-checkbox>
+                                            </div>
+                                            <div class="layout vertical flex-1">
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueFixVersions.isVisible}}"
+                                                    value="{{scrumCardSettings.issueFixVersions.isVisible}}">planed
+                                                    for
+                                                    version
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.parentName.isVisible}}"
+                                                    value="{{scrumCardSettings.parentName.isVisible}}">parent issue
+                                                    name
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.parentKey.isVisible}}"
+                                                    value="{{scrumCardSettings.parentKey.isVisible}}">parent key
+                                                </paper-checkbox>
+                                            </div>
+                                            <div class="layout vertical flex-1">
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueSummary.isVisible}}"
+                                                    value="{{scrumCardSettings.issueSummary.isVisible}}">summary
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueDescription.isVisible}}"
+                                                    value="{{scrumCardSettings.issueDescription.isVisible}}">
+                                                    description
+                                                </paper-checkbox>
+                                                <paper-checkbox
+                                                    checked="{{scrumCardSettings.issueAssignee.isVisible}}"
+                                                    value="{{scrumCardSettings.issueAssignee.isVisible}}">assignee
+                                                </paper-checkbox>
+                                            </div>
                                         </div>
                                     </div>
                                 </paper-material>
@@ -263,8 +297,6 @@
                                     class="vertical center"
                                     jira-issues="{{demoScrumCard}}"
                                     settings="{{scrumCardSettings}}"></scrum-cards>
-
-                                <paper-button id="save-options" on-click="saveUserOptions">Save options</paper-button>
                             </section>
                         </iron-pages>
                     </div>

@@ -18,10 +18,7 @@
         app.createReferencesForUserSettings();
         app.loadUserOptions();
 
-        app.$['settings-for-font-weight'].onchange = function (e) {
-            app.updateScrumCardSettings();
-        };
-        app.$['settings-for-viability'].onchange = function (e) {
+        app.$['settings-checkbox-container'].onchange = function (e) {
             app.updateScrumCardSettings();
         };
     });
@@ -49,12 +46,18 @@
 
     app.onJIRAIssuesRequest = function () {
         document.querySelector('#ajax-spinner').active = true;
+        console.log('onJIRAIssuesRequest')
     };
 
-    app.onJIRAIssuesResponse = function () {
+    app.onJIRAIssuesResponse = function (a, b) {
         document.querySelector('#ajax-spinner').active = false;
+        if (b.response === null) {
+            alert('error');
+        }
     };
-
+    app.test = function (a, b) {
+        alert('test');// TODO
+    };
     app.updateScrumCardSettings = function () {
         let settings = this.scrumCardSettings;
         this.scrumCardSettings = null;
@@ -99,6 +102,8 @@
      * Create needed reference for data binding and loading user settings
      */
     app.createReferencesForUserSettings = function () {
+        this.ajaxSettings = {};
+
         this.scrumCardSettings = {
             issueType: Object.create(null),
             issueKey: Object.create(null),
@@ -115,16 +120,22 @@
     app.loadUserOptions = function () {
         chrome.storage.sync.get('settings', function (object) {
 
-            if (object.settings.ajax === undefined && object.settings.scrumCard === undefined) {
+            if (object.settings === undefined) {
+                // TODO default settings
                 return;
             }
 
-            let ajax = object.settings.ajax;
+            let ajax = object.settings.ajaxSettings;
             let scrumCard = object.settings.scrumCard;
 
-            app.URLAddress = ajax.url;
-            app.project = ajax.project;
-            app.projectVersion = ajax.version;
+            app.ajaxSettings = {
+                jiraURL: ajax.jiraURL,
+                project: ajax.project,
+                projectVersion: ajax.projectVersion,
+                agileBoard: ajax.agileBoard,
+                agileSprint: ajax.agileSprint,
+                isAgileSprintUsed: ajax.isAgileSprintUsed
+            };
 
             app.scrumCardSettings = {
                 issueType: {
@@ -171,14 +182,20 @@
 
     app.saveUserOptions = function () {
         let scrumCardSettings = app.scrumCardSettings;
+        let ajaxSettings = app.ajaxSettings;
 
         let optionsToBeSaved = {
             settings: {
-                ajax: {
-                    url: app.URLAddress || 'https://sapjira.wdf.sap.corp/',
-                    project: app.project || 'BGSOFUIRODOPI',
-                    version: app.projectVersion || '101511'
+
+                ajaxSettings: {
+                    jiraURL: ajaxSettings.jiraURL || 'https://sapjira.wdf.sap.corp/',
+                    project: ajaxSettings.project || 'BGSOFUIRODOPI',
+                    projectVersion: ajaxSettings.projectVersion || '101511',
+                    agileBoard: ajaxSettings.agileBoard || '304 ili BGSOFUIRODOPI',
+                    agileSprint: ajaxSettings.agileSprint || '1513',
+                    isAgileSprintUsed: ajaxSettings.isAgileSprintUsed
                 },
+
                 scrumCard: {
                     issueType: {
                         isBold: scrumCardSettings.issueType.isBold,

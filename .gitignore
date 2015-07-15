@@ -6,5 +6,6 @@ node_modules
 bower_components
 
 # Ignore files and folders
+app/styles/main.css
 dist
 TODO.txt
