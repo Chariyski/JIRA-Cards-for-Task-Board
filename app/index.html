@@ -68,7 +68,7 @@
                         <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
                             <section data-route="home">
-                                <paper-material class="horizontal layout around-justified end ajax-control-container"
+                                <paper-material class="horizontal layout around-justified end ajax-settings-container"
                                                 elevation="1">
                                     <paper-input
                                         id="JIRA-URL-address"
@@ -138,50 +138,50 @@
                             </section>
 
                             <section data-route="contact">
-                                <paper-material class="layout vertical" elevation="1">
+                                <paper-material class="layout horizontal ajax-settings-container" elevation="1">
 
-                                    <div class="layout horizontal flex-1 around-justified end ajax-control-container">
+                                    <div class="layout vertical flex-2">
                                         <paper-input
-                                            class="flex-4"
                                             label="JIRA URL address"
                                             value="{{ajaxSettings.jiraURL}}"></paper-input>
-
-                                        <paper-input
-                                            class="flex-2"
-                                            label="Choose Project"
-                                            value="{{ajaxSettings.project}}"></paper-input>
-
-                                        <paper-input
-                                            class="flex-2"
-                                            label="Choose project version"
-                                            value="{{ajaxSettings.projectVersion}}"></paper-input>
-                                    </div>
-
-                                    <div class="layout horizontal flex-1 around-justified end ajax-control-container">
                                         <div>
                                             <paper-toggle-button
                                                 on-change="test"
                                                 checked="{{ajaxSettings.isAgileSprintUsed}}"></paper-toggle-button>
                                             <span>Use sprints</span>
                                         </div>
+                                    </div>
+
+                                    <div class="layout vertical flex-2">
+                                        <paper-input
+                                            label="Choose Project"
+                                            value="{{ajaxSettings.project}}"></paper-input>
+
 
                                         <paper-input
-                                            class="flex-2"
                                             label="Choose Agile Board"
                                             value="{{ajaxSettings.agileBoard}}"></paper-input>
+                                    </div>
+
+                                    <div class="layout vertical flex-2">
+                                        <paper-input
+                                            label="Choose project version"
+                                            value="{{ajaxSettings.projectVersion}}"></paper-input>
+
 
                                         <paper-input
-                                            class="flex-2"
                                             label="Choose sprint"
                                             value="{{ajaxSettings.agileSprint}}"></paper-input>
+                                    </div>
 
+                                    <div class="layout vertical flex-1">
                                         <paper-button
                                             raised
                                             on-click="saveUserOptions">Save options
                                         </paper-button>
                                     </div>
-
                                 </paper-material>
+
 
                                 <paper-material
                                     id="settings-checkbox-container"

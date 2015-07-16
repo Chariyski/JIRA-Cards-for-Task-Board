@@ -38,8 +38,8 @@
             version = this.$['JIRA-project-version'].value,
             AJAXForJIRAIssues = document.querySelector('#ajax-for-issues');
 
-        AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=project=' + project + '+and+fixVersion=' + version + '&&maxResults=500';
-        //AJAXForJIRAIssues.url = 'https://sapjira.wdf.sap.corp/rest/api/2/search?jql=Sprint=1513';
+        //AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=project=' + project + '+and+fixVersion=' + version + '&&maxResults=500';
+        AJAXForJIRAIssues.url = 'https://sapjira.wdf.sap.corp/rest/api/2/search?jql=Sprint=1513';
 
         AJAXForJIRAIssues.generateRequest();
     };

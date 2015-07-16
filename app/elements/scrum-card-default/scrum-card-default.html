@@ -5,47 +5,47 @@
     <link rel="import" type="css" href="scrum-card-default.css">
 
     <template>
-        <paper-material elevation="3" class="card">
+        <paper-material elevation="3" class="card-layout">
             <div class="card-magnet"></div>
 
             <div class="card-info">
 
                 <div class="card-info__header">
                     <span>
-                        <span class$="{{applyClassesToElement(settings.issueType)}}">
+                        <span class$="[[_computeElementClass(settings.issueType)]]">
                             <span>{{jiraIssue.fields.issuetype.name}}</span>&#32;
                         </span>
-                        <span class$="{{applyClassesToElement(settings.issueKey)}}">#<span>{{jiraIssue.key}}</span>&#32;</span>
+                        <span class$="[[_computeElementClass(settings.issueKey)]]">#<span>{{jiraIssue.key}}</span>&#32;</span>
                         <!-- Add parent information for sub-tasks -->
                         <template is="dom-if" if="{{jiraIssue.fields.issuetype.subtask}}">
-                            <span class$="{{applyClassesToElement(settings.parentName)}}">for&#32;
+                            <span class$="[[_computeElementClass(settings.parentName)]]">for&#32;
                                 <span>{{jiraIssue.fields.parent.fields.issuetype.name}}</span>&#32;
                             </span>
-                            <span class$="{{applyClassesToElement(settings.parentKey)}}">
+                            <span class$="[[_computeElementClass(settings.parentKey)]]">
                                 #<span>{{jiraIssue.fields.parent.key}}</span>
                             </span>
                         </template>
                     </span>
 
                     <span>
-                        <span class$="{{applyClassesToElement(settings.issuePriority)}}">Priority:&#32;
+                        <span class$="[[_computeElementClass(settings.issuePriority)]]">Priority:&#32;
                             <span>{{jiraIssue.fields.priority.name}}</span>
                         </span>
-                        <span class$="{{applyClassesToElement(settings.issueFixVersions)}}">&#32;planned for:&#32;</span>
+                        <span class$="[[_computeElementClass(settings.issueFixVersions)]]">&#32;planned for:&#32;</span>
 
                         <template is="dom-repeat" items="{{jiraIssue.fields.fixVersions}}">
-                            <span class$="{{applyClassesToElement(settings.issueFixVersions)}}">{{item.name}}</span>&#32;
+                            <span class$="[[_computeElementClass(settings.issueFixVersions)]]">{{item.name}}</span>&#32;
                         </template>
                     </span>
                 </div>
 
                 <div class="card-info__body">
-                    <span class$="{{applyClassesToElement(settings.issueSummary)}}">
+                    <span class$="[[_computeElementClass(settings.issueSummary)]]">
                         <span class="card-info__summary">{{jiraIssue.fields.summary}}</span>
                     </span>
                     <pre
-                        class$="{{applyClassesToElement(settings.issueDescription)}}">{{jiraIssue.fields.description}}</pre>
-                    <span class$="{{applyClassesToElement(settings.issueAssignee)}}">{{jiraIssue.fields.assignee.displayName}}</span>
+                        class$="[[_computeElementClass(settings.issueDescription)]]">{{jiraIssue.fields.description}}</pre>
+                    <span class$="[[_computeElementClass(settings.issueAssignee)]]">{{jiraIssue.fields.assignee.displayName}}</span>
                 </div>
 
             </div>
@@ -68,13 +68,17 @@
                     notify: true
                 }
             },
+
+            ready: function () {
+            },
+
             /**
              *
              * @param object.isBold
              * @param object.isVisible
              * @returns {string}
              */
-            applyClassesToElement: function (object) {
+            _computeElementClass: function (object) {
                 if (object === undefined) {
                     return;
                 }
@@ -90,8 +94,6 @@
                 }
 
                 return cssClasses;
-            },
-            ready: function () {
             }
         });
     })();

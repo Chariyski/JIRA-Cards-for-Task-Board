@@ -7,7 +7,10 @@
     <template>
         <div class="cards-container">
             <template is="dom-repeat" items="{{jiraIssues}}">
-                <scrum-card-default jira-issue="{{item}}" settings="{{settings}}"></scrum-card-default>
+                <scrum-card-default
+                    class="scrum-card"
+                    jira-issue="{{item}}"
+                    settings="{{settings}}"></scrum-card-default>
             </template>
         </div>
     </template>
@@ -27,8 +30,18 @@
                     notify: true
                 }
             },
+
             ready: function () {
             }
+//            ,
+//
+//            _clickHandler: function (event) {
+//                var target = event.target;
+//
+//                if (target.classList.contains('scrum-cards')) {
+//                    target.classList.toggle('scrum-card--remove-from-print');
+//                }
+//            }
         });
     })();
 </script>

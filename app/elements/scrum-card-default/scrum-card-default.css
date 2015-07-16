@@ -1,13 +1,5 @@
-:host {
-    page-break-inside: avoid;
-}
-
-.card {
+.card-layout {
     @apply(--layout-horizontal);
-    min-height: 6cm;
-    margin-bottom: 25px;
-    font-size: 20px;
-    background: #fff;
 }
 
 .card-magnet {
@@ -58,7 +50,7 @@
 }
 
 @media print {
-    .card {
+    .card-layout {
         box-shadow: none!important;
         border: 2px solid black;
         display:block;
