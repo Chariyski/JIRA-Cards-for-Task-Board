@@ -10,7 +10,8 @@
                 <scrum-card-default
                     class="scrum-card"
                     jira-issue="{{item}}"
-                    settings="{{settings}}"></scrum-card-default>
+                    settings="{{settings}}"
+                    on-click="_clickHandler"></scrum-card-default>
             </template>
         </div>
     </template>
@@ -32,16 +33,15 @@
             },
 
             ready: function () {
+            },
+
+            _clickHandler: function (event) {
+                var target = event.target;
+
+                if (target.classList.contains('scrum-cards')) {
+                    target.classList.toggle('scrum-card--remove-from-print');
+                }
             }
-//            ,
-//
-//            _clickHandler: function (event) {
-//                var target = event.target;
-//
-//                if (target.classList.contains('scrum-cards')) {
-//                    target.classList.toggle('scrum-card--remove-from-print');
-//                }
-//            }
         });
     })();
 </script>

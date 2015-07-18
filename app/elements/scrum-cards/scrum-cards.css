@@ -13,29 +13,29 @@
     position: relative;
 }
 
-/*.scrum-card::after {*/
-    /*display: block;*/
-    /*content: '+';*/
-    /*cursor: pointer;*/
-    /*font-size: 2rem;*/
-    /*font-weight: bold;*/
-    /*line-height: 0;*/
-    /*position: absolute;*/
-    /*top: 1rem;*/
-    /*right: 0;*/
-    /*transform-origin: center center;*/
-    /*transition: all 0.2s linear;*/
-    /*transform: rotateZ(45deg);*/
-/*}*/
+.scrum-card::after {
+    display: block;
+    content: '+';
+    cursor: pointer;
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 0;
+    position: absolute;
+    top: 1rem;
+    right: 0;
+    transform-origin: center center;
+    transition: all 0.2s linear;
+    transform: rotateZ(45deg);
+}
 
-/*.scrum-card--remove-from-print {*/
-    /*opacity: 0.5;*/
-/*}*/
+.scrum-card--remove-from-print {
+    opacity: 0.5;
+}
 
-/*.scrum-card--remove-from-print::after {*/
-    /*right: 0.125rem;*/
-    /*transform: rotateZ(0deg);*/
-/*}*/
+.scrum-card--remove-from-print::after {
+    right: 0.125rem;
+    transform: rotateZ(0deg);
+}
 
 .cards-container {
     max-width: 29cm;
