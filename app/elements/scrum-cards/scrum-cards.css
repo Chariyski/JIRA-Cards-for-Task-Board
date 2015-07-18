@@ -30,6 +30,7 @@
 
 .scrum-card--remove-from-print {
     opacity: 0.5;
+    -webkit-user-select: none;
 }
 
 .scrum-card--remove-from-print::after {
