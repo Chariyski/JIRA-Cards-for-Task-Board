@@ -117,11 +117,53 @@
         }
     };
 
+    app.defaultsScrumCardSettings = function () {
+        this.scrumCardSettings = {
+            issueType: {
+                isBold: false,
+                isVisible: true
+            },
+            issueKey: {
+                isBold: false,
+                isVisible: true
+            },
+            parentName: {
+                isBold: false,
+                isVisible: true
+            },
+            parentKey: {
+                isBold: false,
+                isVisible: true
+            },
+            issuePriority: {
+                isBold: false,
+                isVisible: true
+            },
+            issueFixVersions: {
+                isBold: false,
+                isVisible: true
+            },
+            issueSummary: {
+                isBold: true,
+                isVisible: true
+            },
+            issueDescription: {
+                isBold: false,
+                isVisible: false
+            },
+            issueAssignee: {
+                isBold: false,
+                isVisible: true
+            }
+        }
+    };
+
     app.loadUserOptions = function () {
+        var that = this;
         chrome.storage.sync.get('settings', function (object) {
 
             if (object.settings === undefined) {
-                // TODO default settings
+                that.defaultsScrumCardSettings();
                 return;
             }
 
@@ -134,7 +176,7 @@
                 projectVersion: ajax.projectVersion,
                 agileBoard: ajax.agileBoard,
                 agileSprint: ajax.agileSprint,
-                isAgileSprintUsed: ajax.isAgileSprintUsed
+                isAgileSprintUsed: ajax.isAgileSprintUsed // TODO do I need this ?
             };
 
             app.scrumCardSettings = {
