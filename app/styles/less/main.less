@@ -1,5 +1,5 @@
 @import "fonts";
-
+// TODO remove all less and css file and add the logic to app-theme.html
 html {
     font-size: 16px;
     font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -10,8 +10,9 @@ body {
     color: #333;
 }
 
-.content {
-    max-width: 29cm;
+iron-pages {
+    height: ~"calc(100% - 112px)";
+    overflow-y: auto;
 }
 
 .ajax-control-container {
@@ -24,20 +25,40 @@ body {
     }
 }
 
-#print {
-    display: none;
-}
-
 #settings-checkbox-container paper-checkbox {
     margin: 1rem 1rem 1rem 0;
 }
 
 @media print {
-    body > * {
-        display: none;
+    body {
+        background: none;
+
+        paper-drawer-panel {
+            position: static !important;
+
+            #drawer {
+                display: none !important;
+                width: 0 !important;
+            }
+
+            #main {
+                transition: none!important;
+                left: -0!important;
+                width: 100%;
+            }
+
+            iron-pages {
+                height: auto;
+                padding: 0!important;
+            }
+        }
     }
 
-    #print {
-        display: block;
+    paper-toast,
+    iron-a11y-announcer,
+    paper-toolbar,
+    .hide-from-print {
+        display: none !important;
     }
+
 }
