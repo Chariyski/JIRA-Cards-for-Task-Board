@@ -56,7 +56,6 @@ gulp.task('vulcanize', function () {
     return gulp.src('app/html/elements.html')
         .pipe(plumber())
         .pipe(vulcanize({
-            abspath: '',
             inlineScripts: true,
             inlineCss: true,
             stripExcludes: false,

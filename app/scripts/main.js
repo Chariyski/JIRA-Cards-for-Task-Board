@@ -21,6 +21,17 @@
         app.$['settings-checkbox-container'].onchange = function (e) {
             app.updateScrumCardSettings();
         };
+
+        app.$['JIRA-URL-address'].onkeyup = function (event) {
+            // TODO
+            let isInputValid = event.target.validity.valid;
+
+            if (isInputValid) {
+
+            } else {
+
+            }
+        };
     });
 
     // Close drawer after menu item is selected if drawerPanel is narrow
@@ -32,14 +43,20 @@
     };
 
     app.getJIRAIssues = function () {
-        let scrumCardsContainer = this.$['scrum-cards-container'].$,
-            url = this.$['JIRA-URL-address'].value,
-            project = this.$['JIRA-project'].value,
-            version = this.$['JIRA-project-version'].value,
+        let url = this.$['JIRA-URL-address'].value,
             AJAXForJIRAIssues = document.querySelector('#ajax-for-issues');
 
-        //AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=project=' + project + '+and+fixVersion=' + version + '&&maxResults=500';
-        AJAXForJIRAIssues.url = 'https://sapjira.wdf.sap.corp/rest/api/2/search?jql=Sprint=1513';
+        if (true) {
+            let jiraFixVersion = document.getElementById('jira-fix-version'),
+                project = jiraFixVersion.querySelector('#JIRA-projects').value,
+                version = jiraFixVersion.querySelector('#JIRA-project-versions').value;
+
+            AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=project=' + project + '+and+fixVersion=' + version + '&&maxResults=500';
+        } else {
+            let sprint = document.getElementById('jira-agile').querySelector('#JIRA-agile-board-sprints').value;
+
+            AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=Sprint=' + sprint;
+        }
 
         AJAXForJIRAIssues.generateRequest();
     };
@@ -49,15 +66,31 @@
         console.log('onJIRAIssuesRequest')
     };
 
-    app.onJIRAIssuesResponse = function (a, b) {
+    app.onJIRAIssuesResponse = function (event, irontRequest) {
         document.querySelector('#ajax-spinner').active = false;
-        if (b.response === null) {
+        if (irontRequest.response === null) {
             alert('error');
         }
     };
+
+    app.toggleSprintUsage = function () {
+        let toggleButtonForSwitchingToAgile = document.getElementById('agile-switcher'),
+            jiraFixVersion = document.getElementById('jira-fix-version'),
+            jiraAgile = document.getElementById('jira-agile');
+
+        if (toggleButtonForSwitchingToAgile.checked) {
+            jiraFixVersion.style.display = 'none';
+            jiraAgile.style.display = 'block';
+        } else {
+            jiraFixVersion.style.display = 'block';
+            jiraAgile.style.display = 'none';
+        }
+    };
+
     app.test = function (a, b) {
         alert('test');// TODO
     };
+
     app.updateScrumCardSettings = function () {
         let settings = this.scrumCardSettings;
         this.scrumCardSettings = null;
@@ -94,9 +127,9 @@
             }
         }
     }];
-    ////////////////////////////////////////////////////////////
-    // Extension storage
-    ////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+// Extension storage
+////////////////////////////////////////////////////////////
 
     /**
      * Create needed reference for data binding and loading user settings
@@ -171,12 +204,7 @@
             let scrumCard = object.settings.scrumCard;
 
             app.ajaxSettings = {
-                jiraURL: ajax.jiraURL,
-                project: ajax.project,
-                projectVersion: ajax.projectVersion,
-                agileBoard: ajax.agileBoard,
-                agileSprint: ajax.agileSprint,
-                isAgileSprintUsed: ajax.isAgileSprintUsed // TODO do I need this ?
+                jiraURL: ajax.jiraURL
             };
 
             app.scrumCardSettings = {
@@ -230,12 +258,7 @@
             settings: {
 
                 ajaxSettings: {
-                    jiraURL: ajaxSettings.jiraURL || 'https://sapjira.wdf.sap.corp/',
-                    project: ajaxSettings.project || 'BGSOFUIRODOPI',
-                    projectVersion: ajaxSettings.projectVersion || '101511',
-                    agileBoard: ajaxSettings.agileBoard || '304 ili BGSOFUIRODOPI',
-                    agileSprint: ajaxSettings.agileSprint || '1513',
-                    isAgileSprintUsed: ajaxSettings.isAgileSprintUsed
+                    jiraURL: ajaxSettings.jiraURL
                 },
 
                 scrumCard: {
@@ -284,4 +307,5 @@
         });
     };
 
-})(document);
+})
+(document);

@@ -1,0 +1,70 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html"/>
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="jira-agile-helper">
+    <style>
+        select {
+            width: 150px
+        }
+    </style>
+    <template>
+
+        <select id="JIRA-agile-boards" class="flex-2" on-change="_getSprints">
+            <template is="dom-repeat" items="{{agileBoards.views}}">
+                <option value="{{item.id}}">{{item.name}}</option>
+            </template>
+        </select>
+
+        <select id="JIRA-agile-board-sprints" class="flex-2">
+            <template is="dom-repeat" items="{{agileBoardSprints.sprints}}">
+                <option value="{{item.id}}">{{item.name}}</option>
+            </template>
+        </select>
+
+        <!-- AJAX for TODO-->
+        <iron-ajax
+            id="ajax-for-agile-boards"
+            content-type="application/json"
+            handle-as="json"
+            last-response="{{agileBoards}}"></iron-ajax>
+        <!-- AJAX for TODO-->
+
+        <!-- AJAX for TODO-->
+        <iron-ajax
+            id="ajax-for-agile-board-sprints"
+            content-type="application/json"
+            handle-as="json"
+            last-response="{{agileBoardSprints}}"></iron-ajax>
+        <!-- AJAX for TODO-->
+    </template>
+</dom-module>
+
+<script>
+    (function () {
+        'use strict';
+
+        Polymer({
+            is: 'jira-agile-helper',
+            properties: {
+                jiraUrlAddress: {
+                    type: String,
+                    notify: true,
+                    observer: '_jiraUrlAddressChanged'
+                }
+            },
+            _jiraUrlAddressChanged: function (newValue, oldValue) {
+                let ajaxForAgileBoards = this.$['ajax-for-agile-boards'];
+
+                ajaxForAgileBoards.url = this.jiraUrlAddress + 'rest/greenhopper/1.0/rapidview';
+                ajaxForAgileBoards.generateRequest();
+            },
+
+            _getSprints: function () {
+                let ajaxForSprints = this.$['ajax-for-agile-board-sprints'];
+
+                ajaxForSprints.url = this.jiraUrlAddress + 'rest/greenhopper/1.0/sprintquery/' + this.$['JIRA-agile-boards'].value + '?includeFutureSprints=true&includeHistoricSprints=false';
+                ajaxForSprints.generateRequest();
+            }
+        });
+    })();
+</script>

@@ -6,7 +6,6 @@
 .scrum-card {
     display: block;
     page-break-inside: avoid;
-    min-height: 6cm;
     margin-bottom: 25px;
     font-size: 20px;
     background: #fff;
