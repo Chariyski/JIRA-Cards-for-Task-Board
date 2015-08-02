@@ -26,6 +26,7 @@
             id="ajax-for-agile-boards"
             content-type="application/json"
             handle-as="json"
+            on-response="_updateSprintsSelectElement"
             last-response="{{agileBoards}}"></iron-ajax>
         <!-- AJAX for TODO-->
 
@@ -52,18 +53,39 @@
                     observer: '_jiraUrlAddressChanged'
                 }
             },
+
             _jiraUrlAddressChanged: function (newValue, oldValue) {
                 let ajaxForAgileBoards = this.$['ajax-for-agile-boards'];
 
-                ajaxForAgileBoards.url = this.jiraUrlAddress + 'rest/greenhopper/1.0/rapidview';
+                if (!this.jiraUrlAddress) {
+                    return;
+                }
+
+                ajaxForAgileBoards.url = this.jiraUrlAddress + '/rest/greenhopper/1.0/rapidview';
                 ajaxForAgileBoards.generateRequest();
             },
 
-            _getSprints: function () {
-                let ajaxForSprints = this.$['ajax-for-agile-board-sprints'];
+            _getSprints: function (event, jiraAgileBoardID) {
+                let ajaxForSprints = this.$['ajax-for-agile-board-sprints'],
+                    boardID;
 
-                ajaxForSprints.url = this.jiraUrlAddress + 'rest/greenhopper/1.0/sprintquery/' + this.$['JIRA-agile-boards'].value + '?includeFutureSprints=true&includeHistoricSprints=false';
+                if (jiraAgileBoardID) {
+                    boardID = jiraAgileBoardID;
+                } else {
+                    boardID = this.$['JIRA-agile-boards'].value;
+                }
+
+                // It is possible that the function is call without an option to take a valid projet ID
+                if (!boardID) {
+                    return;
+                }
+
+                ajaxForSprints.url = this.jiraUrlAddress + '/rest/greenhopper/1.0/sprintquery/' + boardID + '?includeFutureSprints=true&includeHistoricSprints=false';
                 ajaxForSprints.generateRequest();
+            },
+
+            _updateSprintsSelectElement: function (event, ironRequest) {
+                this._getSprints(null, ironRequest.response.views[0].id);
             }
         });
     })();

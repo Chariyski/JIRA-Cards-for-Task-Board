@@ -38,7 +38,8 @@
 }
 
 .card-info__summary {
-    font-size: 36px;
+    font-size: 30px;
+    word-break: break-word;
 }
 
 .bold {

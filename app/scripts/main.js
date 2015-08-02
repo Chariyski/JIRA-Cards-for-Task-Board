@@ -44,18 +44,19 @@
 
     app.getJIRAIssues = function () {
         let url = this.$['JIRA-URL-address'].value,
-            AJAXForJIRAIssues = document.querySelector('#ajax-for-issues');
+            AJAXForJIRAIssues = document.querySelector('#ajax-for-issues'),
+            toggleButtonForSwitchingToAgile = document.getElementById('agile-switcher');
 
-        if (true) {
+        if (toggleButtonForSwitchingToAgile.checked) {
+            let sprint = document.getElementById('jira-agile').querySelector('#JIRA-agile-board-sprints').value;
+
+            AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=Sprint=' + sprint;
+        } else {
             let jiraFixVersion = document.getElementById('jira-fix-version'),
                 project = jiraFixVersion.querySelector('#JIRA-projects').value,
                 version = jiraFixVersion.querySelector('#JIRA-project-versions').value;
 
             AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=project=' + project + '+and+fixVersion=' + version + '&&maxResults=500';
-        } else {
-            let sprint = document.getElementById('jira-agile').querySelector('#JIRA-agile-board-sprints').value;
-
-            AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=Sprint=' + sprint;
         }
 
         AJAXForJIRAIssues.generateRequest();
@@ -127,9 +128,10 @@
             }
         }
     }];
-////////////////////////////////////////////////////////////
-// Extension storage
-////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////
+    // Extension storage
+    ////////////////////////////////////////////////////////////
 
     /**
      * Create needed reference for data binding and loading user settings

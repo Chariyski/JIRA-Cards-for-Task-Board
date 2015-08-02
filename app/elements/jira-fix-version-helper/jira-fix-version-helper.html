@@ -8,7 +8,7 @@
         }
     </style>
     <template>
-        <select id="JIRA-projects" class="flex-2" on-change="_getVersions">
+        <select id="JIRA-projects" class="flex-2" on-change="_getVersionsForProject">
             <template is="dom-repeat" items="{{projects}}">
                 <option value="{{item.key}}">{{item.name}}</option>
             </template>
@@ -25,6 +25,7 @@
             id="ajax-for-projects"
             content-type="application/json"
             handle-as="json"
+            on-response="_updateVersionsSelectElement"
             last-response="{{projects}}"></iron-ajax>
         <!-- AJAX for TODO-->
 
@@ -51,19 +52,41 @@
                     observer: '_jiraUrlAddressChanged'
                 }
             },
+
             _jiraUrlAddressChanged: function (newValue, oldValue) {
                 let ajaxForProjects = this.$['ajax-for-projects'];
+
+                if (!this.jiraUrlAddress) {
+                    return;
+                }
 
                 ajaxForProjects.url = this.jiraUrlAddress + '/rest/api/2/project/';
                 ajaxForProjects.generateRequest();
             },
 
-            _getVersions: function () {
-                let ajaxForVersions = this.$['ajax-for-versions'];
+            _getVersionsForProject: function (event, jiraProjectID) {
+                let ajaxForVersions = this.$['ajax-for-versions'],
+                    projectID;
 
-                ajaxForVersions.url = this.jiraUrlAddress + '/rest/api/2/project/' + this.$['JIRA-projects'].value + '/versions';
+                if (jiraProjectID) {
+                    projectID = jiraProjectID;
+                } else {
+                    projectID = this.$['JIRA-projects'].value;
+                }
+
+                // It is possible that the function is call without an option to take a valid projet ID
+                if (!projectID) {
+                    return;
+                }
+
+                ajaxForVersions.url = this.jiraUrlAddress + '/rest/api/2/project/' + projectID + '/versions';
                 ajaxForVersions.generateRequest();
+            },
+
+            _updateVersionsSelectElement: function (event, ironRequest) {
+                this._getVersionsForProject(null, ironRequest.response[0].id);
             }
         });
     })();
 </script>
+<!--TODO create behavior element for both jira helpers-->
