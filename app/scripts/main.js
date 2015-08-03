@@ -50,7 +50,7 @@
         if (toggleButtonForSwitchingToAgile.checked) {
             let sprint = document.getElementById('jira-agile').querySelector('#JIRA-agile-board-sprints').value;
 
-            AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=Sprint=' + sprint;
+            AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=Sprint=' + sprint + '&&maxResults=500';
         } else {
             let jiraFixVersion = document.getElementById('jira-fix-version'),
                 project = jiraFixVersion.querySelector('#JIRA-projects').value,
