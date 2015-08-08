@@ -21,22 +21,20 @@
             </template>
         </select>
 
-        <!-- AJAX for TODO-->
+        <!-- AJAX for project agile boards -->
         <iron-ajax
             id="ajax-for-agile-boards"
             content-type="application/json"
             handle-as="json"
             on-response="_updateSprintsSelectElement"
             last-response="{{agileBoards}}"></iron-ajax>
-        <!-- AJAX for TODO-->
 
-        <!-- AJAX for TODO-->
+        <!-- AJAX for sprints -->
         <iron-ajax
             id="ajax-for-agile-board-sprints"
             content-type="application/json"
             handle-as="json"
             last-response="{{agileBoardSprints}}"></iron-ajax>
-        <!-- AJAX for TODO-->
     </template>
 </dom-module>
 
@@ -51,18 +49,27 @@
                     type: String,
                     notify: true,
                     observer: '_jiraUrlAddressChanged'
+                },
+                checkUrlValidity: {
+                    type: Function
                 }
             },
 
             _jiraUrlAddressChanged: function (newValue, oldValue) {
-                let ajaxForAgileBoards = this.$['ajax-for-agile-boards'];
+                var that = this;
 
-                if (!this.jiraUrlAddress) {
-                    return;
-                }
+                setTimeout(function () {
+                    let ajaxForAgileBoards = that.$['ajax-for-agile-boards'],
+                        isURLInvalidValid = that.checkUrlValidity();
 
-                ajaxForAgileBoards.url = this.jiraUrlAddress + '/rest/greenhopper/1.0/rapidview';
-                ajaxForAgileBoards.generateRequest();
+                    if (!that.jiraUrlAddress || isURLInvalidValid === true) {
+                        return;
+                    }
+
+                    ajaxForAgileBoards.url = that.jiraUrlAddress + '/rest/greenhopper/1.0/rapidview';
+                    ajaxForAgileBoards.generateRequest();
+                }, 100);
+
             },
 
             _getSprints: function (event, jiraAgileBoardID) {

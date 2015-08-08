@@ -27,21 +27,20 @@
                     </paper-toolbar>
 
                     <!-- Drawer Content -->
-                    <paper-menu class="list" attr-for-selected="data-route" selected="{{route}}"
-                                on-iron-select="onMenuSelect">
+                    <paper-menu
+                        class="list"
+                        attr-for-selected="data-route"
+                        selected="{{route}}"
+                        on-iron-select="onMenuSelect">
+
                         <a data-route="home" href="/index.html">
                             <iron-icon icon="home"></iron-icon>
                             <span>Home</span>
                         </a>
 
-                        <a data-route="users" href="/users">
-                            <iron-icon icon="info"></iron-icon>
-                            <span>Users</span>
-                        </a>
-
-                        <a data-route="contact" href="/contact">
-                            <iron-icon icon="mail"></iron-icon>
-                            <span>Contact</span>
+                        <a data-route="setting" href="/settings">
+                            <iron-icon icon="settings"></iron-icon>
+                            <span>Settings</span>
                         </a>
                     </paper-menu>
                 </div>
@@ -53,10 +52,6 @@
                     <paper-toolbar id="mainToolbar">
                         <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
                         <span class="flex"></span>
-
-                        <!-- Toolbar icons -->
-                        <paper-icon-button icon="refresh"></paper-icon-button>
-                        <paper-icon-button icon="search"></paper-icon-button>
 
                         <!-- Application name -->
                         <div class="middle paper-font-headline">JIRA Cards for Task Board</div>
@@ -98,6 +93,7 @@
 
                                     <div class="layout flex-1 align-element-to-paper-material">
                                         <paper-button
+                                            id="button-for-ajax-to-jira"
                                             class="flex-1"
                                             raised
                                             on-click="getJIRAIssues">Get issues
@@ -111,11 +107,13 @@
                                     <jira-fix-version-helper
                                         id="jira-fix-version"
                                         class="flex-1"
+                                        check-url-validity="{{getJIRAURLAddressInvalidProperty}}"
                                         jira-url-address="{{ajaxSettings.jiraURL}}"></jira-fix-version-helper>
 
                                     <jira-agile-helper
                                         id="jira-agile"
                                         class="flex-1"
+                                        check-url-validity="{{getJIRAURLAddressInvalidProperty}}"
                                         style="display: none;"
                                         jira-url-address="{{ajaxSettings.jiraURL}}"></jira-agile-helper>
 
@@ -123,7 +121,7 @@
                                 </div>
 
 
-                                <!-- AJAX for TODO-->
+                                <!-- AJAX for JIRA Issues-->
                                 <iron-ajax
                                     id="ajax-for-issues"
                                     content-type="application/json"
@@ -141,26 +139,7 @@
                                 settings="{{scrumCardSettings}}"></scrum-cards>
                         </section>
 
-                        <section data-route="users">
-                            <paper-material elevation="1">
-                                <h2 class="paper-font-display2">Users</h2>
-
-                                <p>This is the users section</p>
-                                <a href="/users/Rob">Rob</a>
-                            </paper-material>
-                        </section>
-
-                        <section data-route="user-info">
-                            <paper-material elevation="1">
-                                <h2 class="paper-font-display2">
-                                    User:<span>{{params.name}}</span>
-                                </h2>
-
-                                <div>This is <span>{{params.name}}</span>'s section</div>
-                            </paper-material>
-                        </section>
-
-                        <section data-route="contact">
+                        <section data-route="settings">
                             <paper-material class="layout horizontal center" elevation="1">
 
                                 <div class="flex-2">
@@ -308,7 +287,7 @@
 
             <paper-toast id="options-saved" duration="6000" text="All the options ware saved"></paper-toast>
             <paper-toast id="options-loaded" duration="6000" text="All user options ware loaded"></paper-toast>
-            <!-- TODO add function for message showing-->
+            <!-- TODO add function for showing messages -->
         </template>
 
         <!-- build:js scripts/app.js -->

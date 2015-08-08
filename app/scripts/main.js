@@ -1,58 +1,58 @@
 (function (document) {
     'use strict';
 
-    // Grab a reference to our auto-binding template
-    // and give it some initial binding values
-    // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
     var app = document.querySelector('#app');
 
-    // Listen for template bound event to know when bindings
-    // have resolved and content has been stamped to the page
-    app.addEventListener('dom-change', function () {
-        console.log('Our app is ready to rock!');
-    });
-
-    // See https://github.com/Polymer/polymer/issues/1381
     window.addEventListener('WebComponentsReady', function () {
         // imports are loaded and elements have been registered
         app.createReferencesForUserSettings();
+
         app.loadUserOptions();
 
-        app.$['settings-checkbox-container'].onchange = function (e) {
+        app.$['settings-checkbox-container'].onchange = function (event) {
             app.updateScrumCardSettings();
         };
 
         app.$['JIRA-URL-address'].onkeyup = function (event) {
-            // TODO
-            let isInputValid = event.target.validity.valid;
-
-            if (isInputValid) {
-
-            } else {
-
-            }
+            app.toggleAJAXButtonDisabledAttribute();
         };
     });
 
     // Close drawer after menu item is selected if drawerPanel is narrow
     app.onMenuSelect = function () {
-        let drawerPanel = document.querySelector('#paperDrawerPanel');
+        let drawerPanel = this.$['paperDrawerPanel'];
         if (drawerPanel.narrow) {
             drawerPanel.closeDrawer();
         }
     };
 
+    app.interfaceUpdate = function () {
+        this.toggleJIRAAgileUsage();
+        this.toggleAJAXButtonDisabledAttribute();
+    };
+
+    app.toggleAJAXButtonDisabledAttribute = function () {
+        let inputField = this.$['JIRA-URL-address'],
+            ajaxButton = this.$['button-for-ajax-to-jira'];
+
+        if (inputField.$.input.validity.valid && inputField.value) {
+            ajaxButton.removeAttribute('disabled');
+        } else {
+            ajaxButton.setAttribute('disabled', true);
+        }
+    };
+
     app.getJIRAIssues = function () {
         let url = this.$['JIRA-URL-address'].value,
-            AJAXForJIRAIssues = document.querySelector('#ajax-for-issues'),
-            checkboxForJIRAGreenHopper = document.getElementById('jira-green-hopper');
+            AJAXForJIRAIssues = this.$['ajax-for-issues'],
+            checkboxForJIRAGreenHopper = this.$['jira-green-hopper'];
 
         if (checkboxForJIRAGreenHopper.value) {
-            let sprint = document.getElementById('jira-agile').querySelector('#JIRA-agile-board-sprints').value;
+            let sprint = this.$['jira-agile'].querySelector('#JIRA-agile-board-sprints').value;
 
             AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=Sprint=' + sprint + '&&maxResults=500';
         } else {
-            let jiraFixVersion = document.getElementById('jira-fix-version'),
+            let jiraFixVersion = this.$['jira-fix-version'],
                 project = jiraFixVersion.querySelector('#JIRA-projects').value,
                 version = jiraFixVersion.querySelector('#JIRA-project-versions').value;
 
@@ -62,22 +62,26 @@
         AJAXForJIRAIssues.generateRequest();
     };
 
+    app.getJIRAURLAddressInvalidProperty = function (){
+        return app.$["JIRA-URL-address"].invalid
+    };
+
     app.onJIRAIssuesRequest = function () {
-        document.querySelector('#ajax-spinner').active = true;
+        this.$['ajax-spinner'].active = true;
         console.log('onJIRAIssuesRequest')
     };
 
     app.onJIRAIssuesResponse = function (event, irontRequest) {
-        document.querySelector('#ajax-spinner').active = false;
+        this.$['ajax-spinner'].active = false;
         if (irontRequest.response === null) {
             alert('error');
         }
     };
 
     app.toggleJIRAAgileUsage = function () {
-        let checkboxForJIRAGreenHopper = document.getElementById('jira-green-hopper'),
-            jiraFixVersion = document.getElementById('jira-fix-version'),
-            jiraAgile = document.getElementById('jira-agile');
+        let checkboxForJIRAGreenHopper = this.$['jira-green-hopper'],
+            jiraFixVersion = this.$['jira-fix-version'],
+            jiraAgile = this.$['jira-agile'];
 
         if (checkboxForJIRAGreenHopper.value) {
             jiraFixVersion.style.display = 'none';
@@ -86,8 +90,6 @@
             jiraFixVersion.style.display = 'block';
             jiraAgile.style.display = 'none';
         }
-
-        console.log('asdasd')
     };
 
     app.test = function (a, b) {
@@ -251,9 +253,8 @@
                 }
             };
 
-            that.toggleJIRAAgileUsage();
-
-            document.querySelector('#options-loaded').show();
+            that.$['options-loaded'].show();
+            that.interfaceUpdate()
         });
     };
 
@@ -311,7 +312,7 @@
         };
 
         chrome.storage.sync.set(optionsToBeSaved, function () {
-            document.querySelector('#options-saved').show();
+            app.$['options-saved'].show();
         });
     };
 

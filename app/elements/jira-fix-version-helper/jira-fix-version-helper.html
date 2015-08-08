@@ -20,22 +20,20 @@
             </template>
         </select>
 
-        <!-- AJAX for TODO-->
+        <!-- AJAX for projects-->
         <iron-ajax
             id="ajax-for-projects"
             content-type="application/json"
             handle-as="json"
             on-response="_updateVersionsSelectElement"
             last-response="{{projects}}"></iron-ajax>
-        <!-- AJAX for TODO-->
 
-        <!-- AJAX for TODO-->
+        <!-- AJAX for fix versions-->
         <iron-ajax
             id="ajax-for-versions"
             content-type="application/json"
             handle-as="json"
             last-response="{{versions}}"></iron-ajax>
-        <!-- AJAX for TODO-->
     </template>
 </dom-module>
 
@@ -50,18 +48,26 @@
                     type: String,
                     notify: true,
                     observer: '_jiraUrlAddressChanged'
+                },
+                checkUrlValidity: {
+                    type: Function
                 }
             },
 
             _jiraUrlAddressChanged: function (newValue, oldValue) {
-                let ajaxForProjects = this.$['ajax-for-projects'];
+                var that = this;
 
-                if (!this.jiraUrlAddress) {
-                    return;
-                }
+                setTimeout(function () {
+                    let ajaxForProjects = that.$['ajax-for-projects'],
+                        isURLInvalidValid = that.checkUrlValidity();
 
-                ajaxForProjects.url = this.jiraUrlAddress + '/rest/api/2/project/';
-                ajaxForProjects.generateRequest();
+                    if (!that.jiraUrlAddress || isURLInvalidValid === true) {
+                        return;
+                    }
+
+                    ajaxForProjects.url = that.jiraUrlAddress + '/rest/api/2/project/';
+                    ajaxForProjects.generateRequest();
+                },100);
             },
 
             _getVersionsForProject: function (event, jiraProjectID) {
