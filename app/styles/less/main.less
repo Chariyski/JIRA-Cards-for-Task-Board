@@ -14,11 +14,29 @@ body {
 iron-pages {
     height: ~"calc(100% - 112px)";
     overflow-y: auto;
+
+    & > section {
+        max-width: 29cm;
+    }
+}
+
+.padding-right {
+    padding-right: 1rem;
+}
+
+.align-element-to-paper-material {
+    height: 60px;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 7px;
+    box-sizing: border-box;
 }
 
 #settings-checkbox-container paper-checkbox {
     margin: 1rem 1rem 1rem 0;
 }
+
+
 
 @media print {
     body {

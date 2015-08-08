@@ -45,9 +45,9 @@
     app.getJIRAIssues = function () {
         let url = this.$['JIRA-URL-address'].value,
             AJAXForJIRAIssues = document.querySelector('#ajax-for-issues'),
-            toggleButtonForSwitchingToAgile = document.getElementById('agile-switcher');
+            checkboxForJIRAGreenHopper = document.getElementById('jira-green-hopper');
 
-        if (toggleButtonForSwitchingToAgile.checked) {
+        if (checkboxForJIRAGreenHopper.value) {
             let sprint = document.getElementById('jira-agile').querySelector('#JIRA-agile-board-sprints').value;
 
             AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=Sprint=' + sprint + '&&maxResults=500';
@@ -74,18 +74,20 @@
         }
     };
 
-    app.toggleSprintUsage = function () {
-        let toggleButtonForSwitchingToAgile = document.getElementById('agile-switcher'),
+    app.toggleJIRAAgileUsage = function () {
+        let checkboxForJIRAGreenHopper = document.getElementById('jira-green-hopper'),
             jiraFixVersion = document.getElementById('jira-fix-version'),
             jiraAgile = document.getElementById('jira-agile');
 
-        if (toggleButtonForSwitchingToAgile.checked) {
+        if (checkboxForJIRAGreenHopper.value) {
             jiraFixVersion.style.display = 'none';
             jiraAgile.style.display = 'block';
         } else {
             jiraFixVersion.style.display = 'block';
             jiraAgile.style.display = 'none';
         }
+
+        console.log('asdasd')
     };
 
     app.test = function (a, b) {
@@ -206,7 +208,8 @@
             let scrumCard = object.settings.scrumCard;
 
             app.ajaxSettings = {
-                jiraURL: ajax.jiraURL
+                jiraURL: ajax.jiraURL,
+                isAJAXtoGreenHopper: ajax.isAJAXtoGreenHopper
             };
 
             app.scrumCardSettings = {
@@ -248,6 +251,8 @@
                 }
             };
 
+            that.toggleJIRAAgileUsage();
+
             document.querySelector('#options-loaded').show();
         });
     };
@@ -260,7 +265,8 @@
             settings: {
 
                 ajaxSettings: {
-                    jiraURL: ajaxSettings.jiraURL
+                    jiraURL: ajaxSettings.jiraURL,
+                    isAJAXtoGreenHopper: ajaxSettings.isAJAXtoGreenHopper
                 },
 
                 scrumCard: {

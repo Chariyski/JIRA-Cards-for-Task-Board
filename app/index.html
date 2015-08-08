@@ -73,25 +73,41 @@
                                 class="vertical layout hide-from-print"
                                 elevation="1">
 
-                                <div class="horizontal layout flex-1">
-                                    <paper-input
-                                        id="JIRA-URL-address"
-                                        class="flex-4"
-                                        label="JIRA URL address"
-                                        auto-validate
-                                        pattern="(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})"
-                                        error-message="Invalid input! Example URL: https://example.com"
-                                        value="{{ajaxSettings.jiraURL}}"></paper-input>
+                                <div class="horizontal layout flex-2">
 
-                                    <div class="flex-1">
-                                        <paper-toggle-button
-                                            id="agile-switcher"
-                                            on-change="toggleSprintUsage"></paper-toggle-button>
-                                        <span>Use sprints</span>
+                                    <div class="flex-2">
+                                        <paper-input
+                                            id="JIRA-URL-address"
+                                            class="flex-1 padding-right"
+                                            label="JIRA URL address"
+                                            auto-validate
+                                            pattern="(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})"
+                                            error-message="Invalid input! Example URL: https://example.com"
+                                            value="{{ajaxSettings.jiraURL}}"></paper-input>
+                                    </div>
+
+                                    <div class="layout flex-1 align-element-to-paper-material">
+                                        <paper-checkbox
+                                            id="jira-green-hopper"
+                                            class="flex-1"
+                                            checked="{{ajaxSettings.isAJAXtoGreenHopper}}"
+                                            value="{{ajaxSettings.isAJAXtoGreenHopper}}"
+                                            on-click="toggleJIRAAgileUsage">use JIRA Agile
+                                        </paper-checkbox>
+                                    </div>
+
+                                    <div class="layout flex-1 align-element-to-paper-material">
+                                        <paper-button
+                                            class="flex-1"
+                                            raised
+                                            on-click="getJIRAIssues">Get issues
+                                        </paper-button>
+
+                                        <paper-spinner id="ajax-spinner" alt="Loading issues"></paper-spinner>
                                     </div>
                                 </div>
 
-                                <div class="horizontal layout flex-1">
+                                <div class="horizontal layout flex-5">
                                     <jira-fix-version-helper
                                         id="jira-fix-version"
                                         class="flex-1"
@@ -103,12 +119,7 @@
                                         style="display: none;"
                                         jira-url-address="{{ajaxSettings.jiraURL}}"></jira-agile-helper>
 
-                                    <paper-button
-                                        raised
-                                        on-click="getJIRAIssues">Get issues
-                                    </paper-button>
-
-                                    <paper-spinner id="ajax-spinner" alt="Loading issues"></paper-spinner>
+                                    <div class="flex-1"></div>
                                 </div>
 
 
@@ -150,17 +161,28 @@
                         </section>
 
                         <section data-route="contact">
-                            <paper-material class="layout horizontal" elevation="1">
+                            <paper-material class="layout horizontal center" elevation="1">
 
-                                <paper-input class="flex-1"
-                                             label="JIRA URL address"
-                                             value="{{ajaxSettings.jiraURL}}"></paper-input>
+                                <div class="flex-2">
+                                    <paper-input class="flex-2 padding-right"
+                                                 label="JIRA URL address"
+                                                 value="{{ajaxSettings.jiraURL}}"></paper-input>
+                                </div>
 
-                                <paper-button class="flex-1"
-                                              raised
-                                              on-click="saveUserOptions">Save options
-                                </paper-button>
+                                <div class="layout flex-1 align-element-to-paper-material">
+                                    <paper-checkbox
+                                        class="flex-1"
+                                        checked="{{ajaxSettings.isAJAXtoGreenHopper}}"
+                                        value="{{ajaxSettings.isAJAXtoGreenHopper}}">use JIRA Agile
+                                    </paper-checkbox>
+                                </div>
 
+                                <div class="layout flex-1 align-element-to-paper-material">
+                                    <paper-button class="flex-1"
+                                                  raised
+                                                  on-click="saveUserOptions">Save options
+                                    </paper-button>
+                                </div>
                             </paper-material>
 
                             <paper-material

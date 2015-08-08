@@ -4,18 +4,18 @@
 <dom-module id="jira-agile-helper">
     <style>
         select {
-            width: 150px
+            width: calc(50% - 9px);
         }
     </style>
     <template>
 
-        <select id="JIRA-agile-boards" class="flex-2" on-change="_getSprints">
+        <select id="JIRA-agile-boards" on-change="_getSprints">
             <template is="dom-repeat" items="{{agileBoards.views}}">
                 <option value="{{item.id}}">{{item.name}}</option>
             </template>
         </select>
 
-        <select id="JIRA-agile-board-sprints" class="flex-2">
+        <select id="JIRA-agile-board-sprints">
             <template is="dom-repeat" items="{{agileBoardSprints.sprints}}">
                 <option value="{{item.id}}">{{item.name}}</option>
             </template>

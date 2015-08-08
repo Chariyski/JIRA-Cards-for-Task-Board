@@ -4,17 +4,17 @@
 <dom-module id="jira-fix-version-helper">
     <style>
         select {
-            width: 150px
+            width: calc(50% - 9px);
         }
     </style>
     <template>
-        <select id="JIRA-projects" class="flex-2" on-change="_getVersionsForProject">
+        <select id="JIRA-projects" on-change="_getVersionsForProject">
             <template is="dom-repeat" items="{{projects}}">
                 <option value="{{item.key}}">{{item.name}}</option>
             </template>
         </select>
 
-        <select id="JIRA-project-versions" class="flex-2">
+        <select id="JIRA-project-versions">
             <template is="dom-repeat" items="{{versions}}">
                 <option value="{{item.id}}">{{item.name}}</option>
             </template>
