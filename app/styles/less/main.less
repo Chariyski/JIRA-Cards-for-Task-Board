@@ -16,13 +16,24 @@ iron-pages {
     height: ~"calc(100% - 112px)";
     overflow-y: auto;
 
-    & > section {
-        max-width: 29cm;
-    }
+    //& > section {
+    //    max-width: 29cm;
+    //}
 }
 
 .padding-right {
     padding-right: 1rem;
+}
+
+
+
+.settings-checkbox-container {
+    paper-checkbox {
+        margin: 1rem 1rem 1rem 0;
+    }
+    paper-material {
+        height: auto!important;
+    }
 }
 
 .align-element-to-paper-material {
@@ -31,13 +42,11 @@ iron-pages {
     align-items: flex-end;
     padding-bottom: 7px;
     box-sizing: border-box;
+
+    paper-checkbox {
+        margin: 0;
+    }
 }
-
-#settings-checkbox-container paper-checkbox {
-    margin: 1rem 1rem 1rem 0;
-}
-
-
 
 @media print {
     body {

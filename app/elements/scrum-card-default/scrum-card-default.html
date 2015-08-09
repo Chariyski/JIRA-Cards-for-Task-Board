@@ -8,7 +8,7 @@
         <paper-material elevation="3" class="card-layout">
             <div class="card-magnet"></div>
 
-            <div class="card-info">
+            <div class="card-info" style$="[[test(settings.fontSize)]]">
 
                 <div class="card-info__header">
                     <span>
@@ -70,6 +70,15 @@
             },
 
             ready: function () {
+            },
+
+            test: function (fontSize) {
+                if (typeof fontSize === 'number') {
+                    return 'font-size:' + fontSize + 'px;';
+                } else {
+                    return '';
+                }
+
             },
 
             /**

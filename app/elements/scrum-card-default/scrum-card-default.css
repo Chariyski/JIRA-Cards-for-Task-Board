@@ -1,3 +1,8 @@
+span {
+    font-size: 1em;
+    word-break: break-word;
+}
+
 .card-layout {
     @apply(--layout-horizontal);
 }
@@ -24,7 +29,6 @@
     @apply(--layout-vertical);
     @apply(--layout-around-justified);
     padding: 0.5rem 1rem;
-/* da si pomislq dali da izpolzvam     @apply(--layout-around-justified); i drugi takiva */
 }
 
 .card-info__body > span {
@@ -38,8 +42,7 @@
 }
 
 .card-info__summary {
-    font-size: 30px;
-    word-break: break-word;
+    font-size: 1.5em;
 }
 
 .bold {

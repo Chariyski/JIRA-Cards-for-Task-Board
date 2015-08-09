@@ -62,7 +62,7 @@
         AJAXForJIRAIssues.generateRequest();
     };
 
-    app.getJIRAURLAddressInvalidProperty = function (){
+    app.getJIRAURLAddressInvalidProperty = function () {
         return app.$["JIRA-URL-address"].invalid
     };
 
@@ -128,7 +128,7 @@
                 name: '1.30'
             }],
             assignee: {
-                displayName: 'Joe Doe'
+                displayName: 'John Doe'
             }
         }
     }];
@@ -144,6 +144,7 @@
         this.ajaxSettings = {};
 
         this.scrumCardSettings = {
+            fontSize: {}, // ToDo try to fine why there is on error with  Object.create(null)
             issueType: Object.create(null),
             issueKey: Object.create(null),
             parentName: Object.create(null),
@@ -153,11 +154,13 @@
             issueSummary: Object.create(null),
             issueDescription: Object.create(null),
             issueAssignee: Object.create(null)
-        }
+        };
+
     };
 
     app.defaultsScrumCardSettings = function () {
         this.scrumCardSettings = {
+            fontSize: '20',
             issueType: {
                 isBold: false,
                 isVisible: true
@@ -215,6 +218,7 @@
             };
 
             app.scrumCardSettings = {
+                fontSize: scrumCard.fontSize,
                 issueType: {
                     isBold: scrumCard.issueType.isBold,
                     isVisible: scrumCard.issueType.isVisible
@@ -271,6 +275,7 @@
                 },
 
                 scrumCard: {
+                    fontSize: scrumCardSettings.fontSize,
                     issueType: {
                         isBold: scrumCardSettings.issueType.isBold,
                         isVisible: scrumCardSettings.issueType.isVisible
