@@ -11,6 +11,20 @@ body {
     color: #333;
 }
 
+hr {
+    border-top: 1px solid #727272;
+    width: 100% !important;
+    margin: 1rem 0 0 0;
+}
+
+paper-button[toggles] {
+    color: white;
+    background: #a8a8a8;
+    &[active] {
+        background: #3F51B5;
+    }
+}
+
 iron-pages {
     box-sizing: border-box;
     height: ~"calc(100% - 112px)";
@@ -21,18 +35,12 @@ iron-pages {
     //}
 }
 
-.padding-right {
-    padding-right: 1rem;
-}
-
-
-
 .settings-checkbox-container {
     paper-checkbox {
         margin: 1rem 1rem 1rem 0;
     }
     paper-material {
-        height: auto!important;
+        height: auto !important;
     }
 }
 
