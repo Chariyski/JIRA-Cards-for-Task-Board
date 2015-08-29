@@ -18,7 +18,7 @@
 
     <body unresolved class="fullbleed layout vertical">
         <template is="dom-bind" id="app">
-            <paper-drawer-panel id="paperDrawerPanel">
+            <paper-drawer-panel id="paper-drawer-panel">
                 <!-- Aside /start -->
                 <div drawer>
                     <!-- Drawer Toolbar -->
@@ -35,14 +35,20 @@
 
                         <a data-route="home" href="/home">
                             <iron-icon icon="home"></iron-icon>
-                            <span>Home</span>
+                            <span>JIRA <span>{{jiraProjectName}}</span></span>
                         </a>
 
-                        <a data-route="settings" href="/settings">
+                        <a data-route="design" href="/design">
+                            <iron-icon icon="credit-card"></iron-icon>
+                            <span>Card design</span>
+                        </a>
+
+                        <a data-route="configuration" href="/configuration">
                             <iron-icon icon="settings"></iron-icon>
-                            <span>Settings</span>
+                            <span>Configuration</span>
                         </a>
                     </paper-menu>
+
                 </div>
                 <!-- Aside /end -->
 
@@ -64,250 +70,332 @@
                     <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
                         <section data-route="home">
-                            <paper-material
-                                class="vertical layout hide-from-print"
-                                elevation="1">
 
-                                <div class="horizontal layout flex-2">
+                            <paper-material id="settings-checkbox-container" class="layout vertical" elevation="1">
 
-                                    <div class="flex-2">
-                                        <paper-input
-                                            id="JIRA-URL-address"
-                                            class="flex-1 padding-right"
-                                            label="JIRA URL address"
-                                            auto-validate
-                                            pattern="(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})"
-                                            error-message="Invalid input! Example URL: https://example.com"
-                                            value="{{ajaxSettings.jiraURL}}"></paper-input>
-                                    </div>
+                                <paper-dropdown-menu id="jira-sprints-dropdown" label="Choose sprint" placeholder="Choose sprint">
+                                    <paper-menu class="dropdown-content" on-click="getSprintIssues">
 
-                                    <div class="layout flex-1 align-element-to-paper-material">
-                                        <paper-checkbox
-                                            id="jira-green-hopper"
-                                            class="flex-1"
-                                            checked="{{ajaxSettings.isAJAXtoGreenHopper}}"
-                                            value="{{ajaxSettings.isAJAXtoGreenHopper}}"
-                                            on-click="toggleJIRAAgileUsage">use JIRA Agile
-                                        </paper-checkbox>
-                                    </div>
+                                        <template is="dom-repeat" items="{{editedSprints}}">
+                                            <paper-item data-route="home" value="{{item.id}}">
+                                                <span>{{item.name}}</span>
+                                            </paper-item>
+                                        </template>
 
-                                    <div class="layout flex-1 align-element-to-paper-material">
-                                        <paper-button
-                                            id="button-for-ajax-to-jira"
-                                            class="flex-1"
-                                            raised
-                                            on-click="getJIRAIssues">Get issues
-                                        </paper-button>
+                                    </paper-menu>
+                                </paper-dropdown-menu>
 
-                                        <paper-spinner id="ajax-spinner" alt="Loading issues"></paper-spinner>
-                                    </div>
-                                </div>
-
-                                <div class="horizontal layout flex-5">
-                                    <jira-fix-version-helper
-                                        id="jira-fix-version"
-                                        class="flex-1"
-                                        check-url-validity="{{getJIRAURLAddressInvalidProperty}}"
-                                        jira-url-address="{{ajaxSettings.jiraURL}}"></jira-fix-version-helper>
-
-                                    <jira-agile-helper
-                                        id="jira-agile"
-                                        class="flex-1"
-                                        check-url-validity="{{getJIRAURLAddressInvalidProperty}}"
-                                        style="display: none;"
-                                        jira-url-address="{{ajaxSettings.jiraURL}}"></jira-agile-helper>
-
-                                    <div class="flex-1"></div>
-                                </div>
-
-                                <!-- AJAX for JIRA Issues-->
-                                <iron-ajax
-                                    id="ajax-for-issues"
-                                    content-type="application/json"
-                                    handle-as="json"
-                                    last-response="{{ajax}}"
-                                    on-request="onJIRAIssuesRequest"
-                                    on-response="onJIRAIssuesResponse"
-                                    on-error="test"></iron-ajax>
                             </paper-material>
 
                             <scrum-cards
                                 id="scrum-cards-container"
                                 class="vertical center"
-                                jira-issues="{{ajax.issues}}"
+                                jira-issues="{{sprintIssues.issues}}"
                                 settings="{{scrumCardSettings}}"></scrum-cards>
+
+
+                            <iron-ajax
+                                id="jira-sprint-issues-ajax"
+                                content-type="application/json"
+                                handle-as="json"
+                                last-response="{{sprintIssues}}"></iron-ajax>
+
                         </section>
 
-                        <section data-route="settings" class="layout vertical">
-                            <paper-material class="layout horizontal center" elevation="1">
-                                <div class="layout flex-1 align-element-to-paper-material">
-                                    <paper-button class="flex-1"
-                                                  raised
-                                                  on-click="saveUserOptions">Save options
-                                    </paper-button>
-                                </div>
-                            </paper-material>
-
-                            <!--  Row with settings /start-->
-                            <div id="settings-checkbox-container" class="layout horizontal settings-checkbox-container">
-                                <paper-material class="layout horizontal flex-1" elevation="1">
-                                    <div class="layout vertical flex-1 strech">
-
-                                        <div class="layout horizontal">
-                                            <paper-input class="flex-1 padding-right"
-                                                         label="JIRA URL address"
-                                                         auto-validate
-                                                         pattern="(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})"
-                                                         error-message="Invalid input! Example URL: https://example.com"
-                                                         value="{{ajaxSettings.jiraURL}}"></paper-input>
-
-                                            <div class="layout flex-1 align-element-to-paper-material">
-                                                <paper-checkbox
-                                                    class="flex-1"
-                                                    checked="{{ajaxSettings.isAJAXtoGreenHopper}}"
-                                                    value="{{ajaxSettings.isAJAXtoGreenHopper}}">use JIRA Agile
-                                                </paper-checkbox>
-                                            </div>
-                                        </div>
-
-                                        <h3>Choose template</h3>
-                                        <select>
-                                            <option value="">Default</option>
-                                        </select>
-
-                                        <h3>Cards font size</h3>
-                                        <paper-slider
-                                            class="flex-1"
-                                            min="20"
-                                            max="32"
-                                            value="{{scrumCardSettings.fontSize}}"></paper-slider>
-                                    </div>
-                                </paper-material>
-
-                                <paper-material class="layout horizontal flex-1" elevation="1">
-                                    <div class="layout vertical flex-1">
-                                        <h3>Please choose which parts of the scrum card will be bold</h3>
-
-                                        <div class="layout horizontal">
-                                            <div class="layout vertical">
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueType.isBold}}"
-                                                    value="{{scrumCardSettings.issueType.isBold}}">type
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueKey.isBold}}"
-                                                    value="{{scrumCardSettings.issueKey.isBold}}">key
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issuePriority.isBold}}"
-                                                    value="{{scrumCardSettings.issuePriority.isBold}}">priority
-                                                </paper-checkbox>
-                                            </div>
-                                            <div class="layout vertical">
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueFixVersions.isBold}}"
-                                                    value="{{scrumCardSettings.issueFixVersions.isBold}}">planed for
-                                                    version
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.parentName.isBold}}"
-                                                    value="{{scrumCardSettings.parentName.isBold}}">parent issue name
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.parentKey.isBold}}"
-                                                    value="{{scrumCardSettings.parentKey.isBold}}">parent key
-                                                </paper-checkbox>
-                                            </div>
-                                            <div class="layout vertical">
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueSummary.isBold}}"
-                                                    value="{{scrumCardSettings.issueSummary.isBold}}">summary
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueDescription.isBold}}"
-                                                    value="{{scrumCardSettings.issueDescription.isBold}}">description
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueAssignee.isBold}}"
-                                                    value="{{scrumCardSettings.issueAssignee.isBold}}">assignee
-                                                </paper-checkbox>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </paper-material>
-
-                                <paper-material class="layout horizontal flex-1" elevation="1">
-                                    <div class="layout vertical flex-1">
-                                        <h3>Please choose which parts of the scrum card will be visible</h3>
-
-                                        <div class="layout horizontal">
-                                            <div class="layout vertical">
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueType.isVisible}}"
-                                                    value="{{scrumCardSettings.issueType.isVisible}}">type
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueKey.isVisible}}"
-                                                    value="{{scrumCardSettings.issueKey.isVisible}}">key
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issuePriority.isVisible}}"
-                                                    value="{{scrumCardSettings.issuePriority.isVisible}}">priority
-                                                </paper-checkbox>
-                                            </div>
-                                            <div class="layout vertical">
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueFixVersions.isVisible}}"
-                                                    value="{{scrumCardSettings.issueFixVersions.isVisible}}">planed
-                                                    for
-                                                    version
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.parentName.isVisible}}"
-                                                    value="{{scrumCardSettings.parentName.isVisible}}">parent issue
-                                                    name
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.parentKey.isVisible}}"
-                                                    value="{{scrumCardSettings.parentKey.isVisible}}">parent key
-                                                </paper-checkbox>
-                                            </div>
-                                            <div class="layout vertical">
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueSummary.isVisible}}"
-                                                    value="{{scrumCardSettings.issueSummary.isVisible}}">summary
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueDescription.isVisible}}"
-                                                    value="{{scrumCardSettings.issueDescription.isVisible}}">
-                                                    description
-                                                </paper-checkbox>
-                                                <paper-checkbox
-                                                    checked="{{scrumCardSettings.issueAssignee.isVisible}}"
-                                                    value="{{scrumCardSettings.issueAssignee.isVisible}}">assignee
-                                                </paper-checkbox>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </paper-material>
-                            </div>
-                            <!--  Row with settings /end-->
+                        <section data-route="design" class="layout vertical">
 
                             <scrum-cards
                                 id="demo-card"
                                 class="vertical center"
                                 jira-issues="{{demoScrumCard}}"
                                 settings="{{scrumCardSettings}}"></scrum-cards>
+
+                            <paper-material id="settings-checkbox-container" class="layout vertical" elevation="1">
+
+                                <div class="layout horizontal">
+                                    <div class="layout horizontal wrap flex-2">
+                                        <div>
+                                            <h3>Type</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button toggles raised>
+                                                    <iron-icon icon="editor:format-italic"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueType.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueType.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3>Key</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button toggles raised>
+                                                    <iron-icon icon="editor:format-italic"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueKey.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueKey.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3>Priority</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button toggles raised>
+                                                    <iron-icon icon="editor:format-italic"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issuePriority.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issuePriority.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3>Planed for version </h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button toggles raised>
+                                                    <iron-icon icon="editor:format-italic"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueFixVersions.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueFixVersions.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3>Parent issue name</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button toggles raised>
+                                                    <iron-icon icon="editor:format-italic"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.parentName.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.parentName.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3>Parent key</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button toggles raised>
+                                                    <iron-icon icon="editor:format-italic"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.parentKey.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.parentKey.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3>Summary</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button toggles raised>
+                                                    <iron-icon icon="editor:format-italic"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+
+                                                    raised
+                                                    active="{{scrumCardSettings.issueSummary.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button toggles raised
+                                                              active="{{scrumCardSettings.issueSummary.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3>Description</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button toggles raised>
+                                                    <iron-icon icon="editor:format-italic"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueDescription.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueDescription.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3>Assignee</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button toggles raised>
+                                                    <iron-icon icon="editor:format-italic"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueAssignee.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueAssignee.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="layout vertical flex-1">
+                                        <h3>Font size: <span>{{scrumCardSettings.fontSize}}</span></h3>
+
+                                        <div class="layout horizontal">
+                                            <span>20</span>
+                                            <paper-slider
+                                                min="20"
+                                                max="32"
+                                                value="{{scrumCardSettings.fontSize}}"></paper-slider>
+                                            <span>32</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div>
+                                    <paper-button
+                                        raised
+                                        on-click="saveUserConfiguration">Save card design
+                                    </paper-button>
+                                </div>
+                            </paper-material>
+
                         </section>
 
+                        <section data-route="configuration">
+                            <!-- TODO remove inline style -->
+                            <paper-material class="layout vertical" elevation="1" style="width:300px; margin-left: 0">
+                                <h2>Configurations</h2>
+
+                                <paper-input
+                                    id="jira-url-address"
+                                    class="flex-1"
+                                    label="JIRA Base URL Address"
+                                    auto-validate
+                                    pattern="^(http(s?)\:\/\/|~\/|\/)?([\w]+:\w+@)?([a-zA-Z]{1}([\w\-]+\.)+([\w]{2,5}))(:[\d]{1,5})?"
+                                    error-message="Invalid input! Example URL: https://example.com"
+                                    value="{{jiraURL}}"></paper-input>
+
+                                <paper-checkbox
+                                    id="jira-green-hopper"
+                                    checked="{{isAJAXtoGreenHopper}}"
+                                    value="{{isAJAXtoGreenHopper}}">use JIRA Agile
+                                </paper-checkbox>
+
+                                <hr/>
+
+                                <paper-dropdown-menu id="dropdown-for-jira-projects"  label="Choose project" placeholder="Choose project">
+                                    <paper-menu class="dropdown-content" selected="0">
+                                        <template is="dom-repeat" items="{{editedProjects}}">
+                                            <paper-item label="{{item.name}}" value="{{item.value}}">{{item.name}}</paper-item>
+                                        </template>
+                                    </paper-menu>
+                                </paper-dropdown-menu>
+
+                                <paper-button raised on-click="saveUserConfiguration">Save options</paper-button>
+
+                            </paper-material>
+                        </section>
                     </iron-pages>
                 </div>
                 <!-- Main content /end -->
             </paper-drawer-panel>
 
-            <paper-toast id="options-saved" duration="6000" text="All user options ware saved"></paper-toast>
-            <paper-toast id="options-loaded" duration="6000" text="All user options ware loaded"></paper-toast>
-            <!-- TODO add function for showing messages -->
+            <paper-toast id="custom-message" style="z-index: 999999999"></paper-toast>
+
+            <!-- AJAX for projects-->
+            <iron-ajax
+                id="jira-projects-ajax"
+                content-type="application/json"
+                handle-as="json"
+                on-response="_responseHandlerForProjectsAJAX"
+                last-response="{{projects}}"></iron-ajax>
+
+            <!-- AJAX for sprints-->
+            <iron-ajax
+                id="jira-project-sprints-ajax"
+                content-type="application/json"
+                handle-as="json"
+                on-error="_errorHandlerForSprintsAJAX"
+                on-response="_responseHandlerForSprintsAJAX"
+                last-response="{{sprints}}"></iron-ajax>
+
         </template>
 
         <!-- build:js scripts/app.js -->

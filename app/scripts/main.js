@@ -4,104 +4,118 @@
     var app = document.querySelector('#app');
 
     window.addEventListener('WebComponentsReady', function () {
-        // imports are loaded and elements have been registered
-        app.createReferencesForUserSettings();
 
-        app.loadUserOptions();
+        app._createReferencesForUserConfiguration();
+
+        app.loadUserConfiguration();
 
         app.$['settings-checkbox-container'].onchange = function (event) {
-            app.updateScrumCardSettings();
+            app._updateScrumCardSettings();
         };
 
-        app.$['JIRA-URL-address'].onkeyup = function (event) {
-            app.toggleAJAXButtonDisabledAttribute();
+        app.$['jira-url-address'].onkeyup = function (event) {
+            app._getProjects();
+        };
+
+        app.$['jira-green-hopper'].onclick = function (event) {
+            app._getProjects();
+        };
+
+        app.$['dropdown-for-jira-projects'].onclick = function (event) {
+            var target = event.target;
+
+            if (target.nodeName === 'SPAN') {
+                target = target.parentElement;
+            }
+
+            if (target.nodeName !== 'PAPER-ITEM') {
+                return;
+            }
+
+            app.jiraProject = target.value;
+            app.jiraProjectName = target.label;
+            app._getSprintsForProject();
         };
     });
 
-    // Close drawer after menu item is selected if drawerPanel is narrow
-    app.onMenuSelect = function () {
-        let drawerPanel = this.$['paperDrawerPanel'];
-        if (drawerPanel.narrow) {
-            drawerPanel.closeDrawer();
-        }
-    };
-
+    // TODO remove
     app.interfaceUpdate = function () {
-        this.toggleJIRAAgileUsage();
-        this.toggleAJAXButtonDisabledAttribute();
+        // TODO remove
     };
 
-    app.toggleAJAXButtonDisabledAttribute = function () {
-        let inputField = this.$['JIRA-URL-address'],
-            ajaxButton = this.$['button-for-ajax-to-jira'];
+    app._getProjects = function () {
+        var that = this;
 
-        if (inputField.$.input.validity.valid && inputField.value) {
-            ajaxButton.removeAttribute('disabled');
+        // Delete all elements in the array,
+        // this way the selectedItem in the paper-dropdown will be updated accordingly
+        this.editedProjects = [];
+
+        // The timeout is needed because the "invalid" property of the paper-input need to be updated after the keyup
+        setTimeout(function () {
+            let isInputInvalid = that.$['jira-url-address'].invalid;
+            let ajaxForProjects = that.$['jira-projects-ajax'];
+
+            if (isInputInvalid) {
+                return;
+            }
+
+            if (that.isAJAXtoGreenHopper) {
+                ajaxForProjects.url = that.jiraURL + '/rest/greenhopper/1.0/rapidview';
+            } else {
+                ajaxForProjects.url = that.jiraURL + '/rest/api/2/project/';
+            }
+
+            ajaxForProjects.generateRequest();
+        }, 100);
+    };
+
+    app._getSprintsForProject = function () {
+        let ajaxForVersions = this.$['jira-project-sprints-ajax'];
+        let project = this.jiraProject;
+        let url = this.jiraURL;
+
+        if (!url || !project) {
+            return;
+        }
+
+        if (this.isAJAXtoGreenHopper) {
+            ajaxForVersions.url = url + '/rest/greenhopper/1.0/sprintquery/' + project + '?includeFutureSprints=true&includeHistoricSprints=false';
         } else {
-            ajaxButton.setAttribute('disabled', true);
+            ajaxForVersions.url = url + '/rest/api/2/project/' + project + '/versions';
         }
+
+        ajaxForVersions.generateRequest();
     };
 
-    app.getJIRAIssues = function () {
-        let url = this.$['JIRA-URL-address'].value,
-            AJAXForJIRAIssues = this.$['ajax-for-issues'],
-            checkboxForJIRAGreenHopper = this.$['jira-green-hopper'];
+    app.getSprintIssues = function (event) {
+        var target = event.target;
 
-        if (checkboxForJIRAGreenHopper.value) {
-            let sprint = this.$['jira-agile'].querySelector('#JIRA-agile-board-sprints').value;
+        if (target.nodeName === 'SPAN') {
+            target = target.parentElement;
+        }
 
-            AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=Sprint=' + sprint + '&&maxResults=500';
+        if (target.nodeName !== 'PAPER-ITEM') {
+            return;
+        }
+
+        let sprint = target.value;
+
+        let AJAXForSprintIssues = this.$['jira-sprint-issues-ajax'];
+
+        if (this.isAJAXtoGreenHopper) {
+            AJAXForSprintIssues.url = this.jiraURL + '/rest/api/2/search?jql=Sprint=' + sprint + '&&maxResults=500';
         } else {
-            let jiraFixVersion = this.$['jira-fix-version'],
-                project = jiraFixVersion.querySelector('#JIRA-projects').value,
-                version = jiraFixVersion.querySelector('#JIRA-project-versions').value;
-
-            AJAXForJIRAIssues.url = url + '/rest/api/2/search?jql=project=' + project + '+and+fixVersion=' + version + '&&maxResults=500';
+            AJAXForSprintIssues.url = this.jiraURL + '/rest/api/2/search?jql=project=' + this.jiraProject + '+and+fixVersion=' + sprint + '&&maxResults=500';
         }
 
-        AJAXForJIRAIssues.generateRequest();
+        AJAXForSprintIssues.generateRequest();
     };
 
-    app.getJIRAURLAddressInvalidProperty = function () {
-        return app.$["JIRA-URL-address"].invalid
-    };
+    // =========================================================
+    // UI
+    // =========================================================
 
-    app.onJIRAIssuesRequest = function () {
-        this.$['ajax-spinner'].active = true;
-        console.log('onJIRAIssuesRequest')
-    };
-
-    app.onJIRAIssuesResponse = function (event, irontRequest) {
-        this.$['ajax-spinner'].active = false;
-        if (irontRequest.response === null) {
-            alert('error');
-        }
-    };
-
-    app.toggleJIRAAgileUsage = function () {
-        let checkboxForJIRAGreenHopper = this.$['jira-green-hopper'],
-            jiraFixVersion = this.$['jira-fix-version'],
-            jiraAgile = this.$['jira-agile'];
-
-        if (checkboxForJIRAGreenHopper.value) {
-            jiraFixVersion.style.display = 'none';
-            jiraAgile.style.display = 'block';
-        } else {
-            jiraFixVersion.style.display = 'block';
-            jiraAgile.style.display = 'none';
-        }
-    };
-
-    app.test = function (a, b) {
-        alert('test');// TODO
-    };
-
-    app.updateScrumCardSettings = function () {
-        let settings = this.scrumCardSettings;
-        this.scrumCardSettings = null;
-        this.scrumCardSettings = settings;
-    };
-
+    // Scrum card data for the "design" page
     app.demoScrumCard = [{
         key: '302',
         fields: {
@@ -133,89 +147,66 @@
         }
     }];
 
-    ////////////////////////////////////////////////////////////
-    // Extension storage
-    ////////////////////////////////////////////////////////////
-
     /**
-     * Create needed reference for data binding and loading user settings
+     * Close drawer after menu item is selected if drawerPanel is narrow
      */
-    app.createReferencesForUserSettings = function () {
-        this.ajaxSettings = {};
-
-        this.scrumCardSettings = {
-            fontSize: {}, // ToDo try to fine why there is on error with  Object.create(null)
-            issueType: Object.create(null),
-            issueKey: Object.create(null),
-            parentName: Object.create(null),
-            parentKey: Object.create(null),
-            issuePriority: Object.create(null),
-            issueFixVersions: Object.create(null),
-            issueSummary: Object.create(null),
-            issueDescription: Object.create(null),
-            issueAssignee: Object.create(null)
-        };
-
-    };
-
-    app.defaultsScrumCardSettings = function () {
-        this.scrumCardSettings = {
-            fontSize: '20',
-            issueType: {
-                isBold: false,
-                isVisible: true
-            },
-            issueKey: {
-                isBold: false,
-                isVisible: true
-            },
-            parentName: {
-                isBold: false,
-                isVisible: true
-            },
-            parentKey: {
-                isBold: false,
-                isVisible: true
-            },
-            issuePriority: {
-                isBold: false,
-                isVisible: true
-            },
-            issueFixVersions: {
-                isBold: false,
-                isVisible: true
-            },
-            issueSummary: {
-                isBold: true,
-                isVisible: true
-            },
-            issueDescription: {
-                isBold: false,
-                isVisible: false
-            },
-            issueAssignee: {
-                isBold: false,
-                isVisible: true
-            }
+    app.onMenuSelect = function () {
+        let drawerPanel = this.$['paper-drawer-panel'];
+        if (drawerPanel.narrow) {
+            drawerPanel.closeDrawer();
         }
     };
 
-    app.loadUserOptions = function () {
+    /**
+     * Show message to the user.
+     * @param {string} text - The text to display in the toast.
+     * @param {number} duration - The duration in milliseconds to show the toast.
+     */
+    app.showMessage = function (text, duration) {
+        let messageToast = app.$['custom-message'];
+
+        if (text) {
+            messageToast.setAttribute('text', text);
+        } else {
+            console.warn('Some text must be given as parameter');
+            return;
+        }
+
+        messageToast.removeAttribute('duration');
+
+        if (duration) {
+            messageToast.setAttribute('duration', duration);
+        } else {
+            messageToast.setAttribute('duration', 6000);
+        }
+
+        messageToast.show();
+    };
+
+    // =========================================================
+    // Extension storage
+    // =========================================================
+
+    /**
+     * Load user configuration from chrome storage
+     */
+    app.loadUserConfiguration = function () {
         var that = this;
+
         chrome.storage.sync.get('settings', function (object) {
 
             if (object.settings === undefined) {
-                that.defaultsScrumCardSettings();
+                that._defaultsScrumCardSettings();
                 return;
             }
 
-            let ajax = object.settings.ajaxSettings;
+            let settings = object.settings;
             let scrumCard = object.settings.scrumCard;
 
-            app.ajaxSettings = {
-                jiraURL: ajax.jiraURL,
-                isAJAXtoGreenHopper: ajax.isAJAXtoGreenHopper
-            };
+            app.jiraURL = settings.jiraURL;
+            app.jiraProject = settings.jiraProject;
+            app.jiraProjectName = settings.jiraProjectName;
+            app.isAJAXtoGreenHopper = settings.isAJAXtoGreenHopper;
 
             app.scrumCardSettings = {
                 fontSize: scrumCard.fontSize,
@@ -257,22 +248,28 @@
                 }
             };
 
-            that.$['options-loaded'].show();
-            that.interfaceUpdate()
+            that.showMessage('All user options ware loaded.');
+            that.interfaceUpdate();
+
+            that._getProjects();
+            that._getSprintsForProject();
         });
     };
 
-    app.saveUserOptions = function () {
+    /**
+     * Save user configuration from chrome storage
+     * TODO create two methods for option card/config
+     */
+    app.saveUserConfiguration = function () {
         let scrumCardSettings = app.scrumCardSettings;
-        let ajaxSettings = app.ajaxSettings;
+        let project = app.$['dropdown-for-jira-projects'].selectedItem;
 
         let optionsToBeSaved = {
             settings: {
-
-                ajaxSettings: {
-                    jiraURL: ajaxSettings.jiraURL,
-                    isAJAXtoGreenHopper: ajaxSettings.isAJAXtoGreenHopper
-                },
+                jiraURL: app.jiraURL,
+                jiraProject: project ? project.value : '',
+                jiraProjectName: project ? project.label : '',
+                isAJAXtoGreenHopper: app.isAJAXtoGreenHopper,
 
                 scrumCard: {
                     fontSize: scrumCardSettings.fontSize,
@@ -317,9 +314,173 @@
         };
 
         chrome.storage.sync.set(optionsToBeSaved, function () {
-            app.$['options-saved'].show();
+            app.showMessage('All user options ware save.');
         });
     };
 
-})
-(document);
+    /**
+     * Remove user configuration from chrome storage
+     */
+    app.removeUserConfiguration = function () {
+        chrome.storage.sync.remove('settings', function (object) {
+            // todo some message
+        });
+    };
+
+    // =========================================================
+    // Private methods
+    // =========================================================
+
+    /**
+     * Create needed reference for data binding and loading user configuration
+     * @private
+     */
+    app._createReferencesForUserConfiguration = function () {
+        this.scrumCardSettings = {
+            fontSize: {}, // ToDo try to fine why there is an error with  Object.create(null)
+            issueType: Object.create(null),
+            issueKey: Object.create(null),
+            parentName: Object.create(null),
+            parentKey: Object.create(null),
+            issuePriority: Object.create(null),
+            issueFixVersions: Object.create(null),
+            issueSummary: Object.create(null),
+            issueDescription: Object.create(null),
+            issueAssignee: Object.create(null)
+        };
+
+    };
+
+    /**
+     * Default user setting for scrum card visualization
+     * @private
+     */
+    app._defaultsScrumCardSettings = function () {
+        this.scrumCardSettings = {
+            fontSize: 20,
+            issueType: {
+                isBold: false,
+                isVisible: true
+            },
+            issueKey: {
+                isBold: false,
+                isVisible: true
+            },
+            parentName: {
+                isBold: false,
+                isVisible: true
+            },
+            parentKey: {
+                isBold: false,
+                isVisible: true
+            },
+            issuePriority: {
+                isBold: false,
+                isVisible: true
+            },
+            issueFixVersions: {
+                isBold: false,
+                isVisible: true
+            },
+            issueSummary: {
+                isBold: true,
+                isVisible: true
+            },
+            issueDescription: {
+                isBold: false,
+                isVisible: false
+            },
+            issueAssignee: {
+                isBold: false,
+                isVisible: true
+            }
+        }
+    };
+
+    /**
+     * Check responses for errors
+     * @param status
+     * @private
+     */
+    app._checkAJAXResponseForErrors = function (status) {
+        if (status === 0) {
+            debugger;
+            // todo
+            this.showMessage('It seems that you don\'t have internet connection, please try again later.');
+        }
+    };
+
+    /**
+     * Error handler for the AJAX for JIRA projects
+     * @param {Object} event
+     * @param {element} ironAJAX
+     * @private
+     */
+    app._errorHandlerForSprintsAJAX = function (event, ironAJAX) {
+        debugger;
+        // todo
+        alert('error')
+    };
+
+    /**
+     * Re write the entire scrumCardSettings object
+     * That why the custom elements that depend on it will be updated,
+     * without observing the sub properties
+     * @private
+     */
+    app._updateScrumCardSettings = function () {
+        let settings = this.scrumCardSettings;
+        this.scrumCardSettings = null;
+        this.scrumCardSettings = settings;
+    };
+
+    /**
+     * Handler the response from the AJAX for JIRA projects
+     * @param {Object} event
+     * @param {element} ironAJAX
+     * @private
+     */
+    app._responseHandlerForProjectsAJAX = function (event, ironAJAX) {
+        this._checkAJAXResponseForErrors(ironAJAX.status);
+
+        let projects = this.isAJAXtoGreenHopper ? this.projects.views : this.projects;
+
+        for (let i = 0; i < projects.length; i++) {
+            if (projects[i].key) {
+                projects[i].value = projects[i].key;
+            } else {
+                projects[i].value = projects[i].id;
+            }
+        }
+
+        this.editedProjects = projects;
+    };
+
+    /**
+     * Handler the response from the AJAX for project sprints
+     * @param {Object} event
+     * @param {element} ironAJAX
+     * @private
+     */
+    app._responseHandlerForSprintsAJAX = function (event, ironAJAX) {
+        var response;
+        this._checkAJAXResponseForErrors(ironAJAX.status);
+
+        //todo
+        if (ironAJAX.response === null) {
+            this.editedSprints = [];
+            alert('error in sprints');
+            return;
+        } else {
+            response = ironAJAX.response.sprints ? ironAJAX.response.sprints : ironAJAX.response;
+        }
+
+        if (response.length === 0) {
+            this.showMessage('There are no available sprints in this project.')
+        }
+
+        this.editedSprints = ironAJAX.response.sprints ? ironAJAX.response.sprints : ironAJAX.response;
+
+    };
+
+})(document);
