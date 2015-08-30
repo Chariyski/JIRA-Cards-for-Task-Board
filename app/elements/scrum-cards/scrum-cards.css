@@ -1,6 +1,5 @@
 :host {
     display: block;
-    margin: 16px 4px;
 }
 
 .scrum-card {
@@ -42,8 +41,13 @@
 
 @media print {
     .cards-container {
+        /* TODO */
         /* Display table is needed for page-break-inside: avoid; to work properly */
         /*display: table;*/
+    }
+
+    .scrum-card {
+        margin-bottom: 0;
     }
 
     .scrum-card::after {

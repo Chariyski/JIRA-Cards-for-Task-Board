@@ -11,17 +11,74 @@ body {
     color: #333;
 }
 
+.padding-left {
+    padding-left: 1rem;
+}
+
+.padding-right {
+    padding-right: 1rem;
+}
+
 hr {
     border-top: 1px solid #727272;
     width: 100% !important;
     margin: 1rem 0 0 0;
 }
 
+.jira-project-name {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 160px;
+    text-overflow: ellipsis;
+}
+
+.button-wrapper {
+    margin: 0.5rem 0 0 0;
+    paper-button {
+        margin: 0;
+    }
+}
+
+paper-button {
+    background: #4285f4;
+    color: #fff;
+}
+
+.slider-container {
+    padding-left: 1rem;
+    border-left: 1px solid #727272;
+}
+
+.toggle-buttons-container {
+    min-width: 150px;
+    margin-bottom: 1rem;
+
+    h3 {
+        margin-top: 0;
+    }
+}
+
 paper-button[toggles] {
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
     color: white;
     background: #a8a8a8;
+    margin: 0 .5rem 0 0;
     &[active] {
         background: #3F51B5;
+    }
+
+    .content {
+        padding: 3px 0;
+    }
+}
+
+paper-dropdown-menu {
+    paper-menu-button {
+        width: 100%;
+        padding-right: 0;
+        padding-left: 0;
     }
 }
 
@@ -30,9 +87,26 @@ iron-pages {
     height: ~"calc(100% - 112px)";
     overflow-y: auto;
 
-    //& > section {
-    //    max-width: 29cm;
-    //}
+    &.design {
+        padding: 0 !important;
+        height: 100%;
+        background-color: white;
+    }
+
+    // todo add to media queries
+    .design-options-container {
+        padding: 48px 62px;
+    }
+    // todo add to media queries
+    .demo-card {
+        min-height: 350px;
+        background: #fafafa;
+        padding: 0 62px;
+
+        .scrum-card {
+            margin: 0;
+        }
+    }
 }
 
 .settings-checkbox-container {

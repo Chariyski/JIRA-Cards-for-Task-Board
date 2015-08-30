@@ -32,12 +32,12 @@ span {
 }
 
 .card-info__body > span {
-    padding: 1rem 0;
+    margin-bottom: 1rem;
 }
 
 .card-info__body > pre {
     font-family: inherit;
-    margin: 0;
+    margin: 0 0 1rem 0;
     word-wrap: break-word;
 }
 

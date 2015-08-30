@@ -9,15 +9,16 @@
         <!-- 3RD PARTY -->
         <script src="scripts/bundle.js"></script>
 
-        <!-- ELEMENTS -->
+        <!-- Polymer elements -->
         <link rel="import" href="html/elements.html">
 
-        <!-- APP FILES -->
+        <!-- APP files -->
         <link rel="stylesheet" href="styles/main.css"/>
     </head>
 
     <body unresolved class="fullbleed layout vertical">
         <template is="dom-bind" id="app">
+            <!-- Drawer /start -->
             <paper-drawer-panel id="paper-drawer-panel">
                 <!-- Aside /start -->
                 <div drawer>
@@ -26,7 +27,7 @@
                         <span class="paper-font-title">Menu</span>
                     </paper-toolbar>
 
-                    <!-- Drawer Content -->
+                    <!-- Drawer Content /start -->
                     <paper-menu
                         class="list"
                         attr-for-selected="data-route"
@@ -35,7 +36,9 @@
 
                         <a data-route="home" href="/home">
                             <iron-icon icon="home"></iron-icon>
-                            <span>JIRA <span>{{jiraProjectName}}</span></span>
+                            <span class="jira-project-name">JIRA
+                                <span>{{jiraProjectName}}</span>
+                            </span>
                         </a>
 
                         <a data-route="design" href="/design">
@@ -48,32 +51,30 @@
                             <span>Configuration</span>
                         </a>
                     </paper-menu>
-
+                    <!-- Drawer Content /end -->
                 </div>
                 <!-- Aside /end -->
 
                 <!-- Main content /start -->
                 <div main>
-                    <!-- Main Toolbar -->
+                    <!-- Main Toolbar /start -->
                     <paper-toolbar id="mainToolbar">
                         <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
-                        <span class="flex"></span>
 
                         <!-- Application name -->
                         <div class="middle paper-font-headline">JIRA Cards for Task Board</div>
-
-                        <!-- Application sub title -->
-                        <div class="bottom title"></div>
-
                     </paper-toolbar>
+                    <!-- Main Toolbar /end -->
 
-                    <iron-pages attr-for-selected="data-route" selected="{{route}}">
-
+                    <!-- App Pages /start -->
+                    <iron-pages class$="{{route}}" attr-for-selected="data-route" selected="{{route}}">
+                        <!-- Home page /start -->
                         <section data-route="home">
 
                             <paper-material id="settings-checkbox-container" class="layout vertical" elevation="1">
 
-                                <paper-dropdown-menu id="jira-sprints-dropdown" label="Choose sprint" placeholder="Choose sprint">
+                                <paper-dropdown-menu id="jira-sprints-dropdown" label="Choose sprint"
+                                                     placeholder="Choose sprint">
                                     <paper-menu class="dropdown-content" on-click="getSprintIssues">
 
                                         <template is="dom-repeat" items="{{editedSprints}}">
@@ -101,20 +102,36 @@
                                 last-response="{{sprintIssues}}"></iron-ajax>
 
                         </section>
+                        <!-- Home page /end -->
 
+                        <!-- Card Design page /start -->
                         <section data-route="design" class="layout vertical">
 
-                            <scrum-cards
-                                id="demo-card"
-                                class="vertical center"
-                                jira-issues="{{demoScrumCard}}"
-                                settings="{{scrumCardSettings}}"></scrum-cards>
+                            <div class="demo-card layout vertical center-justified">
+                                <scrum-cards
+                                    class="vertical center"
+                                    jira-issues="{{demoScrumCard}}"
+                                    settings="{{scrumCardSettings}}"></scrum-cards>
+                            </div>
 
-                            <paper-material id="settings-checkbox-container" class="layout vertical" elevation="1">
+                            <div id="design-options-container" class="layout vertical design-options-container">
 
                                 <div class="layout horizontal">
-                                    <div class="layout horizontal wrap flex-2">
-                                        <div>
+                                    <div class="layout vertical flex-3">
+                                        <h2>Scrum card components:</h2>
+                                    </div>
+
+                                    <div class="layout vertical flex-2">
+                                        <h2 class="padding-left">Font size:
+                                            <span>{{scrumCardSettings.fontSize}}</span>
+                                        </h2>
+                                    </div>
+                                </div>
+
+                                <div class="layout horizontal">
+
+                                    <div class="layout horizontal wrap flex-3">
+                                        <div class="toggle-buttons-container">
                                             <h3>Type</h3>
 
                                             <div class="layout horizontal">
@@ -136,7 +153,7 @@
                                             </div>
                                         </div>
 
-                                        <div>
+                                        <div class="toggle-buttons-container">
                                             <h3>Key</h3>
 
                                             <div class="layout horizontal">
@@ -158,7 +175,7 @@
                                             </div>
                                         </div>
 
-                                        <div>
+                                        <div class="toggle-buttons-container">
                                             <h3>Priority</h3>
 
                                             <div class="layout horizontal">
@@ -180,7 +197,7 @@
                                             </div>
                                         </div>
 
-                                        <div>
+                                        <div class="toggle-buttons-container">
                                             <h3>Planed for version </h3>
 
                                             <div class="layout horizontal">
@@ -202,7 +219,7 @@
                                             </div>
                                         </div>
 
-                                        <div>
+                                        <div class="toggle-buttons-container">
                                             <h3>Parent issue name</h3>
 
                                             <div class="layout horizontal">
@@ -224,7 +241,7 @@
                                             </div>
                                         </div>
 
-                                        <div>
+                                        <div class="toggle-buttons-container">
                                             <h3>Parent key</h3>
 
                                             <div class="layout horizontal">
@@ -246,7 +263,7 @@
                                             </div>
                                         </div>
 
-                                        <div>
+                                        <div class="toggle-buttons-container">
                                             <h3>Summary</h3>
 
                                             <div class="layout horizontal">
@@ -267,7 +284,7 @@
                                             </div>
                                         </div>
 
-                                        <div>
+                                        <div class="toggle-buttons-container">
                                             <h3>Description</h3>
 
                                             <div class="layout horizontal">
@@ -289,7 +306,7 @@
                                             </div>
                                         </div>
 
-                                        <div>
+                                        <div class="toggle-buttons-container">
                                             <h3>Assignee</h3>
 
                                             <div class="layout horizontal">
@@ -310,13 +327,10 @@
                                                 </paper-button>
                                             </div>
                                         </div>
-
                                     </div>
 
-                                    <div class="layout vertical flex-1">
-                                        <h3>Font size: <span>{{scrumCardSettings.fontSize}}</span></h3>
-
-                                        <div class="layout horizontal">
+                                    <div class="layout vertical flex-2">
+                                        <div class="layout horizontal flex-1 slider-container">
                                             <span>20</span>
                                             <paper-slider
                                                 min="20"
@@ -328,19 +342,21 @@
 
                                 </div>
 
-                                <div>
+                                <div class="button-wrapper">
                                     <paper-button
                                         raised
                                         on-click="saveUserConfiguration">Save card design
                                     </paper-button>
                                 </div>
-                            </paper-material>
+                            </div>
 
                         </section>
+                        <!-- Card Design page /end -->
 
+                        <!-- Configuration Page /start -->
                         <section data-route="configuration">
                             <!-- TODO remove inline style -->
-                            <paper-material class="layout vertical" elevation="1" style="width:300px; margin-left: 0">
+                            <paper-material class="layout vertical" elevation="3" style="width:300px; margin-left: 0">
                                 <h2>Configurations</h2>
 
                                 <paper-input
@@ -360,22 +376,30 @@
 
                                 <hr/>
 
-                                <paper-dropdown-menu id="dropdown-for-jira-projects"  label="Choose project" placeholder="Choose project">
+                                <paper-dropdown-menu id="dropdown-for-jira-projects" label="Choose project"
+                                                     placeholder="Choose project">
                                     <paper-menu class="dropdown-content" selected="0">
                                         <template is="dom-repeat" items="{{editedProjects}}">
-                                            <paper-item label="{{item.name}}" value="{{item.value}}">{{item.name}}</paper-item>
+                                            <paper-item label="{{item.name}}" value="{{item.value}}">{{item.name}}
+                                            </paper-item>
                                         </template>
                                     </paper-menu>
                                 </paper-dropdown-menu>
 
-                                <paper-button raised on-click="saveUserConfiguration">Save options</paper-button>
+                                <!-- Better way?-->
+                                <div class="button-wrapper">
+                                    <paper-button raised on-click="saveUserConfiguration">Save options</paper-button>
+                                </div>
 
                             </paper-material>
                         </section>
+                        <!-- Configuration Page /end -->
                     </iron-pages>
+                    <!-- App Pages /end -->
                 </div>
                 <!-- Main content /end -->
             </paper-drawer-panel>
+            <!-- Drawer /end -->
 
             <paper-toast id="custom-message" style="z-index: 999999999"></paper-toast>
 
@@ -395,13 +419,10 @@
                 on-error="_errorHandlerForSprintsAJAX"
                 on-response="_responseHandlerForSprintsAJAX"
                 last-response="{{sprints}}"></iron-ajax>
-
         </template>
 
-        <!-- build:js scripts/app.js -->
+        <!-- JavaScript files -->
         <script src="scripts/main.js"></script>
         <script src="scripts/third-party/analytics.js"></script>
-        <!-- endbuild-->
     </body>
-
 </html>

@@ -9,7 +9,7 @@
 
         app.loadUserConfiguration();
 
-        app.$['settings-checkbox-container'].onchange = function (event) {
+        app.$['design-options-container'].onchange = function (event) {
             app._updateScrumCardSettings();
         };
 
