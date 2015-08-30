@@ -73,16 +73,17 @@
 
                             <paper-material id="settings-checkbox-container" class="layout vertical" elevation="1">
 
-                                <paper-dropdown-menu id="jira-sprints-dropdown" label="Choose sprint"
-                                                     placeholder="Choose sprint">
-                                    <paper-menu class="dropdown-content" on-click="getSprintIssues">
+                                <paper-dropdown-menu
+                                    id="jira-sprints-dropdown"
+                                    label="Choose sprint"
+                                    placeholder="downloading ...">
 
-                                        <template is="dom-repeat" items="{{editedSprints}}">
+                                    <paper-menu class="dropdown-content" on-click="getSprintIssues" selected="0">
+                                        <template is="dom-repeat" items="{{_editedSprints}}">
                                             <paper-item data-route="home" value="{{item.id}}">
                                                 <span>{{item.name}}</span>
                                             </paper-item>
                                         </template>
-
                                     </paper-menu>
                                 </paper-dropdown-menu>
 
@@ -93,13 +94,6 @@
                                 class="vertical center"
                                 jira-issues="{{sprintIssues.issues}}"
                                 settings="{{scrumCardSettings}}"></scrum-cards>
-
-
-                            <iron-ajax
-                                id="jira-sprint-issues-ajax"
-                                content-type="application/json"
-                                handle-as="json"
-                                last-response="{{sprintIssues}}"></iron-ajax>
 
                         </section>
                         <!-- Home page /end -->
@@ -376,11 +370,16 @@
 
                                 <hr/>
 
-                                <paper-dropdown-menu id="dropdown-for-jira-projects" label="Choose project"
-                                                     placeholder="Choose project">
+                                <paper-dropdown-menu
+                                    id="dropdown-for-jira-projects"
+                                    label="Choose project"
+                                    placeholder="downloading ...">
                                     <paper-menu class="dropdown-content" selected="0">
-                                        <template is="dom-repeat" items="{{editedProjects}}">
-                                            <paper-item label="{{item.name}}" value="{{item.value}}">{{item.name}}
+                                        <template is="dom-repeat" items="{{_editedProjects}}">
+                                            <paper-item
+                                                label="{{item.name}}"
+                                                value="{{item.value}}">
+                                                <span>{{item.name}}</span>
                                             </paper-item>
                                         </template>
                                     </paper-menu>
@@ -419,6 +418,13 @@
                 on-error="_errorHandlerForSprintsAJAX"
                 on-response="_responseHandlerForSprintsAJAX"
                 last-response="{{sprints}}"></iron-ajax>
+
+            <!-- AJAX for sprint issues-->
+            <iron-ajax
+                id="jira-sprint-issues-ajax"
+                content-type="application/json"
+                handle-as="json"
+                last-response="{{sprintIssues}}"></iron-ajax>
         </template>
 
         <!-- JavaScript files -->

@@ -43,50 +43,6 @@
         // TODO remove
     };
 
-    app._getProjects = function () {
-        var that = this;
-
-        // Delete all elements in the array,
-        // this way the selectedItem in the paper-dropdown will be updated accordingly
-        this.editedProjects = [];
-
-        // The timeout is needed because the "invalid" property of the paper-input need to be updated after the keyup
-        setTimeout(function () {
-            let isInputInvalid = that.$['jira-url-address'].invalid;
-            let ajaxForProjects = that.$['jira-projects-ajax'];
-
-            if (isInputInvalid) {
-                return;
-            }
-
-            if (that.isAJAXtoGreenHopper) {
-                ajaxForProjects.url = that.jiraURL + '/rest/greenhopper/1.0/rapidview';
-            } else {
-                ajaxForProjects.url = that.jiraURL + '/rest/api/2/project/';
-            }
-
-            ajaxForProjects.generateRequest();
-        }, 100);
-    };
-
-    app._getSprintsForProject = function () {
-        let ajaxForVersions = this.$['jira-project-sprints-ajax'];
-        let project = this.jiraProject;
-        let url = this.jiraURL;
-
-        if (!url || !project) {
-            return;
-        }
-
-        if (this.isAJAXtoGreenHopper) {
-            ajaxForVersions.url = url + '/rest/greenhopper/1.0/sprintquery/' + project + '?includeFutureSprints=true&includeHistoricSprints=false';
-        } else {
-            ajaxForVersions.url = url + '/rest/api/2/project/' + project + '/versions';
-        }
-
-        ajaxForVersions.generateRequest();
-    };
-
     app.getSprintIssues = function (event) {
         var target = event.target;
 
@@ -98,17 +54,9 @@
             return;
         }
 
-        let sprint = target.value;
+        this.jiraSprint = target.value;
 
-        let AJAXForSprintIssues = this.$['jira-sprint-issues-ajax'];
-
-        if (this.isAJAXtoGreenHopper) {
-            AJAXForSprintIssues.url = this.jiraURL + '/rest/api/2/search?jql=Sprint=' + sprint + '&&maxResults=500';
-        } else {
-            AJAXForSprintIssues.url = this.jiraURL + '/rest/api/2/search?jql=project=' + this.jiraProject + '+and+fixVersion=' + sprint + '&&maxResults=500';
-        }
-
-        AJAXForSprintIssues.generateRequest();
+        this._getSprintIssues();
     };
 
     // =========================================================
@@ -402,12 +350,18 @@
      * @param status
      * @private
      */
-    app._checkAJAXResponseForErrors = function (status) {
-        if (status === 0) {
-            debugger;
-            // todo
+    app._checkAJAXResponseForErrors = function (ironAJAX) {
+        if (ironAJAX.status === 0) {
             this.showMessage('It seems that you don\'t have internet connection, please try again later.');
+            return false;
         }
+
+        if (ironAJAX.response === null) {
+            this.showMessage('It seems that you don\'t have internet connection or you are behind a proxy.');
+            return false;
+        }
+
+        return true;
     };
 
     /**
@@ -420,6 +374,78 @@
         debugger;
         // todo
         alert('error')
+    };
+
+    /**
+     * Trigger AJAX request for all JIRA projects
+     * @private
+     */
+    app._getProjects = function () {
+        var that = this;
+
+        // The timeout is needed because the "invalid" property of the paper-input need to be updated after the keyup
+        setTimeout(function () {
+            let isInputInvalid = that.$['jira-url-address'].invalid;
+            let ajaxForProjects = that.$['jira-projects-ajax'];
+
+            if (isInputInvalid) {
+                return;
+            }
+
+            if (that.isAJAXtoGreenHopper) {
+                ajaxForProjects.url = that.jiraURL + '/rest/greenhopper/1.0/rapidview';
+            } else {
+                ajaxForProjects.url = that.jiraURL + '/rest/api/2/project/';
+            }
+
+            ajaxForProjects.generateRequest();
+
+            // Delete all elements in the array,
+            // this way the visualized item in the paper-dropdown will be updated accordingly
+            that._editedProjects = [];
+        }, 100);
+    };
+
+    /**
+     * Trigger AJAX request for all sprint for the current selected project
+     * @private
+     */
+    app._getSprintsForProject = function () {
+        let ajaxForVersions = this.$['jira-project-sprints-ajax'];
+        let project = this.jiraProject;
+        let url = this.jiraURL;
+
+        if (!url || !project) {
+            return;
+        }
+
+        if (this.isAJAXtoGreenHopper) {
+            ajaxForVersions.url = url + '/rest/greenhopper/1.0/sprintquery/' + project + '?includeFutureSprints=true&includeHistoricSprints=false';
+        } else {
+            ajaxForVersions.url = url + '/rest/api/2/project/' + project + '/versions';
+        }
+
+        ajaxForVersions.generateRequest();
+
+        // Delete all elements in the array,
+        // this way the visualized item in the paper-dropdown will be updated accordingly
+        this._editedSprints = [];
+    };
+
+    /**
+     * Trigger AJAX request for all issues for the current selected sprint
+     * @private
+     */
+    app._getSprintIssues = function () {
+        let AJAXForSprintIssues = this.$['jira-sprint-issues-ajax'];
+
+        if (this.isAJAXtoGreenHopper) {
+            AJAXForSprintIssues.url = this.jiraURL + '/rest/api/2/search?jql=Sprint=' + this.jiraSprint + '&&maxResults=500';
+        } else {
+            AJAXForSprintIssues.url = this.jiraURL + '/rest/api/2/search?jql=project=' + this.jiraProject + '+and+fixVersion=' + this.jiraSprint + '&&maxResults=500';
+        }
+
+        AJAXForSprintIssues.generateRequest();
     };
 
     /**
@@ -441,9 +467,15 @@
      * @private
      */
     app._responseHandlerForProjectsAJAX = function (event, ironAJAX) {
-        this._checkAJAXResponseForErrors(ironAJAX.status);
+        let isResponseValid = this._checkAJAXResponseForErrors(ironAJAX);
+        let projects;
 
-        let projects = this.isAJAXtoGreenHopper ? this.projects.views : this.projects;
+        if (isResponseValid) {
+            projects = ironAJAX.response.views ? ironAJAX.response.views : ironAJAX.response;
+        } else {
+            this._editedProjects = [];
+            return;
+        }
 
         for (let i = 0; i < projects.length; i++) {
             if (projects[i].key) {
@@ -453,7 +485,7 @@
             }
         }
 
-        this.editedProjects = projects;
+        this._editedProjects = this._sortProjects(projects);
     };
 
     /**
@@ -463,24 +495,69 @@
      * @private
      */
     app._responseHandlerForSprintsAJAX = function (event, ironAJAX) {
-        var response;
-        this._checkAJAXResponseForErrors(ironAJAX.status);
+        let isResponseValid = this._checkAJAXResponseForErrors(ironAJAX);
+        let response;
 
-        //todo
-        if (ironAJAX.response === null) {
-            this.editedSprints = [];
-            alert('error in sprints');
-            return;
-        } else {
+        if (isResponseValid) {
             response = ironAJAX.response.sprints ? ironAJAX.response.sprints : ironAJAX.response;
+        } else {
+            this._editedSprints = [];
+            return;
         }
 
         if (response.length === 0) {
             this.showMessage('There are no available sprints in this project.')
         }
 
-        this.editedSprints = ironAJAX.response.sprints ? ironAJAX.response.sprints : ironAJAX.response;
+        this._editedSprints = this._sortSprints(response);
 
+        // TODO there can be no sprints - alert the user !
+        this.jiraSprint = this._editedSprints[0].id;
+        this._getSprintIssues();
     };
 
+    /**
+     * Sort JIRA projects alphabetically
+     * @param object
+     * @private
+     */
+    app._sortProjects = function (object) {
+        let result = object;
+
+        let compareStrings = function (fistKey, secondKey) {
+            fistKey = fistKey.toLowerCase();
+            secondKey = secondKey.toLowerCase();
+
+            return (fistKey < secondKey) ? -1 : (fistKey > secondKey) ? 1 : 0;
+        };
+
+        result.sort(function (fistKey, secondKey) {
+            return compareStrings(fistKey.name, secondKey.name);
+        });
+
+        return result;
+    };
+
+    /**
+     * Sort JIRA sprints so the last created will be the first visualized
+     * @param {array} sprints
+     * @returns {array}
+     * @private
+     */
+    app._sortSprints = function (sprints) {
+        let result = sprints;
+
+        let compareStrings = function (fistKey, secondKey) {
+            fistKey = fistKey.toLowerCase();
+            secondKey = secondKey.toLowerCase();
+
+            return fistKey < secondKey ? 1 : -1;
+        };
+
+        result.sort(function (fistKey, secondKey) {
+            return compareStrings(fistKey.name, secondKey.name);
+        });
+
+        return result;
+    };
 })(document);
