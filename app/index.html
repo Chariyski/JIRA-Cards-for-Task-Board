@@ -14,6 +14,8 @@
 
         <!-- APP files -->
         <link rel="stylesheet" href="styles/main.css"/>
+        <!-- The last style tag is used for dynamic CSS rules insertion-->
+        <style></style>
     </head>
 
     <body unresolved class="fullbleed layout vertical">
@@ -73,7 +75,7 @@
 
                             <paper-material
                                 id="settings-checkbox-container"
-                                class="layout horizontal center"
+                                class="layout horizontal center around-justified"
                                 elevation="1">
 
                                 <paper-dropdown-menu
@@ -89,6 +91,7 @@
                                         </template>
                                     </paper-menu>
                                 </paper-dropdown-menu>
+                                <paper-spinner id="issue-spinner" alt="Loading issues"></paper-spinner>
 
                                 <div>
                                     <paper-button raised on-click="addAllScrumCardsForPrinting">
@@ -100,6 +103,21 @@
                                        Remove all cards from printing
                                     </paper-button>
                                 </div>
+
+                                <paper-dropdown-menu
+                                    id="project-assignees-dropdown"
+                                    label="Choose assignee"
+                                    placeholder="">
+                                    <paper-menu class="dropdown-content" selected="0">
+                                        <template is="dom-repeat" items="{{_jiraProjectAssignees}}">
+                                            <paper-item
+                                                label="{{item.name}}"
+                                                value="{{item.name}}">
+                                                <span>{{item.name}}</span>
+                                            </paper-item>
+                                        </template>
+                                    </paper-menu>
+                                </paper-dropdown-menu>
                             </paper-material>
 
                             <scrum-cards
@@ -410,6 +428,8 @@
                 id="jira-sprint-issues-ajax"
                 content-type="application/json"
                 handle-as="json"
+                on-request="_requestHandlerForIssuesAJAX"
+                on-response="_responseHandlerForIssuesAJAX"
                 last-response="{{sprintIssues}}"></iron-ajax>
         </template>
 

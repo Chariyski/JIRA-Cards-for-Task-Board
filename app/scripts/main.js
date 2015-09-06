@@ -9,6 +9,7 @@
 
         app.loadUserConfiguration();
 
+        // TODO add all handler as function on the elemtns
         app.$['design-options-container'].onchange = function (event) {
             app._updateScrumCardSettings();
         };
@@ -35,6 +36,39 @@
             app.jiraProject = target.value;
             app.jiraProjectName = target.label;
             app._getSprintsForProject();
+        };
+
+        app.$['project-assignees-dropdown'].onclick = function (event) {
+            let target;
+            let assigneeName;
+            let cards = app.$['scrum-cards-container'].querySelectorAll('.scrum-card .card-layout');
+            let cardsThatWillBeInvisible = [];
+
+            if (event.target.nodeName !== 'PAPER-ITEM' && event.target.nodeName !== 'SPAN') {
+                return;
+            }
+
+            if (event.target.nodeName === 'SPAN') {
+                target = event.target.parentElement;
+            }
+
+            if (event.target.nodeName === 'PAPER-ITEM') {
+                target = event.target;
+            }
+
+
+            var _insertCSSRule = function (cssRule) {
+                var sheet = document.styleSheets[document.styleSheets.length - 1];
+                sheet.insertRule(cssRule, sheet.cssRules.length);
+            };
+
+            // TODO if there is no ID in the selector the demo scrum cards is affected from the CSS, think for an solution.
+            _insertCSSRule('#scrum-cards-container .scrum-card[data-assignee]{ display:block;}');
+
+            assigneeName = target.innerText.trim();
+            if (assigneeName !== 'All') {
+                _insertCSSRule('#scrum-cards-container .scrum-card:not([data-assignee="' + assigneeName + '"]){ display:none;}');
+            }
         };
     });
 
@@ -98,7 +132,7 @@
     /**
      * Add all scrum cards for printing.
      */
-    app.addAllScrumCardsForPrinting= function () {
+    app.addAllScrumCardsForPrinting = function () {
         var cards = app.$['scrum-cards-container'].querySelectorAll('.scrum-card');
 
         for (var i = 0; i < cards.length; i++) {
@@ -146,7 +180,7 @@
     /**
      * Remove all scrum cards from printing.
      */
-    app.removeAllScrumCardsForPrinting =  function () {
+    app.removeAllScrumCardsForPrinting = function () {
         var cards = app.$['scrum-cards-container'].querySelectorAll('.scrum-card');
 
         for (var i = 0; i < cards.length; i++) {
@@ -501,8 +535,56 @@
         }
     };
 
+    /**
+     * Request handler for project issues
+     * @private
+     */
+    app._requestHandlerForIssuesAJAX = function () {
+        app.$['issue-spinner'].active = true;
+    };
+
+    /**
+     * Request handler for projects
+     * @private
+     */
     app._requestHandlerForProjectsAJAX = function () {
         app.$['dropdown-for-jira-projects'].placeholder = 'downloading ...';
+    };
+
+    /**
+     * Handler the response from the AJAX for project issues.
+     * @param {Object} event
+     * @param {element} ironAJAX
+     * @private
+     */
+    app._responseHandlerForIssuesAJAX = function (event, ironAJAX) {
+        let that = this;
+        let issues = ironAJAX.response.issues;
+        let assignees = Object.create(null);
+        let filteredAssignees = [];
+
+        // Stop the downloading indication
+        app.$['issue-spinner'].active = false;
+
+        // Get unique names
+        for (var i = 0; i < issues.length; i++) {
+            if (issues[i].fields.assignee) {
+                assignees[issues[i].fields.assignee.displayName] = issues[i].fields.assignee.displayName;
+            }
+        }
+
+        // Create default assignee types
+        filteredAssignees = [{name: 'All'}, {name: 'Unassigned'}];
+
+        // Populate the filteredAssignees with the unique assignees names
+        Object.keys(assignees).forEach(function (index) {
+            filteredAssignees.push({
+                name: assignees[index]
+            });
+        });
+
+        // Create reference for binding
+        this._jiraProjectAssignees = filteredAssignees;
     };
 
     /**

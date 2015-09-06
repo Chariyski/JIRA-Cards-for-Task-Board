@@ -9,6 +9,7 @@
             <template is="dom-repeat" items="{{jiraIssues}}">
                 <scrum-card-default
                     class="scrum-card"
+                    data-assignee$="[[_addDataAssigneeAttribute(item.fields.assignee.displayName)]]"
                     jira-issue="{{item}}"
                     settings="{{settings}}"
                     on-click="_clickHandler"></scrum-card-default>
@@ -33,6 +34,14 @@
             },
 
             ready: function () {
+            },
+
+            _addDataAssigneeAttribute: function (assignee) {
+                if (assignee) {
+                    return assignee;
+                } else {
+                    return 'Unassigned';
+                }
             },
 
             _clickHandler: function (event) {
