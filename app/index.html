@@ -73,7 +73,7 @@
 
                             <paper-material
                                 id="settings-checkbox-container"
-                                class="layout horizontal"
+                                class="layout horizontal center"
                                 elevation="1">
 
                                 <paper-dropdown-menu
@@ -90,6 +90,16 @@
                                     </paper-menu>
                                 </paper-dropdown-menu>
 
+                                <div>
+                                    <paper-button raised on-click="addAllScrumCardsForPrinting">
+                                        <iron-icon icon="icons:visibility"></iron-icon>
+                                        Add all cards for printing
+                                    </paper-button>
+                                    <paper-button raised on-click="removeAllScrumCardsForPrinting">
+                                        <iron-icon icon="icons:visibility-off"></iron-icon>
+                                       Remove all cards from printing
+                                    </paper-button>
+                                </div>
                             </paper-material>
 
                             <scrum-cards
@@ -348,7 +358,7 @@
                                 <paper-dropdown-menu
                                     id="dropdown-for-jira-projects"
                                     label="Choose project"
-                                    placeholder="downloading ...">
+                                    placeholder="but first enter a JIRA URL address">
                                     <paper-menu class="dropdown-content" selected="{{_projectNumber}}">
                                         <template is="dom-repeat" items="{{_editedProjects}}">
                                             <paper-item
@@ -360,7 +370,7 @@
                                     </paper-menu>
                                 </paper-dropdown-menu>
 
-                                <!-- Better way?-->
+                                <!-- TODO Better way?-->
                                 <div class="button-wrapper">
                                     <paper-button raised on-click="saveUserConfiguration">Save options</paper-button>
                                 </div>
@@ -382,6 +392,7 @@
                 id="jira-projects-ajax"
                 content-type="application/json"
                 handle-as="json"
+                on-request="_requestHandlerForProjectsAJAX"
                 on-response="_responseHandlerForProjectsAJAX"
                 last-response="{{projects}}"></iron-ajax>
 

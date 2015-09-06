@@ -96,6 +96,18 @@
     }];
 
     /**
+     * Add all scrum cards for printing.
+     */
+    app.addAllScrumCardsForPrinting= function () {
+        var cards = app.$['scrum-cards-container'].querySelectorAll('.scrum-card');
+
+        for (var i = 0; i < cards.length; i++) {
+            cards[i].classList.remove('scrum-card--remove-from-print');
+
+        }
+    };
+
+    /**
      * Close drawer after menu item is selected if drawerPanel is narrow
      */
     app.onMenuSelect = function () {
@@ -129,6 +141,18 @@
         }
 
         messageToast.show();
+    };
+
+    /**
+     * Remove all scrum cards from printing.
+     */
+    app.removeAllScrumCardsForPrinting =  function () {
+        var cards = app.$['scrum-cards-container'].querySelectorAll('.scrum-card');
+
+        for (var i = 0; i < cards.length; i++) {
+            cards[i].classList.add('scrum-card--remove-from-print');
+
+        }
     };
 
     // =========================================================
@@ -471,6 +495,14 @@
                 this._projectNumber = i;
             }
         }
+
+        if (this._projectNumber === undefined) {
+            this._projectNumber = 0;
+        }
+    };
+
+    app._requestHandlerForProjectsAJAX = function () {
+        app.$['dropdown-for-jira-projects'].placeholder = 'downloading ...';
     };
 
     /**
