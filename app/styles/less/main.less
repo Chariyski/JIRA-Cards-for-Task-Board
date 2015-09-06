@@ -20,7 +20,7 @@ body {
 }
 
 hr {
-    border-top: 1px solid #727272;
+    border-top: 1px solid rgba(0, 0, 0, 0.14);
     width: 100% !important;
     margin: 1rem 0 0 0;
 }
@@ -39,6 +39,12 @@ hr {
     }
 }
 
+#settings-checkbox-container {
+    max-width: 29cm;
+    margin-left: 0;
+    box-sizing: border-box;
+}
+
 paper-button {
     background: #4285f4;
     color: #fff;
@@ -46,7 +52,7 @@ paper-button {
 
 .slider-container {
     padding-left: 1rem;
-    border-left: 1px solid #727272;
+    border-left: 1px solid rgba(0, 0, 0, 0.14);
 }
 
 .toggle-buttons-container {
@@ -102,6 +108,7 @@ iron-pages {
         min-height: 350px;
         background: #fafafa;
         padding: 0 62px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.14);
 
         .scrum-card {
             margin: 0;

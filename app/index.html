@@ -71,7 +71,10 @@
                         <!-- Home page /start -->
                         <section data-route="home">
 
-                            <paper-material id="settings-checkbox-container" class="layout vertical" elevation="1">
+                            <paper-material
+                                id="settings-checkbox-container"
+                                class="layout horizontal"
+                                elevation="1">
 
                                 <paper-dropdown-menu
                                     id="jira-sprints-dropdown"
@@ -124,14 +127,11 @@
 
                                 <div class="layout horizontal">
 
-                                    <div class="layout horizontal wrap flex-3">
+                                    <div class="layout horizontal wrap flex-1">
                                         <div class="toggle-buttons-container">
                                             <h3>Type</h3>
 
                                             <div class="layout horizontal">
-                                                <paper-button toggles raised>
-                                                    <iron-icon icon="editor:format-italic"></iron-icon>
-                                                </paper-button>
                                                 <paper-button
                                                     toggles
                                                     raised
@@ -151,9 +151,6 @@
                                             <h3>Key</h3>
 
                                             <div class="layout horizontal">
-                                                <paper-button toggles raised>
-                                                    <iron-icon icon="editor:format-italic"></iron-icon>
-                                                </paper-button>
                                                 <paper-button
                                                     toggles
                                                     raised
@@ -173,9 +170,6 @@
                                             <h3>Priority</h3>
 
                                             <div class="layout horizontal">
-                                                <paper-button toggles raised>
-                                                    <iron-icon icon="editor:format-italic"></iron-icon>
-                                                </paper-button>
                                                 <paper-button
                                                     toggles
                                                     raised
@@ -195,9 +189,6 @@
                                             <h3>Planed for version </h3>
 
                                             <div class="layout horizontal">
-                                                <paper-button toggles raised>
-                                                    <iron-icon icon="editor:format-italic"></iron-icon>
-                                                </paper-button>
                                                 <paper-button
                                                     toggles
                                                     raised
@@ -217,9 +208,6 @@
                                             <h3>Parent issue name</h3>
 
                                             <div class="layout horizontal">
-                                                <paper-button toggles raised>
-                                                    <iron-icon icon="editor:format-italic"></iron-icon>
-                                                </paper-button>
                                                 <paper-button
                                                     toggles
                                                     raised
@@ -239,9 +227,6 @@
                                             <h3>Parent key</h3>
 
                                             <div class="layout horizontal">
-                                                <paper-button toggles raised>
-                                                    <iron-icon icon="editor:format-italic"></iron-icon>
-                                                </paper-button>
                                                 <paper-button
                                                     toggles
                                                     raised
@@ -261,9 +246,6 @@
                                             <h3>Summary</h3>
 
                                             <div class="layout horizontal">
-                                                <paper-button toggles raised>
-                                                    <iron-icon icon="editor:format-italic"></iron-icon>
-                                                </paper-button>
                                                 <paper-button
                                                     toggles
 
@@ -282,9 +264,6 @@
                                             <h3>Description</h3>
 
                                             <div class="layout horizontal">
-                                                <paper-button toggles raised>
-                                                    <iron-icon icon="editor:format-italic"></iron-icon>
-                                                </paper-button>
                                                 <paper-button
                                                     toggles
                                                     raised
@@ -304,9 +283,6 @@
                                             <h3>Assignee</h3>
 
                                             <div class="layout horizontal">
-                                                <paper-button toggles raised>
-                                                    <iron-icon icon="editor:format-italic"></iron-icon>
-                                                </paper-button>
                                                 <paper-button
                                                     toggles
                                                     raised
@@ -323,7 +299,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="layout vertical flex-2">
+                                    <div class="layout vertical flex-1">
                                         <div class="layout horizontal flex-1 slider-container">
                                             <span>20</span>
                                             <paper-slider
@@ -337,9 +313,8 @@
                                 </div>
 
                                 <div class="button-wrapper">
-                                    <paper-button
-                                        raised
-                                        on-click="saveUserConfiguration">Save card design
+                                    <paper-button raised on-click="saveUserConfiguration">
+                                        Save card design
                                     </paper-button>
                                 </div>
                             </div>
@@ -374,7 +349,7 @@
                                     id="dropdown-for-jira-projects"
                                     label="Choose project"
                                     placeholder="downloading ...">
-                                    <paper-menu class="dropdown-content" selected="0">
+                                    <paper-menu class="dropdown-content" selected="{{_projectNumber}}">
                                         <template is="dom-repeat" items="{{_editedProjects}}">
                                             <paper-item
                                                 label="{{item.name}}"
