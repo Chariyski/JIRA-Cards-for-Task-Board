@@ -461,6 +461,19 @@
     };
 
     /**
+     * Create a binding reference that is used for selecting the saved project from the user.
+     * @param {array} projects
+     * @private
+     */
+    app._setProjectNameFromConfiguration = function (projects) {
+        for (var i = 0; i < projects.length; i++) {
+            if (this.jiraProjectName === projects[i].name) {
+                this._projectNumber = i;
+            }
+        }
+    };
+
+    /**
      * Handler the response from the AJAX for JIRA projects
      * @param {Object} event
      * @param {element} ironAJAX
@@ -486,6 +499,8 @@
         }
 
         this._editedProjects = this._sortProjects(projects);
+
+        this._setProjectNameFromConfiguration(this._editedProjects);
     };
 
     /**
@@ -507,11 +522,11 @@
 
         if (response.length === 0) {
             this.showMessage('There are no available sprints in this project.')
+            return;
         }
 
         this._editedSprints = this._sortSprints(response);
 
-        // TODO there can be no sprints - alert the user !
         this.jiraSprint = this._editedSprints[0].id;
         this._getSprintIssues();
     };
