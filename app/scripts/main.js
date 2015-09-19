@@ -88,7 +88,9 @@
         }
 
         if (isDialogNeed === true) {
-            this.$['animated'].open();
+            this.$['dialog-popup'].open();
+            app.route = 'configuration';
+            window.history.pushState('', '', '/index.html#!/configuration');
         }
     };
 
@@ -434,6 +436,13 @@
      * @private
      */
     app._checkAJAXResponseForErrors = function (ironAJAX) {
+        let project = this.jiraProject;
+        let url = this.jiraURL;
+
+        if (url.length === 0 || project.length === 0) {
+            return;
+        }
+
         if (ironAJAX.status === 0) {
             this.showMessage('It seems that you don\'t have internet connection, please try again later.');
             return false;
