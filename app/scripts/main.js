@@ -72,6 +72,26 @@
         };
     });
 
+    app._handlerForInsufficientUserSettings = function () {
+        var isDialogNeed = false;
+
+        if (!this.jiraURL) {
+            isDialogNeed = true;
+        }
+
+        if (!this.jiraProject) {
+            isDialogNeed = true;
+        }
+
+        if (!this.jiraProjectName) {
+            isDialogNeed = true;
+        }
+
+        if (isDialogNeed === true) {
+            this.$['animated'].open();
+        }
+    };
+
     // TODO remove
     app.interfaceUpdate = function () {
         // TODO remove
@@ -203,6 +223,8 @@
 
             if (object.settings === undefined) {
                 that._defaultsScrumCardSettings();
+                that._handlerForInsufficientUserSettings();
+
                 return;
             }
 
@@ -259,6 +281,8 @@
 
             that._getProjects();
             that._getSprintsForProject();
+            that._handlerForInsufficientUserSettings();
+
         });
     };
 
@@ -317,6 +341,7 @@
                     }
                 }
             }
+
         };
 
         chrome.storage.sync.set(optionsToBeSaved, function () {
