@@ -100,14 +100,15 @@
                                     </paper-button>
                                     <paper-button raised on-click="removeAllScrumCardsForPrinting">
                                         <iron-icon icon="icons:visibility-off"></iron-icon>
-                                       Remove all cards from printing
+                                        Remove all cards from printing
                                     </paper-button>
                                 </div>
 
                                 <paper-dropdown-menu
                                     id="project-assignees-dropdown"
                                     label="Choose assignee"
-                                    placeholder="">
+                                    placeholder=""
+                                    on-click="_filterJiraCardsByAssignee">
                                     <paper-menu class="dropdown-content" selected="0">
                                         <template is="dom-repeat" items="{{_jiraProjectAssignees}}">
                                             <paper-item
@@ -139,7 +140,8 @@
                                     settings="{{scrumCardSettings}}"></scrum-cards>
                             </div>
 
-                            <div id="design-options-container" class="layout vertical design-options-container">
+                            <div id="design-options-container" class="layout vertical design-options-container"
+                                 on-change="_updateScrumCardSettings">
 
                                 <div class="layout horizontal">
                                     <div class="layout vertical flex-3">
@@ -361,12 +363,14 @@
                                     class="flex-1"
                                     label="JIRA Base URL Address"
                                     auto-validate
+                                    on-keyup="_getProjects"
                                     pattern="^(http(s?)\:\/\/|~\/|\/)?([\w]+:\w+@)?([a-zA-Z]{1}([\w\-]+\.)+([\w]{2,5}))(:[\d]{1,5})?"
                                     error-message="Invalid input! Example URL: https://example.com"
                                     value="{{jiraURL}}"></paper-input>
 
                                 <paper-checkbox
                                     id="jira-green-hopper"
+                                    on-click="_getProjects"
                                     checked="{{isAJAXtoGreenHopper}}"
                                     value="{{isAJAXtoGreenHopper}}">use JIRA Agile
                                 </paper-checkbox>
@@ -376,6 +380,7 @@
                                 <paper-dropdown-menu
                                     id="dropdown-for-jira-projects"
                                     label="Choose project"
+                                    on-click="_clickHandlerForSprintRequest"
                                     placeholder="but first enter a JIRA URL address">
                                     <paper-menu class="dropdown-content" selected="{{_projectNumber}}">
                                         <template is="dom-repeat" items="{{_editedProjects}}">
@@ -403,7 +408,21 @@
             </paper-drawer-panel>
             <!-- Drawer /end -->
 
+            <!-- Popups /start -->
             <paper-toast id="custom-message" style="z-index: 999999999"></paper-toast>
+
+            <paper-dialog id="dialog-popup" class="pop-up-dialog" entry-animation="scale-up-animation"
+                          exit-animation="fade-out-animation" modal with-backdrop>
+                <h2>No configuration settings where found</h2>
+
+                <p>You will be redirected to the Configuration section, please add JIRA Base URL Address and choose
+                    project. </p>
+
+                <div class="buttons">
+                    <paper-button dialog-confirm autofocus>Understood</paper-button>
+                </div>
+            </paper-dialog>
+            <!-- Popups /end -->
 
             <!-- AJAX for projects-->
             <iron-ajax
