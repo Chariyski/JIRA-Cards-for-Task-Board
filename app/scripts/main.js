@@ -9,68 +9,55 @@
 
         app.loadUserConfiguration();
 
-        // TODO add all handler as function on the elemtns
-        app.$['design-options-container'].onchange = function (event) {
-            app._updateScrumCardSettings();
-        };
-
-        app.$['jira-url-address'].onkeyup = function (event) {
-            app._getProjects();
-        };
-
-        app.$['jira-green-hopper'].onclick = function (event) {
-            app._getProjects();
-        };
-
-        app.$['dropdown-for-jira-projects'].onclick = function (event) {
-            var target = event.target;
-
-            if (target.nodeName === 'SPAN') {
-                target = target.parentElement;
-            }
-
-            if (target.nodeName !== 'PAPER-ITEM') {
-                return;
-            }
-
-            app.jiraProject = target.value;
-            app.jiraProjectName = target.label;
-            app._getSprintsForProject();
-        };
-
-        app.$['project-assignees-dropdown'].onclick = function (event) {
-            let target;
-            let assigneeName;
-            let cards = app.$['scrum-cards-container'].querySelectorAll('.scrum-card .card-layout');
-            let cardsThatWillBeInvisible = [];
-
-            if (event.target.nodeName !== 'PAPER-ITEM' && event.target.nodeName !== 'SPAN') {
-                return;
-            }
-
-            if (event.target.nodeName === 'SPAN') {
-                target = event.target.parentElement;
-            }
-
-            if (event.target.nodeName === 'PAPER-ITEM') {
-                target = event.target;
-            }
-
-
-            var _insertCSSRule = function (cssRule) {
-                var sheet = document.styleSheets[document.styleSheets.length - 1];
-                sheet.insertRule(cssRule, sheet.cssRules.length);
-            };
-
-            // TODO if there is no ID in the selector the demo scrum cards is affected from the CSS, think for an solution.
-            _insertCSSRule('#scrum-cards-container .scrum-card[data-assignee]{ display:block;}');
-
-            assigneeName = target.innerText.trim();
-            if (assigneeName !== 'All') {
-                _insertCSSRule('#scrum-cards-container .scrum-card:not([data-assignee="' + assigneeName + '"]){ display:none;}');
-            }
-        };
     });
+    app._clickHandlerForSprintRequest = function (event) {
+        var target = event.target;
+
+        if (target.nodeName === 'SPAN') {
+            target = target.parentElement;
+        }
+
+        if (target.nodeName !== 'PAPER-ITEM') {
+            return;
+        }
+
+        app.jiraProject = target.value;
+        app.jiraProjectName = target.label;
+        app._getSprintsForProject();
+    };
+
+    app._filterJiraCardsByAssignee = function (event) {
+        let target;
+        let assigneeName;
+        let cards = app.$['scrum-cards-container'].querySelectorAll('.scrum-card .card-layout');
+        let cardsThatWillBeInvisible = [];
+
+        if (event.target.nodeName !== 'PAPER-ITEM' && event.target.nodeName !== 'SPAN') {
+            return;
+        }
+
+        if (event.target.nodeName === 'SPAN') {
+            target = event.target.parentElement;
+        }
+
+        if (event.target.nodeName === 'PAPER-ITEM') {
+            target = event.target;
+        }
+
+
+        var _insertCSSRule = function (cssRule) {
+            var sheet = document.styleSheets[document.styleSheets.length - 1];
+            sheet.insertRule(cssRule, sheet.cssRules.length);
+        };
+
+        // TODO if there is no ID in the selector the demo scrum cards is affected from the CSS, think for an solution.
+        _insertCSSRule('#scrum-cards-container .scrum-card[data-assignee]{ display:block;}');
+
+        assigneeName = target.innerText.trim();
+        if (assigneeName !== 'All') {
+            _insertCSSRule('#scrum-cards-container .scrum-card:not([data-assignee="' + assigneeName + '"]){ display:none;}');
+        }
+    };
 
     app._handlerForInsufficientUserSettings = function () {
         var isDialogNeed = false;
@@ -90,7 +77,6 @@
         if (isDialogNeed === true) {
             this.$['dialog-popup'].open();
             app.route = 'configuration';
-            window.history.pushState('', '', '/index.html#!/configuration');
         }
     };
 
@@ -436,13 +422,6 @@
      * @private
      */
     app._checkAJAXResponseForErrors = function (ironAJAX) {
-        let project = this.jiraProject;
-        let url = this.jiraURL;
-
-        if (url.length === 0 || project.length === 0) {
-            return;
-        }
-
         if (ironAJAX.status === 0) {
             this.showMessage('It seems that you don\'t have internet connection, please try again later.');
             return false;
@@ -573,7 +552,7 @@
      * Request handler for project issues
      * @private
      */
-    app._requestHandlerForIssuesAJAX = function () {
+    app._requestHandlerForIssuesAJAX = function (event, ironAJAX) {
         app.$['issue-spinner'].active = true;
     };
 
@@ -581,7 +560,15 @@
      * Request handler for projects
      * @private
      */
-    app._requestHandlerForProjectsAJAX = function () {
+    app._requestHandlerForProjectsAJAX = function (event, ironAJAX) {
+        let project = this.jiraProject;
+        let url = this.jiraURL;
+
+        if (url.length === 0 || !project) {
+            ironAJAX['request'].abort();
+            return;
+        }
+
         app.$['dropdown-for-jira-projects'].placeholder = 'downloading ...';
     };
 
