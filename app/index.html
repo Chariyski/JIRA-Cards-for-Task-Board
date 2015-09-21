@@ -91,18 +91,6 @@
                                         </template>
                                     </paper-menu>
                                 </paper-dropdown-menu>
-                                <paper-spinner id="issue-spinner" alt="Loading issues"></paper-spinner>
-
-                                <div>
-                                    <paper-button raised on-click="addAllScrumCardsForPrinting">
-                                        <iron-icon icon="icons:visibility"></iron-icon>
-                                        Add all cards for printing
-                                    </paper-button>
-                                    <paper-button raised on-click="removeAllScrumCardsForPrinting">
-                                        <iron-icon icon="icons:visibility-off"></iron-icon>
-                                        Remove all cards from printing
-                                    </paper-button>
-                                </div>
 
                                 <paper-dropdown-menu
                                     id="project-assignees-dropdown"
@@ -119,6 +107,15 @@
                                         </template>
                                     </paper-menu>
                                 </paper-dropdown-menu>
+
+                                <paper-spinner id="issue-spinner" alt="Loading issues"></paper-spinner>
+
+                                <div>
+                                    <paper-button toggles raised active="true" on-click="_toggleCardFromPrinting">
+                                        Show/Hide cards
+                                    </paper-button>
+                                </div>
+
                             </paper-material>
 
                             <scrum-cards

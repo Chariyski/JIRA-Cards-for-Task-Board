@@ -197,6 +197,22 @@
         }
     };
 
+    app._toggleCardFromPrinting = function (event) {
+        var element = event.target;
+
+        while (element.nodeName !== 'PAPER-BUTTON') {
+            element = element.parentNode;
+        }
+
+        if (element.active === true) {
+            this.addAllScrumCardsForPrinting();
+        }
+
+        if (element.active === false) {
+            this.removeAllScrumCardsForPrinting();
+        }
+    };
+
     // =========================================================
     // Extension storage
     // =========================================================
@@ -561,10 +577,9 @@
      * @private
      */
     app._requestHandlerForProjectsAJAX = function (event, ironAJAX) {
-        let project = this.jiraProject;
         let url = this.jiraURL;
 
-        if (url.length === 0 || !project) {
+        if (url.length === 0) {
             ironAJAX['request'].abort();
             return;
         }
