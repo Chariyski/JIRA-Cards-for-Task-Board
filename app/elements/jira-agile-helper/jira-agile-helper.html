@@ -1,0 +1,99 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html"/>
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="jira-agile-helper">
+    <style>
+        select {
+            width: calc(50% - 9px);
+        }
+    </style>
+    <template>
+
+        <select id="JIRA-agile-boards" on-change="_getSprints">
+            <template is="dom-repeat" items="{{agileBoards.views}}">
+                <option value="{{item.id}}">{{item.name}}</option>
+            </template>
+        </select>
+
+        <select id="JIRA-agile-board-sprints">
+            <template is="dom-repeat" items="{{agileBoardSprints.sprints}}">
+                <option value="{{item.id}}">{{item.name}}</option>
+            </template>
+        </select>
+
+        <!-- AJAX for project agile boards -->
+        <iron-ajax
+            id="ajax-for-agile-boards"
+            content-type="application/json"
+            handle-as="json"
+            on-response="_updateSprintsSelectElement"
+            last-response="{{agileBoards}}"></iron-ajax>
+
+        <!-- AJAX for sprints -->
+        <iron-ajax
+            id="ajax-for-agile-board-sprints"
+            content-type="application/json"
+            handle-as="json"
+            last-response="{{agileBoardSprints}}"></iron-ajax>
+    </template>
+</dom-module>
+
+<script>
+    (function () {
+        'use strict';
+
+        Polymer({
+            is: 'jira-agile-helper',
+            properties: {
+                jiraUrlAddress: {
+                    type: String,
+                    notify: true,
+                    observer: '_jiraUrlAddressChanged'
+                },
+                checkUrlValidity: {
+                    type: Function
+                }
+            },
+
+            _jiraUrlAddressChanged: function (newValue, oldValue) {
+                var that = this;
+
+                setTimeout(function () {
+                    let ajaxForAgileBoards = that.$['ajax-for-agile-boards'],
+                        isURLInvalidValid = that.checkUrlValidity();
+
+                    if (!that.jiraUrlAddress || isURLInvalidValid === true) {
+                        return;
+                    }
+
+                    ajaxForAgileBoards.url = that.jiraUrlAddress + '/rest/greenhopper/1.0/rapidview';
+                    ajaxForAgileBoards.generateRequest();
+                }, 100);
+
+            },
+
+            _getSprints: function (event, jiraAgileBoardID) {
+                let ajaxForSprints = this.$['ajax-for-agile-board-sprints'],
+                    boardID;
+
+                if (jiraAgileBoardID) {
+                    boardID = jiraAgileBoardID;
+                } else {
+                    boardID = this.$['JIRA-agile-boards'].value;
+                }
+
+                // It is possible that the function is call without an option to take a valid projet ID
+                if (!boardID) {
+                    return;
+                }
+
+                ajaxForSprints.url = this.jiraUrlAddress + '/rest/greenhopper/1.0/sprintquery/' + boardID + '?includeFutureSprints=true&includeHistoricSprints=false';
+                ajaxForSprints.generateRequest();
+            },
+
+            _updateSprintsSelectElement: function (event, ironRequest) {
+                this._getSprints(null, ironRequest.response.views[0].id);
+            }
+        });
+    })();
+</script>

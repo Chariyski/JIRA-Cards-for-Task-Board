@@ -1,0 +1,107 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html"/>
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+
+<dom-module id="jira-projects">
+    <template>
+
+        <paper-dropdown-menu id="jira-projects-dropdown" placeholder="Choose project">
+            <paper-menu class="dropdown-content" selected="{{_projectNumber}}">
+                <template is="dom-repeat" items="{{_editedProjects}}">
+
+                    <!-- mai tova e proeblena koito pravi zaciklqneto - oprosti isAgile da go nqma -->
+                    <template is="dom-if" if="{{isAgile}}">
+                        <paper-item label="{{item.name}}" value="{{item.id}}">{{item.name}}</paper-item>
+                    </template>
+
+                    <template is="dom-if" if="{{!isAgile}}">
+                        <paper-item label="{{item.name}}" value="{{item.key}}">{{item.name}}</paper-item>
+                    </template>
+
+                </template>
+            </paper-menu>
+        </paper-dropdown-menu>
+
+        <!-- AJAX for projects-->
+        <iron-ajax
+            id="jira-projects-ajax"
+            content-type="application/json"
+            handle-as="json"
+            on-response="_responseHandler"
+            last-response="{{projects}}"></iron-ajax>
+
+    </template>
+</dom-module>
+
+<script>
+    (function () {
+        'use strict';
+
+        Polymer({
+            is: 'jira-projects',
+            properties: {
+                jiraUrlAddress: {
+                    type: String,
+                    notify: true,
+                    observer: '_getProjects'
+                },
+                checkUrlValidity: {
+                    type: Function
+                },
+                isAgile: {
+                    type: Boolean,
+                    notify: true,
+                    observer: '_getProjects'
+                },
+                selectItem: {
+                    type: String
+                }
+            },
+//
+//            _getProjects: function () {
+//                debugger;
+//                var that = this;
+//
+//                setTimeout(function () {
+//                    let ajaxForProjects = that.$['jira-projects-ajax'],
+//                        isURLInvalid = that.checkUrlValidity();
+//
+//                    if (!that.jiraUrlAddress || isURLInvalid === true) {
+//                        return;
+//                    }
+//
+//                    if (that.isAgile) {
+//                        ajaxForProjects.url = that.jiraUrlAddress + '/rest/greenhopper/1.0/rapidview';
+//                    } else {
+//                        ajaxForProjects.url = that.jiraUrlAddress + '/rest/api/2/project/';
+//                    }
+//
+//                    ajaxForProjects.generateRequest();
+//                }, 100);
+//            },
+//
+//            _responseHandler: function () {
+//                this._projectNumber = 0;
+//
+//                let projects = this.isAgile ? this.projects.views : this.projects;
+//                this._editedProjects = projects;
+//
+//                for (let i = 0; i < projects.length; i++) {
+//                    if (this.isAgile) {
+//                        if (projects[i].id === this.selectItem) {
+//                            this._projectNumber = i;
+//                        }
+//                    } else {
+//                        if (projects[i].key === this.selectItem) {
+//                            this._projectNumber = i;
+//                        }
+//                    }
+//
+//                }
+//
+//            }
+        });
+    })();
+</script>

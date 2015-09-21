@@ -1,0 +1,12 @@
+# Ignore IntelliJ project and settings files
+.idea
+
+# npm and bower
+node_modules
+bower_components
+
+# Ignore files and folders
+app/scripts/bundle.js
+app/styles/main.css
+dist
+TODO.txt

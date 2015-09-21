@@ -1,0 +1,109 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html"/>
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+
+<dom-module id="scrum-card-default">
+    <link rel="import" type="css" href="scrum-card-default.css">
+
+    <template>
+        <paper-material elevation="3" class="card-layout">
+            <div class="card-magnet"></div>
+
+            <div class="card-info" style$="[[_computeElementFontSize(settings.fontSize)]]">
+
+                <div class="card-info__header">
+                    <span>
+                        <span class$="[[_computeElementClass(settings.issueType)]]">
+                            <span>{{jiraIssue.fields.issuetype.name}}</span>&#32;
+                        </span>
+                        <span class$="[[_computeElementClass(settings.issueKey)]]">#<span>{{jiraIssue.key}}</span>&#32;</span>
+                        <!-- Add parent information for sub-tasks -->
+                        <template is="dom-if" if="{{jiraIssue.fields.issuetype.subtask}}">
+                            <span class$="[[_computeElementClass(settings.parentName)]]">for&#32;
+                                <span>{{jiraIssue.fields.parent.fields.issuetype.name}}</span>&#32;
+                            </span>
+                            <span class$="[[_computeElementClass(settings.parentKey)]]">
+                                #<span>{{jiraIssue.fields.parent.key}}</span>
+                            </span>
+                        </template>
+                    </span>
+
+                    <span>
+                        <span class$="[[_computeElementClass(settings.issuePriority)]]">Priority:&#32;
+                            <span>{{jiraIssue.fields.priority.name}}</span>
+                        </span>
+                        <span class$="[[_computeElementClass(settings.issueFixVersions)]]">&#32;planned for:&#32;</span>
+
+                        <template is="dom-repeat" items="{{jiraIssue.fields.fixVersions}}">
+                            <span class$="[[_computeElementClass(settings.issueFixVersions)]]">{{item.name}}</span>&#32;
+                        </template>
+                    </span>
+                </div>
+
+                <div class="card-info__body">
+                    <span class$="[[_computeElementClass(settings.issueSummary)]]">
+                        <span class="card-info__summary">{{jiraIssue.fields.summary}}</span>
+                    </span>
+                    <pre
+                        class$="[[_computeElementClass(settings.issueDescription)]]">{{jiraIssue.fields.description}}</pre>
+                    <span class$="[[_computeElementClass(settings.issueAssignee)]]">{{jiraIssue.fields.assignee.displayName}}</span>
+                </div>
+
+            </div>
+        </paper-material>
+    </template>
+
+</dom-module>
+
+<script>
+    (function () {
+        Polymer({
+            is: 'scrum-card-default',
+            properties: {
+                jiraIssue: {
+                    type: Object,
+                    notify: true
+                },
+                settings: {
+                    type: Object,
+                    notify: true
+                }
+            },
+
+            ready: function () {
+            },
+
+            _computeElementFontSize: function (fontSize) {
+                if (typeof fontSize === 'number') {
+                    return 'font-size:' + fontSize + 'px;';
+                } else {
+                    return '';
+                }
+
+            },
+
+            /**
+             *
+             * @param object.isBold
+             * @param object.isVisible
+             * @returns {string}
+             */
+            _computeElementClass: function (object) {
+                if (object === undefined) {
+                    return;
+                }
+
+                var cssClasses = '';
+
+                if (object.isBold === true) {
+                    cssClasses += 'bold ';
+                }
+
+                if (object.isVisible === false) {
+                    cssClasses += 'hidden ';
+                }
+
+                return cssClasses;
+            }
+        });
+    })();
+</script>

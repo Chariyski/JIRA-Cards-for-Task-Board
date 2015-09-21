@@ -1,0 +1,67 @@
+:host {
+    display: block;
+}
+
+.scrum-card {
+    display: block;
+    page-break-inside: avoid;
+    margin-bottom: 25px;
+    background: #fff;
+    position: relative;
+}
+
+.scrum-card::after {
+    display: block;
+    content: '+';
+    cursor: pointer;
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 0;
+    position: absolute;
+    top: 1rem;
+    right: 0;
+    transform-origin: center center;
+    transition: all 0.2s linear;
+    transform: rotateZ(45deg);
+}
+
+.scrum-card--remove-from-print {
+    opacity: 0.5;
+    -webkit-user-select: none;
+}
+
+.scrum-card--remove-from-print /deep/ paper-material {
+    box-shadow:
+        0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 1px 5px 0 rgba(0, 0, 0, 0.12),
+        0 3px 1px -2px rgba(0, 0, 0, 0.2);
+}
+
+.scrum-card--remove-from-print::after {
+    right: 0.125rem;
+    transform: rotateZ(0deg);
+}
+
+.cards-container {
+    max-width: 29cm;
+}
+
+@media print {
+    .cards-container {
+        /* TODO */
+        /* Display table is needed for page-break-inside: avoid; to work properly */
+        /*display: table;*/
+    }
+
+    .scrum-card {
+        margin-bottom: 0;
+    }
+
+    .scrum-card::after {
+        display: none;
+    }
+
+    .scrum-card--remove-from-print {
+        display: none;
+    }
+}

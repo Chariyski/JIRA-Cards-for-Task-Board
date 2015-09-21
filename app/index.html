@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+
+    <head lang="en">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>JIRA Cards for Task Board</title>
+
+        <!-- 3RD PARTY -->
+        <script src="scripts/bundle.js"></script>
+
+        <!-- Polymer elements -->
+        <link rel="import" href="html/elements.html">
+
+        <!-- APP files -->
+        <link rel="stylesheet" href="styles/main.css"/>
+        <!-- The last style tag is used for dynamic CSS rules insertion-->
+        <style></style>
+    </head>
+
+    <body unresolved class="fullbleed layout vertical">
+        <template is="dom-bind" id="app">
+            <!-- Drawer /start -->
+            <paper-drawer-panel id="paper-drawer-panel">
+                <!-- Aside /start -->
+                <div drawer>
+                    <!-- Drawer Toolbar -->
+                    <paper-toolbar id="drawerToolbar">
+                        <span class="paper-font-title">Menu</span>
+                    </paper-toolbar>
+
+                    <!-- Drawer Content /start -->
+                    <paper-menu
+                        class="list"
+                        attr-for-selected="data-route"
+                        selected="{{route}}"
+                        on-iron-select="onMenuSelect">
+
+                        <a data-route="home" href="/home">
+                            <iron-icon icon="home"></iron-icon>
+                            <span class="jira-project-name">JIRA
+                                <span>{{jiraProjectName}}</span>
+                            </span>
+                        </a>
+
+                        <a data-route="design" href="/design">
+                            <iron-icon icon="credit-card"></iron-icon>
+                            <span>Card design</span>
+                        </a>
+
+                        <a data-route="configuration" href="/configuration">
+                            <iron-icon icon="settings"></iron-icon>
+                            <span>Configuration</span>
+                        </a>
+                    </paper-menu>
+                    <!-- Drawer Content /end -->
+                </div>
+                <!-- Aside /end -->
+
+                <!-- Main content /start -->
+                <div main>
+                    <!-- Main Toolbar /start -->
+                    <paper-toolbar id="mainToolbar">
+                        <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
+
+                        <!-- Application name -->
+                        <div class="middle paper-font-headline">JIRA Cards for Task Board</div>
+                    </paper-toolbar>
+                    <!-- Main Toolbar /end -->
+
+                    <!-- App Pages /start -->
+                    <iron-pages class$="{{route}}" attr-for-selected="data-route" selected="{{route}}">
+                        <!-- Home page /start -->
+                        <section data-route="home">
+
+                            <paper-material
+                                id="settings-checkbox-container"
+                                class="layout horizontal center around-justified"
+                                elevation="1">
+
+                                <paper-dropdown-menu
+                                    id="jira-sprints-dropdown"
+                                    label="Choose sprint"
+                                    placeholder="downloading ...">
+
+                                    <paper-menu class="dropdown-content" on-click="getSprintIssues" selected="0">
+                                        <template is="dom-repeat" items="{{_editedSprints}}">
+                                            <paper-item data-route="home" value="{{item.id}}">
+                                                <span>{{item.name}}</span>
+                                            </paper-item>
+                                        </template>
+                                    </paper-menu>
+                                </paper-dropdown-menu>
+
+                                <paper-dropdown-menu
+                                    id="project-assignees-dropdown"
+                                    label="Choose assignee"
+                                    placeholder=""
+                                    on-click="_filterJiraCardsByAssignee">
+                                    <paper-menu class="dropdown-content" selected="0">
+                                        <template is="dom-repeat" items="{{_jiraProjectAssignees}}">
+                                            <paper-item
+                                                label="{{item.name}}"
+                                                value="{{item.name}}">
+                                                <span>{{item.name}}</span>
+                                            </paper-item>
+                                        </template>
+                                    </paper-menu>
+                                </paper-dropdown-menu>
+
+                                <paper-spinner id="issue-spinner" alt="Loading issues"></paper-spinner>
+
+                                <div>
+                                    <paper-button toggles raised active="true" on-click="_toggleCardFromPrinting">
+                                        Show/Hide cards
+                                    </paper-button>
+                                </div>
+
+                            </paper-material>
+
+                            <scrum-cards
+                                id="scrum-cards-container"
+                                class="vertical center"
+                                jira-issues="{{sprintIssues.issues}}"
+                                settings="{{scrumCardSettings}}"></scrum-cards>
+
+                        </section>
+                        <!-- Home page /end -->
+
+                        <!-- Card Design page /start -->
+                        <section data-route="design" class="layout vertical">
+
+                            <div class="demo-card layout vertical center-justified">
+                                <scrum-cards
+                                    class="vertical center"
+                                    jira-issues="{{demoScrumCard}}"
+                                    settings="{{scrumCardSettings}}"></scrum-cards>
+                            </div>
+
+                            <div id="design-options-container" class="layout vertical design-options-container"
+                                 on-change="_updateScrumCardSettings">
+
+                                <div class="layout horizontal">
+                                    <div class="layout vertical flex-3">
+                                        <h2>Scrum card components:</h2>
+                                    </div>
+
+                                    <div class="layout vertical flex-2">
+                                        <h2 class="padding-left">Font size:
+                                            <span>{{scrumCardSettings.fontSize}}</span>
+                                        </h2>
+                                    </div>
+                                </div>
+
+                                <div class="layout horizontal">
+
+                                    <div class="layout horizontal wrap flex-1">
+                                        <div class="toggle-buttons-container">
+                                            <h3>Type</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueType.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueType.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div class="toggle-buttons-container">
+                                            <h3>Key</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueKey.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueKey.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div class="toggle-buttons-container">
+                                            <h3>Priority</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issuePriority.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issuePriority.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div class="toggle-buttons-container">
+                                            <h3>Planed for version </h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueFixVersions.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueFixVersions.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div class="toggle-buttons-container">
+                                            <h3>Parent issue name</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.parentName.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.parentName.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div class="toggle-buttons-container">
+                                            <h3>Parent key</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.parentKey.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.parentKey.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div class="toggle-buttons-container">
+                                            <h3>Summary</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button
+                                                    toggles
+
+                                                    raised
+                                                    active="{{scrumCardSettings.issueSummary.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button toggles raised
+                                                              active="{{scrumCardSettings.issueSummary.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div class="toggle-buttons-container">
+                                            <h3>Description</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueDescription.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueDescription.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+
+                                        <div class="toggle-buttons-container">
+                                            <h3>Assignee</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueAssignee.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueAssignee.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layout vertical flex-1">
+                                        <div class="layout horizontal flex-1 slider-container">
+                                            <span>20</span>
+                                            <paper-slider
+                                                min="20"
+                                                max="32"
+                                                value="{{scrumCardSettings.fontSize}}"></paper-slider>
+                                            <span>32</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="button-wrapper">
+                                    <paper-button raised on-click="saveUserConfiguration">
+                                        Save card design
+                                    </paper-button>
+                                </div>
+                            </div>
+
+                        </section>
+                        <!-- Card Design page /end -->
+
+                        <!-- Configuration Page /start -->
+                        <section data-route="configuration">
+                            <!-- TODO remove inline style -->
+                            <paper-material class="layout vertical" elevation="3" style="width:300px; margin-left: 0">
+                                <h2>Configurations</h2>
+
+                                <paper-input
+                                    id="jira-url-address"
+                                    class="flex-1"
+                                    label="JIRA Base URL Address"
+                                    auto-validate
+                                    on-keyup="_getProjects"
+                                    pattern="^(http(s?)\:\/\/|~\/|\/)?([\w]+:\w+@)?([a-zA-Z]{1}([\w\-]+\.)+([\w]{2,5}))(:[\d]{1,5})?"
+                                    error-message="Invalid input! Example URL: https://example.com"
+                                    value="{{jiraURL}}"></paper-input>
+
+                                <paper-checkbox
+                                    id="jira-green-hopper"
+                                    on-click="_getProjects"
+                                    checked="{{isAJAXtoGreenHopper}}"
+                                    value="{{isAJAXtoGreenHopper}}">use JIRA Agile
+                                </paper-checkbox>
+
+                                <hr/>
+
+                                <paper-dropdown-menu
+                                    id="dropdown-for-jira-projects"
+                                    label="Choose project"
+                                    on-click="_clickHandlerForSprintRequest"
+                                    placeholder="but first enter a JIRA URL address">
+                                    <paper-menu class="dropdown-content" selected="{{_projectNumber}}">
+                                        <template is="dom-repeat" items="{{_editedProjects}}">
+                                            <paper-item
+                                                label="{{item.name}}"
+                                                value="{{item.value}}">
+                                                <span>{{item.name}}</span>
+                                            </paper-item>
+                                        </template>
+                                    </paper-menu>
+                                </paper-dropdown-menu>
+
+                                <!-- TODO Better way?-->
+                                <div class="button-wrapper">
+                                    <paper-button raised on-click="saveUserConfiguration">Save options</paper-button>
+                                </div>
+
+                            </paper-material>
+                        </section>
+                        <!-- Configuration Page /end -->
+                    </iron-pages>
+                    <!-- App Pages /end -->
+                </div>
+                <!-- Main content /end -->
+            </paper-drawer-panel>
+            <!-- Drawer /end -->
+
+            <!-- Popups /start -->
+            <paper-toast id="custom-message" style="z-index: 999999999"></paper-toast>
+
+            <paper-dialog id="dialog-popup" class="pop-up-dialog" entry-animation="scale-up-animation"
+                          exit-animation="fade-out-animation" modal with-backdrop>
+                <h2>No configuration settings where found</h2>
+
+                <p>You will be redirected to the Configuration section, please add JIRA Base URL Address and choose
+                    project. </p>
+
+                <div class="buttons">
+                    <paper-button dialog-confirm autofocus>Understood</paper-button>
+                </div>
+            </paper-dialog>
+            <!-- Popups /end -->
+
+            <!-- AJAX for projects-->
+            <iron-ajax
+                id="jira-projects-ajax"
+                content-type="application/json"
+                handle-as="json"
+                on-request="_requestHandlerForProjectsAJAX"
+                on-response="_responseHandlerForProjectsAJAX"
+                last-response="{{projects}}"></iron-ajax>
+
+            <!-- AJAX for sprints-->
+            <iron-ajax
+                id="jira-project-sprints-ajax"
+                content-type="application/json"
+                handle-as="json"
+                on-error="_errorHandlerForSprintsAJAX"
+                on-response="_responseHandlerForSprintsAJAX"
+                last-response="{{sprints}}"></iron-ajax>
+
+            <!-- AJAX for sprint issues-->
+            <iron-ajax
+                id="jira-sprint-issues-ajax"
+                content-type="application/json"
+                handle-as="json"
+                on-request="_requestHandlerForIssuesAJAX"
+                on-response="_responseHandlerForIssuesAJAX"
+                last-response="{{sprintIssues}}"></iron-ajax>
+        </template>
+
+        <!-- JavaScript files -->
+        <script src="scripts/main.js"></script>
+        <script src="scripts/third-party/analytics.js"></script>
+    </body>
+</html>
