@@ -10,96 +10,6 @@
         app.loadUserConfiguration();
 
     });
-    app._clickHandlerForSprintRequest = function (event) {
-        var target = event.target;
-
-        if (target.nodeName === 'SPAN') {
-            target = target.parentElement;
-        }
-
-        if (target.nodeName !== 'PAPER-ITEM') {
-            return;
-        }
-
-        app.jiraProject = target.value;
-        app.jiraProjectName = target.label;
-        app._getSprintsForProject();
-    };
-
-    app._filterJiraCardsByAssignee = function (event) {
-        let target;
-        let assigneeName;
-        let cards = app.$['scrum-cards-container'].querySelectorAll('.scrum-card .card-layout');
-        let cardsThatWillBeInvisible = [];
-
-        if (event.target.nodeName !== 'PAPER-ITEM' && event.target.nodeName !== 'SPAN') {
-            return;
-        }
-
-        if (event.target.nodeName === 'SPAN') {
-            target = event.target.parentElement;
-        }
-
-        if (event.target.nodeName === 'PAPER-ITEM') {
-            target = event.target;
-        }
-
-
-        var _insertCSSRule = function (cssRule) {
-            var sheet = document.styleSheets[document.styleSheets.length - 1];
-            sheet.insertRule(cssRule, sheet.cssRules.length);
-        };
-
-        // TODO if there is no ID in the selector the demo scrum cards is affected from the CSS, think for an solution.
-        _insertCSSRule('#scrum-cards-container .scrum-card[data-assignee]{ display:block;}');
-
-        assigneeName = target.innerText.trim();
-        if (assigneeName !== 'All') {
-            _insertCSSRule('#scrum-cards-container .scrum-card:not([data-assignee="' + assigneeName + '"]){ display:none;}');
-        }
-    };
-
-    app._handlerForInsufficientUserSettings = function () {
-        var isDialogNeed = false;
-
-        if (!this.jiraURL) {
-            isDialogNeed = true;
-        }
-
-        if (!this.jiraProject) {
-            isDialogNeed = true;
-        }
-
-        if (!this.jiraProjectName) {
-            isDialogNeed = true;
-        }
-
-        if (isDialogNeed === true) {
-            this.$['dialog-popup'].open();
-            app.route = 'configuration';
-        }
-    };
-
-    // TODO remove
-    app.interfaceUpdate = function () {
-        // TODO remove
-    };
-
-    app.getSprintIssues = function (event) {
-        var target = event.target;
-
-        if (target.nodeName === 'SPAN') {
-            target = target.parentElement;
-        }
-
-        if (target.nodeName !== 'PAPER-ITEM') {
-            return;
-        }
-
-        this.jiraSprint = target.value;
-
-        this._getSprintIssues();
-    };
 
     // =========================================================
     // UI
@@ -165,7 +75,7 @@
      * @param {number} duration - The duration in milliseconds to show the toast.
      */
     app.showMessage = function (text, duration) {
-        let messageToast = app.$['custom-message'];
+        let messageToast = this.$['custom-message'];
 
         if (text) {
             messageToast.setAttribute('text', text);
@@ -197,6 +107,11 @@
         }
     };
 
+    /**
+     * Show/hide scrum cards from print print preview
+     * @param event
+     * @private
+     */
     app._toggleCardFromPrinting = function (event) {
         var element = event.target;
 
@@ -235,12 +150,12 @@
             let settings = object.settings;
             let scrumCard = object.settings.scrumCard;
 
-            app.jiraURL = settings.jiraURL;
-            app.jiraProject = settings.jiraProject;
-            app.jiraProjectName = settings.jiraProjectName;
-            app.isAJAXtoGreenHopper = settings.isAJAXtoGreenHopper;
+            that.jiraURL = settings.jiraURL;
+            that.jiraProject = settings.jiraProject;
+            that.jiraProjectName = settings.jiraProjectName;
+            that.isAJAXtoGreenHopper = settings.isAJAXtoGreenHopper;
 
-            app.scrumCardSettings = {
+            that.scrumCardSettings = {
                 fontSize: scrumCard.fontSize,
                 issueType: {
                     isBold: scrumCard.issueType.isBold,
@@ -281,7 +196,6 @@
             };
 
             that.showMessage('All user options ware loaded.');
-            that.interfaceUpdate();
 
             that._getProjects();
             that._getSprintsForProject();
@@ -295,15 +209,15 @@
      * TODO create two methods for option card/config
      */
     app.saveUserConfiguration = function () {
-        let scrumCardSettings = app.scrumCardSettings;
-        let project = app.$['dropdown-for-jira-projects'].selectedItem;
+        let scrumCardSettings = this.scrumCardSettings;
+        let project = this.$['dropdown-for-jira-projects'].selectedItem;
 
         let optionsToBeSaved = {
             settings: {
-                jiraURL: app.jiraURL,
+                jiraURL: this.jiraURL,
                 jiraProject: project ? project.value : '',
                 jiraProjectName: project ? project.label : '',
-                isAJAXtoGreenHopper: app.isAJAXtoGreenHopper,
+                isAJAXtoGreenHopper: this.isAJAXtoGreenHopper,
 
                 scrumCard: {
                     fontSize: scrumCardSettings.fontSize,
@@ -349,7 +263,7 @@
         };
 
         chrome.storage.sync.set(optionsToBeSaved, function () {
-            app.showMessage('All user options ware save.');
+            app.showMessage('All user options were saved.');
         });
     };
 
@@ -358,7 +272,7 @@
      */
     app.removeUserConfiguration = function () {
         chrome.storage.sync.remove('settings', function (object) {
-            // todo some message
+            app.showMessage('All user options were deleted.');
         });
     };
 
@@ -366,13 +280,29 @@
     // Private methods
     // =========================================================
 
+    app._clickHandlerForSprintRequest = function (event) {
+        var target = event.target;
+
+        if (target.nodeName === 'SPAN') {
+            target = target.parentElement;
+        }
+
+        if (target.nodeName !== 'PAPER-ITEM') {
+            return;
+        }
+
+        this.jiraProject = target.value;
+        this.jiraProjectName = target.label;
+        this._getSprintsForProject();
+    };
+
     /**
      * Create needed reference for data binding and loading user configuration
      * @private
      */
     app._createReferencesForUserConfiguration = function () {
         this.scrumCardSettings = {
-            fontSize: {}, // ToDo try to fine why there is an error with  Object.create(null)
+            fontSize: {},
             issueType: Object.create(null),
             issueKey: Object.create(null),
             parentName: Object.create(null),
@@ -384,6 +314,25 @@
             issueAssignee: Object.create(null)
         };
 
+    };
+
+    /**
+     * Check responses for errors
+     * @param ironAJAX
+     * @private
+     */
+    app._checkAJAXResponseForErrors = function (ironAJAX) {
+        if (ironAJAX.status === 0) {
+            this.showMessage('It seems that you don\'t have internet connection, please try again later.');
+            return false;
+        }
+
+        if (ironAJAX.response === null) {
+            this.showMessage('It seems that you don\'t have internet connection or you are behind a proxy.');
+            return false;
+        }
+
+        return true;
     };
 
     /**
@@ -433,34 +382,40 @@
     };
 
     /**
-     * Check responses for errors
-     * @param status
+     * Hide all cards that are not from the given assignee
+     * @param event
      * @private
      */
-    app._checkAJAXResponseForErrors = function (ironAJAX) {
-        if (ironAJAX.status === 0) {
-            this.showMessage('It seems that you don\'t have internet connection, please try again later.');
-            return false;
+    app._filterJIRACardsByAssignee = function (event) {
+        let target;
+        let assigneeName;
+        let cards = this.$['scrum-cards-container'].querySelectorAll('.scrum-card .card-layout');
+        let cardsThatWillBeInvisible = [];
+
+        if (event.target.nodeName !== 'PAPER-ITEM' && event.target.nodeName !== 'SPAN') {
+            return;
         }
 
-        if (ironAJAX.response === null) {
-            this.showMessage('It seems that you don\'t have internet connection or you are behind a proxy.');
-            return false;
+        if (event.target.nodeName === 'SPAN') {
+            target = event.target.parentElement;
         }
 
-        return true;
-    };
+        if (event.target.nodeName === 'PAPER-ITEM') {
+            target = event.target;
+        }
 
-    /**
-     * Error handler for the AJAX for JIRA projects
-     * @param {Object} event
-     * @param {element} ironAJAX
-     * @private
-     */
-    app._errorHandlerForSprintsAJAX = function (event, ironAJAX) {
-        debugger;
-        // todo
-        alert('error')
+
+        var _insertCSSRule = function (cssRule) {
+            var sheet = document.styleSheets[document.styleSheets.length - 1];
+            sheet.insertRule(cssRule, sheet.cssRules.length);
+        };
+
+        _insertCSSRule('#scrum-cards-container .scrum-card[data-assignee]{ display:block;}');
+
+        assigneeName = target.innerText.trim();
+        if (assigneeName !== 'All') {
+            _insertCSSRule('#scrum-cards-container .scrum-card:not([data-assignee="' + assigneeName + '"]){ display:none;}');
+        }
     };
 
     /**
@@ -535,6 +490,43 @@
         AJAXForSprintIssues.generateRequest();
     };
 
+    app._handlerForInsufficientUserSettings = function () {
+        var isDialogNeed = false;
+
+        if (!this.jiraURL) {
+            isDialogNeed = true;
+        }
+
+        if (!this.jiraProject) {
+            isDialogNeed = true;
+        }
+
+        if (!this.jiraProjectName) {
+            isDialogNeed = true;
+        }
+
+        if (isDialogNeed === true) {
+            this.$['dialog-popup'].open();
+            this.route = 'configuration';
+        }
+    };
+
+    app._handlerForGettingSprintIssues = function (event) {
+        var target = event.target;
+
+        if (target.nodeName === 'SPAN') {
+            target = target.parentElement;
+        }
+
+        if (target.nodeName !== 'PAPER-ITEM') {
+            return;
+        }
+
+        this.jiraSprint = target.value;
+
+        this._getSprintIssues();
+    };
+
     /**
      * Re write the entire scrumCardSettings object
      * That why the custom elements that depend on it will be updated,
@@ -549,7 +541,7 @@
 
     /**
      * Create a binding reference that is used for selecting the saved project from the user.
-     * @param {array} projects
+     * @param {Array} projects
      * @private
      */
     app._setProjectNameFromConfiguration = function (projects) {
@@ -569,7 +561,7 @@
      * @private
      */
     app._requestHandlerForIssuesAJAX = function (event, ironAJAX) {
-        app.$['issue-spinner'].active = true;
+        this.$['issue-spinner'].active = true;
     };
 
     /**
@@ -584,7 +576,7 @@
             return;
         }
 
-        app.$['dropdown-for-jira-projects'].placeholder = 'downloading ...';
+        this.$['dropdown-for-jira-projects'].placeholder = 'downloading ...';
     };
 
     /**
@@ -594,13 +586,12 @@
      * @private
      */
     app._responseHandlerForIssuesAJAX = function (event, ironAJAX) {
-        let that = this;
         let issues = ironAJAX.response.issues;
         let assignees = Object.create(null);
         let filteredAssignees = [];
 
         // Stop the downloading indication
-        app.$['issue-spinner'].active = false;
+        this.$['issue-spinner'].active = false;
 
         // Get unique names
         for (var i = 0; i < issues.length; i++) {
@@ -671,7 +662,8 @@
         }
 
         if (response.length === 0) {
-            this.showMessage('There are no available sprints in this project.')
+            this.showMessage('There are no available sprints in this project.');
+            this.$['jira-sprints-dropdown'].placeholder = 'No available sprints ...';
             return;
         }
 
@@ -705,8 +697,8 @@
 
     /**
      * Sort JIRA sprints so the last created will be the first visualized
-     * @param {array} sprints
-     * @returns {array}
+     * @param {Array} sprints
+     * @returns {Array}
      * @private
      */
     app._sortSprints = function (sprints) {

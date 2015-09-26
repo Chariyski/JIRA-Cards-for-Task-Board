@@ -83,7 +83,7 @@
                                     label="Choose sprint"
                                     placeholder="downloading ...">
 
-                                    <paper-menu class="dropdown-content" on-click="getSprintIssues" selected="0">
+                                    <paper-menu class="dropdown-content" on-click="_handlerForGettingSprintIssues" selected="0">
                                         <template is="dom-repeat" items="{{_editedSprints}}">
                                             <paper-item data-route="home" value="{{item.id}}">
                                                 <span>{{item.name}}</span>
@@ -96,7 +96,7 @@
                                     id="project-assignees-dropdown"
                                     label="Choose assignee"
                                     placeholder=""
-                                    on-click="_filterJiraCardsByAssignee">
+                                    on-click="_filterJIRACardsByAssignee">
                                     <paper-menu class="dropdown-content" selected="0">
                                         <template is="dom-repeat" items="{{_jiraProjectAssignees}}">
                                             <paper-item
@@ -358,11 +358,11 @@
                                 <paper-input
                                     id="jira-url-address"
                                     class="flex-1"
-                                    label="JIRA Base URL Address"
+                                    label="Enter JIRA Base URL Address"
                                     auto-validate
                                     on-keyup="_getProjects"
                                     pattern="^(http(s?)\:\/\/|~\/|\/)?([\w]+:\w+@)?([a-zA-Z]{1}([\w\-]+\.)+([\w]{2,5}))(:[\d]{1,5})?"
-                                    error-message="Invalid input! Example URL: https://example.com"
+                                    error-message="Invalid input! Example URL: https://jira.atlassian.com"
                                     value="{{jiraURL}}"></paper-input>
 
                                 <paper-checkbox
@@ -435,7 +435,6 @@
                 id="jira-project-sprints-ajax"
                 content-type="application/json"
                 handle-as="json"
-                on-error="_errorHandlerForSprintsAJAX"
                 on-response="_responseHandlerForSprintsAJAX"
                 last-response="{{sprints}}"></iron-ajax>
 
