@@ -540,6 +540,14 @@
     };
 
     /**
+     * Open Chrome print preview
+     * @private
+     */
+    app._openPrintPreview = function () {
+        window.print();
+    };
+
+    /**
      * Create a binding reference that is used for selecting the saved project from the user.
      * @param {Array} projects
      * @private

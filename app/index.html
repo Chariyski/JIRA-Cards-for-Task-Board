@@ -83,7 +83,8 @@
                                     label="Choose sprint"
                                     placeholder="downloading ...">
 
-                                    <paper-menu class="dropdown-content" on-click="_handlerForGettingSprintIssues" selected="0">
+                                    <paper-menu class="dropdown-content" on-click="_handlerForGettingSprintIssues"
+                                                selected="0">
                                         <template is="dom-repeat" items="{{_editedSprints}}">
                                             <paper-item data-route="home" value="{{item.id}}">
                                                 <span>{{item.name}}</span>
@@ -113,6 +114,10 @@
                                 <div>
                                     <paper-button toggles raised active="true" on-click="_toggleCardFromPrinting">
                                         Show/Hide cards
+                                    </paper-button>
+
+                                    <paper-button raised on-click="_openPrintPreview">
+                                        Print
                                     </paper-button>
                                 </div>
 
