@@ -67,7 +67,7 @@ gulp.task('vulcanize', function () {
 });
 
 gulp.task('zip', function () {
-    return gulp.src('dist/*')
+    return gulp.src('dist/**/*.*')
         .pipe(zip('package.zip'))
         .pipe(gulp.dest('webstore'));
 });
