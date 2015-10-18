@@ -50,7 +50,7 @@
 
                         <a data-route="configuration" href="/configuration">
                             <iron-icon icon="settings"></iron-icon>
-                            <span>Configuration</span>
+                            <span>Configurations</span>
                         </a>
                     </paper-menu>
                     <!-- Drawer Content /end -->
@@ -80,7 +80,7 @@
 
                                 <paper-dropdown-menu
                                     id="jira-sprints-dropdown"
-                                    label="Choose sprint"
+                                    label="Choose a sprint"
                                     placeholder="downloading ...">
 
                                     <paper-menu class="dropdown-content" on-click="_handlerForGettingSprintIssues"
@@ -381,7 +381,7 @@
 
                                 <paper-dropdown-menu
                                     id="dropdown-for-jira-projects"
-                                    label="Choose project"
+                                    label="Choose a project"
                                     on-click="_clickHandlerForSprintRequest"
                                     placeholder="but first enter a JIRA URL address">
                                     <paper-menu class="dropdown-content" selected="{{_projectNumber}}">
@@ -397,7 +397,7 @@
 
                                 <!-- TODO Better way?-->
                                 <div class="button-wrapper">
-                                    <paper-button raised on-click="saveUserConfiguration">Save options</paper-button>
+                                    <paper-button raised on-click="saveUserConfiguration">Save</paper-button>
                                 </div>
 
                             </paper-material>
