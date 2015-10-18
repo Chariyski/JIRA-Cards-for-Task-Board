@@ -55,7 +55,6 @@
 
         for (var i = 0; i < cards.length; i++) {
             cards[i].classList.remove('scrum-card--remove-from-print');
-
         }
     };
 
@@ -64,6 +63,7 @@
      */
     app.onMenuSelect = function () {
         let drawerPanel = this.$['paper-drawer-panel'];
+
         if (drawerPanel.narrow) {
             drawerPanel.closeDrawer();
         }
@@ -103,7 +103,6 @@
 
         for (var i = 0; i < cards.length; i++) {
             cards[i].classList.add('scrum-card--remove-from-print');
-
         }
     };
 
@@ -200,7 +199,6 @@
             that._getProjects();
             that._getSprintsForProject();
             that._handlerForInsufficientUserSettings();
-
         });
     };
 
@@ -259,7 +257,6 @@
                     }
                 }
             }
-
         };
 
         chrome.storage.sync.set(optionsToBeSaved, function () {

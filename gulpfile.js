@@ -10,7 +10,8 @@ var clean = require('gulp-clean'),
     plumber = require('gulp-plumber'),
     runSequence = require('gulp-run-sequence'),
     path = require('path'),
-    less = require('gulp-less');
+    less = require('gulp-less'),
+    zip = require('gulp-zip');
 
 // Delete dist folder
 gulp.task('clean', function () {
@@ -65,13 +66,10 @@ gulp.task('vulcanize', function () {
         .pipe(gulp.dest('dist/html'));
 });
 
-// Tasks
-gulp.task('default', function (callback) {
-    runSequence(['less', 'concat', 'copy', 'vulcanize'], callback);
-});
-
-gulp.task('build', function (callback) {
-    runSequence('clean', 'default', callback);
+gulp.task('zip', function () {
+    return gulp.src('dist/*')
+        .pipe(zip('package.zip'))
+        .pipe(gulp.dest('webstore'));
 });
 
 gulp.task('watch', function () {
@@ -82,4 +80,13 @@ gulp.task('watch', function () {
     gulp.watch('app/scripts/main.js', ['default']);
 });
 
-gulp.task('serve', ['build', 'watch']);
+// Tasks
+gulp.task('default', function (callback) {
+    runSequence('clean', ['less'], ['concat'], ['copy'], ['vulcanize'], callback);
+});
+
+gulp.task('dist', function () {
+    runSequence('default', 'zip');
+});
+
+gulp.task('serve', ['default', 'watch']);
