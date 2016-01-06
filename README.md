@@ -9,7 +9,7 @@ Download and Install JSC from [Chrome WebStore](https://chrome.google.com/websto
 * Go to Configuration page
     - Enter JIRA base URL address in the input field
     - Choose a project
-    - If you don't want to repeat the last two steps, pres the 'SAVE' button
+    - If you don't want to repeat the last two steps, press the 'SAVE' button
 * Go to JIRA page
 * Choose a sprint
 
@@ -25,6 +25,19 @@ After the cards are loaded, you will be able to change their visual style and pr
 * Change the font of cards
 * Show cards from assignee
 * Save options
+
+## How to setup
+
+1. Install [Node](https://nodejs.org/en/), [Gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) and [Bower](http://bower.io/)
+2. Clone the project locally
+3. Install dependencies with the following commands:
+    - npm install
+    - bower install
+4. To build the project use the following command:
+    - gulp default
+5. Open Chrome and type "chrome://extensions/" in the URL bar
+6. Check “Developer mode” and then click "Load unpacked extension..."
+7. From the newly opened window select the "dist" folder from the locally cloned project
 
 ## Changelog
 
