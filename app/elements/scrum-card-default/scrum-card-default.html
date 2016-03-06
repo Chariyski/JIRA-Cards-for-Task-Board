@@ -19,7 +19,7 @@
                         <!-- Add parent information for sub-tasks -->
                         <template is="dom-if" if="{{jiraIssue.fields.issuetype.subtask}}">
                             <span class$="[[_computeElementClass(settings.parentName)]]">for&#32;
-                                <span>{{jiraIssue.fields.parent.fields.issuetype.name}}</span>&#32;
+                                <span>{{jiraIssue.fields.parent.fields.summary}}</span>&#32;
                             </span>
                             <span class$="[[_computeElementClass(settings.parentKey)]]">
                                 #<span>{{jiraIssue.fields.parent.key}}</span>
