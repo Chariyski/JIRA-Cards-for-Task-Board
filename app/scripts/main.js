@@ -28,9 +28,7 @@
             parent: {
                 key: '298',
                 fields: {
-                    issuetype: {
-                        name: 'Backlog Item'
-                    }
+                    summary: 'Backlog Item'
                 }
             },
             priority: {
