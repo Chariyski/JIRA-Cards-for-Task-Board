@@ -385,7 +385,7 @@
             },
             issueTimeOriginalEstimate: {
                 isBold: false,
-                isVisible: true
+                isVisible: false
             }
         }
     };
