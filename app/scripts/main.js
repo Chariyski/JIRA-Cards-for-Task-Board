@@ -21,7 +21,7 @@
         fields: {
             summary: 'This is the task summary',
             description: 'This is some description about the task. Lorem ipsum dolor sit amet, consectetur adipisicing elit!',
-			timeoriginalestimate: '21600',
+            timeoriginalestimate: '21600',
             issuetype: {
                 name: 'Task',
                 subtask: true
@@ -191,7 +191,7 @@
                     isBold: scrumCard.issueAssignee.isBold,
                     isVisible: scrumCard.issueAssignee.isVisible
                 },
-				issueTimeOriginalEstimate: {
+                issueTimeOriginalEstimate: {
                     isBold: scrumCard.issueTimeOriginalEstimate.isBold,
                     isVisible: scrumCard.issueTimeOriginalEstimate.isVisible
                 }
@@ -258,7 +258,7 @@
                         isBold: scrumCardSettings.issueAssignee.isBold,
                         isVisible: scrumCardSettings.issueAssignee.isVisible
                     },
-					issueTimeOriginalEstimate: {
+                    issueTimeOriginalEstimate: {
                         isBold: scrumCardSettings.issueTimeOriginalEstimate.isBold,
                         isVisible: scrumCardSettings.issueTimeOriginalEstimate.isVisible
                     }
@@ -316,7 +316,7 @@
             issueSummary: Object.create(null),
             issueDescription: Object.create(null),
             issueAssignee: Object.create(null),
-			issueTimeOriginalEstimate: Object.create(null)
+            issueTimeOriginalEstimate: Object.create(null)
         };
 
     };
@@ -383,7 +383,7 @@
                 isBold: false,
                 isVisible: true
             },
-			issueTimeOriginalEstimate: {
+            issueTimeOriginalEstimate: {
                 isBold: false,
                 isVisible: true
             }

@@ -45,7 +45,7 @@
                     </span>
                     <pre class$="[[_computeElementClass(settings.issueDescription)]]">{{jiraIssue.fields.description}}</pre>
                     <span class$="[[_computeElementClass(settings.issueAssignee)]]">{{jiraIssue.fields.assignee.displayName}}</span>
-					<span class$="[[_computeElementClass(settings.issueTimeOriginalEstimate)]]">{{_secondsToHours(jiraIssue.fields.timeoriginalestimate)}}h</span>
+                    <span class$="[[_computeElementClass(settings.issueTimeOriginalEstimate)]]">{{_secondsToHours(jiraIssue.fields.timeoriginalestimate)}}h</span>
                 </div>
 
             </div>
@@ -104,10 +104,10 @@
 
                 return cssClasses;
             },
-			
-			_secondsToHours: function (seconds) {
-				return seconds / 3600;
-			}
+
+            _secondsToHours: function (seconds) {
+                return seconds / 3600;
+            }
         });
     })();
 </script>
