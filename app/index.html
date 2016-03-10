@@ -329,6 +329,24 @@
                                                 </paper-button>
                                             </div>
                                         </div>
+                                        <div class="toggle-buttons-container">
+                                            <h3>Estimated time</h3>
+
+                                            <div class="layout horizontal">
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueTimeOriginalEstimate.isVisible}}">
+                                                    <iron-icon icon="icons:visibility"></iron-icon>
+                                                </paper-button>
+                                                <paper-button
+                                                    toggles
+                                                    raised
+                                                    active="{{scrumCardSettings.issueTimeOriginalEstimate.isBold}}">
+                                                    <iron-icon icon="editor:format-bold"></iron-icon>
+                                                </paper-button>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="layout vertical flex-1">
