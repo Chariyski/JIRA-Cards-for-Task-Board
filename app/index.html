@@ -384,7 +384,7 @@
                                     label="Enter JIRA Base URL Address"
                                     auto-validate
                                     on-keyup="_getProjects"
-                                    pattern="^(http(s?)\:\/\/|~\/|\/){1}([\w]+:\w+@)?([a-zA-Z]{1}([\w\-]+\.)+([\w]{2,8}))(:[\d]{1,8})?(\/?\w+(?!\/))?"
+                                    pattern="^(http(s?):\/\/|~\/|\/){1}([\w]+:\w+@)?([a-zA-Z]{1}([\w-]+\.)+([\w]{2,8}))(:[\d]{1,8})?(\/?\w+(?!\/))?"
                                     error-message="Invalid input! Example URL: https://jira.atlassian.com"
                                     value="{{jiraURL}}"></paper-input>
 
