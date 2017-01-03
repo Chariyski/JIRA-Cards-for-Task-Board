@@ -1,8 +1,11 @@
+# The project is out of maintenance.
+The Atlassian API was been changed again and currently the extension is not working and need to be fixed.
+
 ## JIRA Cards for Task Board
 Chrome extensions for printing task board cards from JIRA. Useful for developers working on Scrum and/or Agile methodology.
 
 ## Installation
-Download and Install JSC from [Chrome WebStore](https://chrome.google.com/webstore/detail/jira-cards-for-task-board/pkjkejnmpailbogakjkpoefndabeenek)
+Download and Install JSC from [Chrome WebStore](https://chrome.google.com/webstore)
 
 ## How to use
 * Click the extension icon
